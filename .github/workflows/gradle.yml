@@ -42,13 +42,13 @@ jobs:
         echo "${{ secrets.APPLICATION_YML_COMMON }}" > ./application-common.yml
       shell: bash
 
-    ## create application-dev.yml
-    - name: make application-dev.yml
+    ## create application-db.yml
+    - name: make application-db.yml
       if: contains(github.ref, 'main')
       run: |
           cd ./src/main/resources
-          touch ./application-dev.yml
-          echo "${{ secrets.APPLICATION_YML_DEV }}" > ./application-dev.yml
+          touch ./application-db.yml
+          echo "${{ secrets.APPLICATION_YML_DB }}" > ./application-db.yml
       shell: bash
               
     - name: Make gradlew executable
