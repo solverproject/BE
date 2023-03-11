@@ -5,7 +5,7 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class HashTagDto {
+public class HashTagRequestDto {
 
     private String title;
 

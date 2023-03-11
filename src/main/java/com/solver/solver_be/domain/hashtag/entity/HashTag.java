@@ -25,12 +25,12 @@ public class HashTag {
     private String title;
 
     @Builder
-    public HashTag(String title, QuestionBoard questionBoard){
+    private HashTag(QuestionBoard questionBoard, String title){
         this.title = title;
         this.questionBoard = questionBoard;
     }
 
-    public HashTag of(String title, QuestionBoard questionBoard){
+    public static HashTag of(QuestionBoard questionBoard, String title){
         return HashTag.builder()
                 .title(title)
                 .questionBoard(questionBoard)
