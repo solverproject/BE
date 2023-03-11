@@ -1,5 +1,8 @@
 package com.solver.solver_be.domain.image.entity;
 
+import com.solver.solver_be.domain.board.questionBoard.entity.QuestionBoard;
+import com.solver.solver_be.domain.user.entity.User;
+import com.solver.solver_be.global.util.TimeStamped;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -10,7 +13,7 @@ import javax.persistence.*;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Image extends Timestamped {
+public class Image extends TimeStamped {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,26 +22,26 @@ public class Image extends Timestamped {
     @Column(nullable = false)
     private String uploadPath;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "POST_ID", nullable = false)
+    @ManyToOne
+    @JoinColumn(name = "QUESTIONBOARD_ID", nullable = false)
     private QuestionBoard questionBoard;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "USER_ID", nullable = false)
     private User user;
 
     @Builder
-    private Image(String uploadPath, User user, Post post) {
+    private Image(String uploadPath, User user, QuestionBoard questionBoard) {
         this.uploadPath = uploadPath;
         this.user = user;
-        this.post = post;
+        this.questionBoard = questionBoard;
     }
 
-    public static Image of(String uploadPath, User user, Post post){
+    public static Image of(String uploadPath, User user, QuestionBoard questionBoard){
         return Image.builder()
                 .uploadPath(uploadPath)
                 .user(user)
-                .post(post)
+                .questionBoard(questionBoard)
                 .build();
     }
 
