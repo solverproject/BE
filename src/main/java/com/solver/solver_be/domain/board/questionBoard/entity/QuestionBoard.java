@@ -1,5 +1,6 @@
 package com.solver.solver_be.domain.board.questionBoard.entity;
 
+import com.solver.solver_be.domain.board.questionBoard.dto.QuestionRequestDto;
 import com.solver.solver_be.domain.user.entity.User;
 import com.solver.solver_be.global.util.TimeStamped;
 import lombok.AccessLevel;
@@ -10,7 +11,6 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 
 @Entity
-@Table
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class QuestionBoard extends TimeStamped {
@@ -19,25 +19,28 @@ public class QuestionBoard extends TimeStamped {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column
-    private String content;
+    @Column(nullable = false)
+    private String title;
+
+    @Column(nullable = false)
+    private String contents;
 
     @ManyToOne
     @JoinColumn(name = "USER_ID", nullable = false)
     private User user;
 
-
     @Builder
-    private QuestionBoard(CommentRequestDto commentRequestDto, User user) {
-        this.content = commentRequestDto.getContent();
+    private QuestionBoard(String title, String contents, User user){
+        this.title = title;
+        this.contents = contents;
         this.user = user;
     }
 
-    public static QuestionBoard of(CommentRequestDto commentRequestDto, User user) {
-        return QuestionBoard.builder()
-                .commentRequestDto(commentRequestDto)
+    public static QuestionBoard of(QuestionRequestDto questionRequestDto, User user){
+        return builder()
+                .title(questionRequestDto.getTitle())
+                .contents(questionRequestDto.getContents())
                 .user(user)
                 .build();
     }
-
 }
