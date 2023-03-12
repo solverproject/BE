@@ -18,17 +18,23 @@ public class Follow {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "USER_ID", nullable = false)
-    private User user;
+    @JoinColumn(name = "FOLLOW_ID", nullable = false)
+    private User follow;
+
+    @ManyToOne
+    @JoinColumn(name = "FOLLOWING_ID", nullable = false)
+    private User following;
 
     @Builder
-    private Follow(User user) {
-        this.user = user;
+    private Follow(User follow, User following) {
+        this.follow = follow;
+        this.following = following;
     }
 
-    public static Follow of(User user){
+    public static Follow of(User follow, User following){
         return Follow.builder()
-                .user(user)
+                .follow(follow)
+                .following(following)
                 .build();
     }
 }
