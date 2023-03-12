@@ -1,6 +1,7 @@
 package com.solver.solver_be.domain.board.questionBoard.dto;
 
 
+import com.solver.solver_be.domain.board.questionBoard.entity.QuestionBoard;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,11 +23,18 @@ public class QuestionResponseDto {
         this.imageUrlList = imageUrlList;
     }
 
-    public static QuestionResponseDto of(QuestionRequestDto questionRequestDto, List<String> imageUrlList){
+    public static QuestionResponseDto of(QuestionBoard questionBoard, List<String> imageUrlList){
         return QuestionResponseDto.builder()
-                .title(questionRequestDto.getTitle())
-                .contents(questionRequestDto.getContents())
+                .title(questionBoard.getTitle())
+                .contents(questionBoard.getContents())
                 .imageUrlList(imageUrlList)
+                .build();
+    }
+
+    public static QuestionResponseDto of(QuestionBoard questionBoard){
+        return QuestionResponseDto.builder()
+                .title(questionBoard.getTitle())
+                .contents(questionBoard.getContents())
                 .build();
     }
 }
