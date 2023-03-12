@@ -1,8 +1,6 @@
 package com.solver.solver_be.domain.board.questionBoard.entity;
 
 import com.solver.solver_be.domain.board.questionBoard.dto.QuestionRequestDto;
-import com.solver.solver_be.domain.board.questionBoard.dto.QuestionResponseDto;
-import com.solver.solver_be.domain.image.entity.Image;
 import com.solver.solver_be.domain.user.entity.User;
 import com.solver.solver_be.global.util.TimeStamped;
 import lombok.AccessLevel;
@@ -11,8 +9,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
+
 
 @Entity
 @Getter

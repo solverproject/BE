@@ -12,12 +12,14 @@ import java.util.List;
 @NoArgsConstructor
 public class QuestionResponseDto {
 
+    private Long id;
     private String title;
     private String contents;
     private List<String> imageUrlList;
 
     @Builder
-    private QuestionResponseDto(String title, String contents, List<String> imageUrlList){
+    private QuestionResponseDto(Long id, String title, String contents, List<String> imageUrlList){
+        this.id = id;
         this.title = title;
         this.contents = contents;
         this.imageUrlList = imageUrlList;
@@ -25,6 +27,7 @@ public class QuestionResponseDto {
 
     public static QuestionResponseDto of(QuestionBoard questionBoard, List<String> imageUrlList){
         return QuestionResponseDto.builder()
+                .id(questionBoard.getId())
                 .title(questionBoard.getTitle())
                 .contents(questionBoard.getContents())
                 .imageUrlList(imageUrlList)
@@ -33,6 +36,7 @@ public class QuestionResponseDto {
 
     public static QuestionResponseDto of(QuestionBoard questionBoard){
         return QuestionResponseDto.builder()
+                .id(questionBoard.getId())
                 .title(questionBoard.getTitle())
                 .contents(questionBoard.getContents())
                 .build();
