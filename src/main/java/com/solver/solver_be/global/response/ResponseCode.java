@@ -19,6 +19,12 @@ public enum ResponseCode {
     BOARD_GET_SUCCESS(200, "질문리스트 가져오기 완료했습니다."),
     BOARD_UPDATE_SUCCESS(200, "질문 업데이트 완료되었습니다." ),
     BOARD_DELETE_SUCCESS(200, "질문 삭제 완료되었습니다." ),
+    FAVORITE_SUCCESS(200, "즐겨찾기 성공했습니다."  ),
+
+    // Follow 관련
+
+    FOLLOW_SUCCESS(200, "팔로우에 성공했습니다."  ),
+    FOLLOW_CANCEL(200, "팔로우를 취소했습니다."  ),
 
     /*============================ FAIL ================================*/
 
