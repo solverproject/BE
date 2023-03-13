@@ -1,10 +1,12 @@
 package com.solver.solver_be.domain.user.entity;
 
+import com.solver.solver_be.domain.board.questionBoard.entity.QuestionBoard;
+import com.solver.solver_be.domain.favorite.entity.Favorite;
 import lombok.*;
 
 import javax.persistence.*;
 
-@Entity
+@Entity(name = "users")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @EqualsAndHashCode

@@ -13,6 +13,19 @@ public enum ResponseCode {
     SIGN_UP_SUCCESS(200, "회원 가입에 성공했습니다"),
     LOG_IN_SUCCESS(200, "로그인되었습니다."),
 
+    //Board 관련
+    BOARD_UPLOAD_SUCCESS(200, "질문등록이 완료되었습니다."),
+    BOARD_LIST_GET_SUCCESS(200, "질문리스트 가져오기 완료했습니다."),
+    BOARD_GET_SUCCESS(200, "질문리스트 가져오기 완료했습니다."),
+    BOARD_UPDATE_SUCCESS(200, "질문 업데이트 완료되었습니다." ),
+    BOARD_DELETE_SUCCESS(200, "질문 삭제 완료되었습니다." ),
+    FAVORITE_SUCCESS(200, "즐겨찾기 성공했습니다."  ),
+
+    // Follow 관련
+
+    FOLLOW_SUCCESS(200, "팔로우에 성공했습니다."  ),
+    FOLLOW_CANCEL(200, "팔로우를 취소했습니다."  ),
+
     /*============================ FAIL ================================*/
 
     //Global
@@ -28,7 +41,11 @@ public enum ResponseCode {
     PASSWORD_MISMATCH(400,  "비밀번호가 일치하지 않습니다."),
 
     //Image 관련
-    IMAGE_NOT_FOUND(400, "존재하지 않는 이미지입니다.");
+    IMAGE_NOT_FOUND(400, "존재하지 않는 이미지입니다."),
+
+    // BOARD 관련
+    BOARD_NOT_FOUND(400, "질문을 찾지 못했습니다."),
+    BOARD_UPDATE_FAILED(400, "질문 업데이트에 실패하였습니다.");
 
     private final int statusCode;
     private final String message;

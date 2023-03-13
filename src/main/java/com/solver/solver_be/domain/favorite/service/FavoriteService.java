@@ -1,10 +1,12 @@
 package com.solver.solver_be.domain.favorite.service;
 
+import com.solver.solver_be.domain.board.questionBoard.dto.QuestionResponseDto;
 import com.solver.solver_be.domain.board.questionBoard.entity.QuestionBoard;
 import com.solver.solver_be.domain.board.questionBoard.repository.QuestionBoardRepository;
 import com.solver.solver_be.domain.favorite.entity.Favorite;
 import com.solver.solver_be.domain.favorite.repository.FavoriteRepository;
 import com.solver.solver_be.domain.user.entity.User;
+import com.solver.solver_be.global.exception.exceptionType.QuestionBoardException;
 import com.solver.solver_be.global.response.GlobalResponseDto;
 import com.solver.solver_be.global.response.ResponseCode;
 import lombok.RequiredArgsConstructor;
@@ -19,23 +21,20 @@ import java.util.Optional;
 public class FavoriteService {
 
     private final FavoriteRepository favoriteRepository;
-
     private final QuestionBoardRepository questionBoardRepository;
 
     @Transactional
-    public ResponseEntity<GlobalResponseDto> createFavorite(Long id, User user){
-        QuestionBoard questionBoard = questionBoardRepository.findById(id).orElseThrow(
-                () -> new FavoriteException(ResponseCode.)
-        );
+    public ResponseEntity<GlobalResponseDto> createFavorite(Long id, User user) {
+        QuestionBoard questionBoard = getQuestionBoardById(id);
+        favoriteRepository.saveAndFlush(Favorite.of(questionBoard,user));
+        return ResponseEntity.ok(GlobalResponseDto.of(ResponseCode.FAVORITE_SUCCESS));
 
-        Optional<Favorite> favorite = favoriteRepository.findByUserIdAndQuestionBoard(id, user.getId());
-        if (favorite.isEmpty()) {
-            favoriteRepository.saveAndFlush(Favorite.from(user));
-            return ResponseEntity.ok(GlobalResponseDto.of(ResponseCode.));
-
-        }else {
-            favoriteRepository.deleteByUserIdAndQuestionBoard(user.getId(), id);
-            return ResponseEntity.ok(GlobalResponseDto.of(ResponseCode.));
-        }
     }
+
+    private QuestionBoard getQuestionBoardById(Long id) {
+        return questionBoardRepository.findById(id).orElseThrow(
+                () -> new QuestionBoardException(ResponseCode.BOARD_NOT_FOUND)
+        );
+    }
+
 }

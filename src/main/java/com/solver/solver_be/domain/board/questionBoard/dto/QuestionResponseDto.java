@@ -12,27 +12,42 @@ import java.util.List;
 @NoArgsConstructor
 public class QuestionResponseDto {
 
+    private Long id;
     private String title;
     private String contents;
     private List<String> imageUrlList;
+    private List<String> hashTagList;
 
     @Builder
-    private QuestionResponseDto(String title, String contents, List<String> imageUrlList){
+    private QuestionResponseDto(Long id, String title, String contents, List<String> imageUrlList,List<String> hashTagList){
+        this.id = id;
         this.title = title;
         this.contents = contents;
         this.imageUrlList = imageUrlList;
+        this.hashTagList = hashTagList;
     }
 
-    public static QuestionResponseDto of(QuestionBoard questionBoard, List<String> imageUrlList){
+    public static QuestionResponseDto of(QuestionBoard questionBoard, List<String> imageUrlList,List<String> hashTagList){
         return QuestionResponseDto.builder()
+                .id(questionBoard.getId())
                 .title(questionBoard.getTitle())
                 .contents(questionBoard.getContents())
                 .imageUrlList(imageUrlList)
+                .hashTagList(hashTagList)
+                .build();
+    }
+    public static QuestionResponseDto of(QuestionBoard questionBoard,List<String> hashTagList){
+        return QuestionResponseDto.builder()
+                .id(questionBoard.getId())
+                .title(questionBoard.getTitle())
+                .contents(questionBoard.getContents())
+                .hashTagList(hashTagList)
                 .build();
     }
 
     public static QuestionResponseDto of(QuestionBoard questionBoard){
         return QuestionResponseDto.builder()
+                .id(questionBoard.getId())
                 .title(questionBoard.getTitle())
                 .contents(questionBoard.getContents())
                 .build();
