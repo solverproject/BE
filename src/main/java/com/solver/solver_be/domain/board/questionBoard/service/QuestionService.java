@@ -4,6 +4,8 @@ import com.solver.solver_be.domain.board.questionBoard.dto.QuestionRequestDto;
 import com.solver.solver_be.domain.board.questionBoard.dto.QuestionResponseDto;
 import com.solver.solver_be.domain.board.questionBoard.entity.QuestionBoard;
 import com.solver.solver_be.domain.board.questionBoard.repository.QuestionBoardRepository;
+import com.solver.solver_be.domain.hashtag.entity.HashTag;
+import com.solver.solver_be.domain.hashtag.repository.HashTagRepository;
 import com.solver.solver_be.domain.image.entity.Image;
 import com.solver.solver_be.domain.image.repository.ImageRepository;
 import com.solver.solver_be.domain.user.entity.User;
@@ -29,16 +31,22 @@ public class QuestionService {
 
     private final QuestionBoardRepository questionBoardRepository;
     private final ImageRepository imageRepository;
+    private final HashTagRepository hashTagRepository;
     private final S3Service s3Service;
 
     // 질문게시물 등록
     public ResponseEntity<GlobalResponseDto> createBoard(QuestionRequestDto questionRequestDto, List<MultipartFile> multipartFilelist, User user) throws IOException {
 
-        QuestionBoard questionBoard = questionBoardRepository.saveAndFlush(QuestionBoard.of(questionRequestDto, user));
+        QuestionBoard questionBoard = questionBoardRepository.saveAndFlush(QuestionBoard.of(questionRequestDto.getTitle(),questionRequestDto.getContents(), user));
+        List <String> hashTagList = questionRequestDto.getHashTagList();
+        for(String hashTag : hashTagList)
+        {
+            hashTagRepository.saveAndFlush(HashTag.of(questionBoard,hashTag));
+        }
         if (multipartFilelist != null) {
             s3Service.upload(multipartFilelist, "static", questionBoard, user);
         }
-        return ResponseEntity.ok(GlobalResponseDto.of(ResponseCode.BOARD_UPLOAD_SUCCESS, QuestionResponseDto.of(questionBoard)));
+        return ResponseEntity.ok(GlobalResponseDto.of(ResponseCode.BOARD_UPLOAD_SUCCESS, QuestionResponseDto.of(questionBoard,hashTagList)));
     }
 
     // 질문게시글 전체 조회

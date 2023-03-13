@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 
 
+
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -41,6 +42,14 @@ public class QuestionBoard extends TimeStamped {
         return builder()
                 .title(questionRequestDto.getTitle())
                 .contents(questionRequestDto.getContents())
+                .user(user)
+                .build();
+    }
+
+    public static QuestionBoard of(String title, String contents, User user){
+        return builder()
+                .title(title)
+                .contents(contents)
                 .user(user)
                 .build();
     }
