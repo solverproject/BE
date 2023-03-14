@@ -40,3 +40,7 @@ out/
 application.yml
 application-common.yml
 application-db.yml
+
+
+### index ###
+index.html

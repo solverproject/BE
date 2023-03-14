@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.solver.solver_be.domain.user.dto.KakaoUserInfoDto;
 import com.solver.solver_be.domain.user.entity.User;
+import com.solver.solver_be.domain.user.entity.UserRoleEnum;
 import com.solver.solver_be.domain.user.repository.UserRepository;
 import com.solver.solver_be.global.response.GlobalResponseDto;
 import com.solver.solver_be.global.response.ResponseCode;
@@ -54,10 +55,12 @@ public class KakaoService {
         response.addCookie(cookie);
 
         return ResponseEntity.ok(GlobalResponseDto.of(ResponseCode.LOG_IN_SUCCESS));
+
     }
 
     // 1. "인가 코드"로 "액세스 토큰" 요청
     private String getToken(String code) throws JsonProcessingException {
+
         // HTTP Header 생성
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-type", "application/x-www-form-urlencoded;charset=utf-8");
@@ -65,8 +68,8 @@ public class KakaoService {
         // HTTP Body 생성
         MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
         body.add("grant_type", "authorization_code");
-        body.add("client_id", "80e4f32a666317cf2ce747bed7812f6e");
-        body.add("redirect_uri", "http://localhost:8080/api/users/kakao/login");
+        body.add("client_id", "69e38f21fc5c4ccd6f0a47a084915c4b");
+        body.add("redirect_uri", "http://localhost:8080/api/users/kakao/callback");
         body.add("code", code);
 
         // HTTP 요청 보내기
@@ -140,7 +143,7 @@ public class KakaoService {
                 // email: kakao email
                 String userEmail = kakaoUserInfo.getUsername();
 
-                kakaoUser = User.of(userEmail, encodedPassword, kakaoUser.getRole(), kakaoUserInfo.getNickname(), kakaoId);
+                kakaoUser = User.of(userEmail, encodedPassword, UserRoleEnum.USER, kakaoUserInfo.getNickname(), kakaoId);
             }
 
             userRepository.save(kakaoUser);
