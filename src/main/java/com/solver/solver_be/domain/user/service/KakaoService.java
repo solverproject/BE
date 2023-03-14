@@ -10,6 +10,9 @@ import com.solver.solver_be.domain.user.repository.UserRepository;
 import com.solver.solver_be.global.response.GlobalResponseDto;
 import com.solver.solver_be.global.response.ResponseCode;
 import com.solver.solver_be.global.security.jwt.JwtUtil;
+import com.solver.solver_be.global.security.refreshtoken.RefreshToken;
+import com.solver.solver_be.global.security.refreshtoken.RefreshTokenRepository;
+import com.solver.solver_be.global.security.refreshtoken.TokenDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpEntity;
@@ -24,6 +27,7 @@ import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Optional;
 import java.util.UUID;
 
 @Slf4j
@@ -32,6 +36,7 @@ import java.util.UUID;
 public class KakaoService {
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
+    private final RefreshTokenRepository refreshTokenRepository;
     private final JwtUtil jwtUtil;
 
     public ResponseEntity<GlobalResponseDto> kakaoLogin(String code, HttpServletResponse response) throws JsonProcessingException {
@@ -45,17 +50,27 @@ public class KakaoService {
         User kakaoUser = registerKakaoUserIfNeeded(kakaoUserInfo);
 
         // 4. JWT 토큰 반환
-        String createToken =  jwtUtil.createToken(kakaoUser.getUserEmail(), kakaoUser.getRole());
-        response.addHeader(JwtUtil.AUTHORIZATION_HEADER, createToken);
+        TokenDto tokenDto = jwtUtil.createAllToken(kakaoUser.getUserEmail());
 
-        Cookie cookie = new Cookie("token", createToken.substring(7));
+        Optional<RefreshToken> refreshToken = refreshTokenRepository.findAllByUserEmail(kakaoUser.getUserEmail());
+
+        if (refreshToken.isPresent()) {
+            refreshTokenRepository.save(refreshToken.get().updateToken(tokenDto.getRefreshToken()));
+        } else {
+            RefreshToken newToken = new RefreshToken(tokenDto.getRefreshToken(), kakaoUser.getUserEmail());
+            refreshTokenRepository.save(newToken);
+        }
+        jwtUtil.setHeader(response, tokenDto);
+
+        String token =  jwtUtil.createToken(kakaoUser.getUserEmail(), "Access");
+
+        Cookie cookie = new Cookie("token", token.substring(7));
         cookie.setPath("/");
         cookie.setHttpOnly(true);
         cookie.setMaxAge(3600);
         response.addCookie(cookie);
 
         return ResponseEntity.ok(GlobalResponseDto.of(ResponseCode.LOG_IN_SUCCESS));
-
     }
 
     // 1. "인가 코드"로 "액세스 토큰" 요청

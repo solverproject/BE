@@ -2,6 +2,7 @@ package com.solver.solver_be.global.security.webSecurity;
 
 import com.solver.solver_be.global.security.jwt.JwtAuthFilter;
 import com.solver.solver_be.global.security.jwt.JwtUtil;
+import com.solver.solver_be.global.security.refreshtoken.RefreshTokenRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
@@ -25,6 +26,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 public class WebSecurityConfig {
 
     private final JwtUtil jwtUtil;
+    private final RefreshTokenRepository refreshTokenRepository;
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
@@ -64,7 +66,7 @@ public class WebSecurityConfig {
         http.authorizeRequests().antMatchers("/api/users/**").permitAll()
                 .anyRequest().authenticated()
                 .and().exceptionHandling().authenticationEntryPoint(new CustomAuthenticationEntryPoint())
-                .and().addFilterBefore(new JwtAuthFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class);
+                .and().addFilterBefore(new JwtAuthFilter(jwtUtil, refreshTokenRepository), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }

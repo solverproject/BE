@@ -9,6 +9,9 @@ import com.solver.solver_be.global.exception.exceptionType.UserException;
 import com.solver.solver_be.global.response.GlobalResponseDto;
 import com.solver.solver_be.global.response.ResponseCode;
 import com.solver.solver_be.global.security.jwt.JwtUtil;
+import com.solver.solver_be.global.security.refreshtoken.RefreshToken;
+import com.solver.solver_be.global.security.refreshtoken.RefreshTokenRepository;
+import com.solver.solver_be.global.security.refreshtoken.TokenDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -25,6 +28,7 @@ import java.util.Optional;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final RefreshTokenRepository refreshTokenRepository;
     private final JwtUtil jwtUtil;
     private final PasswordEncoder passwordEncoder;
 
@@ -70,8 +74,20 @@ public class UserService {
             throw new UserException(ResponseCode.PASSWORD_MISMATCH);
         }
 
-        String token = jwtUtil.createToken(user.getUserEmail(), user.getRole());
-        response.addHeader(JwtUtil.AUTHORIZATION_HEADER, token);
+        TokenDto tokenDto = jwtUtil.createAllToken(userEmail);
+
+        Optional<RefreshToken> refreshToken = refreshTokenRepository.findAllByUserEmail(userEmail);
+
+        if(refreshToken.isPresent()) {
+            refreshTokenRepository.save(refreshToken.get().updateToken(tokenDto.getRefreshToken()));
+        }else {
+            RefreshToken newToken = new RefreshToken(tokenDto.getRefreshToken(), userEmail);
+            refreshTokenRepository.save(newToken);
+        }
+
+        jwtUtil.setHeader(response, tokenDto);
+
+        String token =  jwtUtil.createToken(userEmail, "Access");
 
         Cookie cookie = new Cookie("token", token.substring(7));
         cookie.setPath("/");
