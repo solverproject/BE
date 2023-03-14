@@ -1,7 +1,5 @@
 package com.solver.solver_be.domain.user.entity;
 
-import com.solver.solver_be.domain.board.questionBoard.entity.QuestionBoard;
-import com.solver.solver_be.domain.favorite.entity.Favorite;
 import lombok.*;
 
 import javax.persistence.*;
@@ -28,12 +26,15 @@ public class User {
     @Enumerated(value = EnumType.STRING)
     private UserRoleEnum role;
 
+    private Long kakaoId;
+
     @Builder
-    private User(String userEmail, String password, UserRoleEnum role, String nickname) {
+    private User(String userEmail, String password, UserRoleEnum role, String nickname, Long kakaoId) {
         this.userEmail = userEmail;
         this.password = password;
         this.role = role;
         this.nickname = nickname;
+        this.kakaoId = kakaoId;
     }
 
     public static User of(String userEmail, String password, UserRoleEnum role, String nickname) {
@@ -43,6 +44,21 @@ public class User {
                 .role(role)
                 .nickname(nickname)
                 .build();
+    }
+
+    public static User of(String userEmail, String password, UserRoleEnum role, String nickname, Long kakaoId) {
+        return User.builder()
+                .userEmail(userEmail)
+                .password(password)
+                .role(role)
+                .nickname(nickname)
+                .kakaoId(kakaoId)
+                .build();
+    }
+
+    public User kakaoIdUpdate(Long kakaoId) {
+        this.kakaoId = kakaoId;
+        return this;
     }
 }
 
