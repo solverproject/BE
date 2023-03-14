@@ -26,7 +26,12 @@ public class User {
     @Enumerated(value = EnumType.STRING)
     private UserRoleEnum role;
 
+    @Column
     private Long kakaoId;
+    @Column
+    private Long googleId;
+    @Column
+    private String naverId;
 
     @Builder
     private User(String userEmail, String password, UserRoleEnum role, String nickname, Long kakaoId) {
@@ -60,5 +65,16 @@ public class User {
         this.kakaoId = kakaoId;
         return this;
     }
+
+    public User googleIdUpdate(Long googleId) {
+        this.googleId = googleId;
+        return this;
+    }
+
+    public User naverIdUpdate(String naverId) {
+        this.naverId = naverId;
+        return this;
+    }
+
 }
 

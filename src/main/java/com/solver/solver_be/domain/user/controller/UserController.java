@@ -3,7 +3,7 @@ package com.solver.solver_be.domain.user.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.solver.solver_be.domain.user.dto.LoginRequestDto;
 import com.solver.solver_be.domain.user.dto.SignupRequestDto;
-import com.solver.solver_be.domain.user.service.KakaoService;
+import com.solver.solver_be.domain.user.service.SocialLoginService;
 import com.solver.solver_be.domain.user.service.UserService;
 import com.solver.solver_be.global.response.GlobalResponseDto;
 import lombok.RequiredArgsConstructor;
@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
@@ -21,7 +22,11 @@ import javax.validation.Valid;
 public class UserController {
 
     private final UserService userService;
-    private final KakaoService kakaoService;
+    private final SocialLoginService socialLoginService;
+//    private final KakaoService kakaoService;
+    private final String naver = "naver";
+    private final String google = "google";
+    private final String kakao = "kakao";
 
     //회원 가입
     @PostMapping("signup")
@@ -36,7 +41,13 @@ public class UserController {
     }
 
     @GetMapping("/kakao/callback")
-    public ResponseEntity<GlobalResponseDto> kakaoLogin(@RequestParam String code, HttpServletResponse response) throws JsonProcessingException {
-        return kakaoService.kakaoLogin(code, response);
+    public ResponseEntity<GlobalResponseDto> socialLogin(@RequestParam String code, HttpServletResponse response, HttpServletRequest request) throws JsonProcessingException {
+        return socialLoginService.socialLogin(kakao,code,null,response,request);
     }
+
+//    @GetMapping("/kakao/callback")
+//    public ResponseEntity<GlobalResponseDto> kakaoLogin(@RequestParam String code, HttpServletResponse response) throws JsonProcessingException {
+//        return kakaoService.kakaoLogin(code, response);
+//    }
+
 }
