@@ -29,17 +29,19 @@ public class User {
     @Column
     private Long kakaoId;
     @Column
-    private Long googleId;
+    private String googleId;
     @Column
     private String naverId;
 
     @Builder
-    private User(String userEmail, String password, UserRoleEnum role, String nickname, Long kakaoId) {
+    private User(String userEmail, String password, UserRoleEnum role, String nickname, Long kakaoId ,String googleId, String naverId) {
         this.userEmail = userEmail;
         this.password = password;
         this.role = role;
         this.nickname = nickname;
         this.kakaoId = kakaoId;
+        this.googleId = googleId;
+        this.naverId = naverId;
     }
 
     public static User of(String userEmail, String password, UserRoleEnum role, String nickname) {
@@ -66,7 +68,7 @@ public class User {
         return this;
     }
 
-    public User googleIdUpdate(Long googleId) {
+    public User googleIdUpdate(String googleId) {
         this.googleId = googleId;
         return this;
     }
