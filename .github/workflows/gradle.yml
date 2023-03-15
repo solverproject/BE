@@ -50,6 +50,15 @@ jobs:
           touch ./application-db.yml
           echo "${{ secrets.APPLICATION_YML_DB }}" > ./application-db.yml
       shell: bash
+
+    ## create application-oauth.yml
+    - name: make application-oauth.yml
+      if: contains(github.ref, 'main')
+      run: |
+        cd ./src/main/resources
+        touch ./application-oauth.yml
+        echo "${{ secrets.APPLICATION_YML_OAUTH }}" > ./application-oauth.yml
+      shell: bash
               
     - name: Make gradlew executable
       run: chmod +x gradlew

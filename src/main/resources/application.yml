@@ -12,3 +12,4 @@ spring:
     include:
       - db
       - common
+      - oauth
