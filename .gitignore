@@ -40,6 +40,7 @@ out/
 application.yml
 application-common.yml
 application-db.yml
+application-oauth.yml
 
 
 ### index ###
