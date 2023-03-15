@@ -47,7 +47,7 @@ public class JwtUtil {
         key = Keys.hmacShaKeyFor(bytes);
     }
 
-    // header 토큰을 가져오기
+     // header 토큰을 가져오기
     public String resolveToken(HttpServletRequest request, String type) {
         String bearerToken  = type.equals("Access") ? request.getHeader(ACCESS_TOKEN) :request.getHeader(REFRESH_TOKEN);
         if(bearerToken == null) {
@@ -97,20 +97,20 @@ public class JwtUtil {
     }
 
     // refreshToken 토큰 검증
-    public Boolean refreshTokenValidation(String token) {
-
+    public Boolean refreshTokenValidation(String userEmail) {
         // 1차 토큰 검증
-        if(!validateToken(token)) return false;
-
+        if(!validateToken(userEmail)) return false;
         // DB에 저장한 토큰 비교
-        Optional<RefreshToken> refreshToken = refreshTokenRepository.findAllByUserEmail(token);
-
-        return refreshToken.isPresent() && token.equals(refreshToken.get().getRefreshToken());
+        Optional<RefreshToken> refreshToken = refreshTokenRepository.findAllByUserEmail(userEmail);
+        return refreshToken.isPresent() && userEmail.equals(refreshToken.get().getUserEmail());
     }
 
     // 토큰에서 사용자 정보 가져오기
     public Claims getUserInfoFromToken(String token){
         return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
+    }
+    public String getUserEmail(String token) {
+        return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().getSubject();
     }
 
     // 인증 객체 생성
