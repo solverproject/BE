@@ -1,15 +1,9 @@
 package com.solver.solver_be.global.security.jwt;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.nimbusds.oauth2.sdk.ResponseType;
 import com.solver.solver_be.global.response.ResponseCode;
-import com.solver.solver_be.global.security.refreshtoken.RefreshToken;
-import com.solver.solver_be.global.security.refreshtoken.RefreshTokenRepository;
 import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -21,37 +15,56 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Optional;
 
 @Slf4j
 @RequiredArgsConstructor
 public class JwtAuthFilter extends OncePerRequestFilter {
 
     private final JwtUtil jwtUtil;
-    private final RefreshTokenRepository refreshTokenRepository;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        String token = jwtUtil.resolveToken(request,JwtUtil.ACCESS_TOKEN);
-        if (token == null) {
-            request.setAttribute("exception", ResponseCode.NOT_VALID_TOKEN);
+
+        String accessToken = jwtUtil.resolveToken(request, "Access");
+        String refreshToken = jwtUtil.resolveToken(request, "Refresh");
+
+
+        // 1. 토큰이 없는 상황
+        if (accessToken == null) {
+            request.setAttribute("exception", ResponseCode.TOKEN_NOT_FOUND);
             filterChain.doFilter(request, response);
             return;
         }
-
-        if (!jwtUtil.validateToken(token)) {
-            request.setAttribute("exception",  ResponseCode.NOT_VALID_TOKEN);
-            filterChain.doFilter(request, response);
-            return;
+        // 2. 토큰이 유효하지 않은 상황
+        if (!jwtUtil.validateToken(accessToken)) {
+            if (refreshToken != null) {
+                boolean validateRefreshToken = jwtUtil.validateToken(refreshToken);
+                if (validateRefreshToken) {
+                    String userEmail = jwtUtil.getUserEmail(refreshToken);
+                    String newAccessToken = jwtUtil.createToken(userEmail, "Access");
+                    response.addHeader(JwtUtil.ACCESS_TOKEN, newAccessToken);
+                    this.setAuthentication(userEmail);
+                    filterChain.doFilter(request, response);
+                    return;
+                }
+                else {
+                    request.setAttribute("exception", ResponseCode.NOT_VALID_REFRESH_TOKEN);
+                    filterChain.doFilter(request, response);
+                    return;
+                }
+            } else {
+                request.setAttribute("exception", ResponseCode.NOT_VALID_TOKEN);
+                filterChain.doFilter(request, response);
+                return;
+            }
         }
 
-        Claims info = jwtUtil.getUserInfoFromToken(token);
+        Claims info = jwtUtil.getUserInfoFromToken(accessToken);
         try {
             setAuthentication(info.getSubject());
         } catch (UsernameNotFoundException e) {
             request.setAttribute("exception", ResponseCode.USER_NOT_FOUND);
         }
-
         filterChain.doFilter(request, response);
     }
 
@@ -63,14 +76,4 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         SecurityContextHolder.setContext(context);
     }
 
-    public void jwtExceptionHandler(HttpServletResponse response, String msg, HttpStatus status) {
-        response.setStatus(status.value());
-        response.setContentType("application/json");
-        try {
-            String json = new ObjectMapper().writeValueAsString(ResponseEntity.status(HttpStatus.UNAUTHORIZED));
-            response.getWriter().write(json);
-        } catch (Exception e) {
-            log.error(e.getMessage());
-        }
-    }
 }
