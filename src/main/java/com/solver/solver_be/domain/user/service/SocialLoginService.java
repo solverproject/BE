@@ -45,7 +45,7 @@ public class SocialLoginService {
 
     private final JwtUtil jwtUtil;
 
-    public ResponseEntity<GlobalResponseDto> socialLogin(String vendor, String code, String state, HttpServletResponse response, HttpServletRequest request) throws JsonProcessingException {
+    public ResponseEntity<GlobalResponseDto> socialLogin(String vendor, String code, String state, HttpServletResponse response) throws JsonProcessingException {
         // 1. "인가 코드"로 "액세스 토큰" 요청
         String accessToken = getToken(vendor, code, state);
 
@@ -94,22 +94,21 @@ public class SocialLoginService {
         body.add("grant_type", "authorization_code");
         body.add("client_id", switchVendor.get("clientId"));
         body.add("redirect_uri", switchVendor.get("redirectUri"));
-//        body.add("client_secret", switchVendor.get("clientSecret"));
+        body.add("client_secret", switchVendor.get("clientSecret"));
         body.add("code", code);
-//        body.add("state", state);
+        body.add("state", state);
 
-//        String tokenUri = switchVendor.get("tokenUri");
+        String tokenUri = switchVendor.get("tokenUri");
 
         // HTTP 요청 보내기
         HttpEntity<MultiValueMap<String, String>> socialTokenRequest = new HttpEntity<>(body, headers);
         RestTemplate rt = new RestTemplate();
         ResponseEntity <String> response = rt.exchange(
-                "https://kauth.kakao.com/oauth/token",
+                tokenUri,
                 HttpMethod.POST,
                 socialTokenRequest,
                 String.class
         );
-
 
         // HTTP 응답 (JSON) -> 액세스 토큰 파싱
         String responseBody = response.getBody();
@@ -130,7 +129,7 @@ public class SocialLoginService {
         RestTemplate rt = new RestTemplate();
         ResponseEntity<String> response = rt.exchange(
                 switchVendor(vendor).get("userInfoUri"),
-                HttpMethod.POST,
+                HttpMethod.GET,
                 socialUserInfoRequest,
                 String.class
         );
@@ -149,18 +148,18 @@ public class SocialLoginService {
                 email = jsonNode.get("kakao_account").get("email").asText();
                 nickname = jsonNode.get("properties").get("nickname").asText();
                 break;
-//            case "google":
-//                id = jsonNode.get("exp").asText();
-//                email = jsonNode.get("email").asText();
-//                nickname = jsonNode.get("nickname").asText();
-//                break;
-//            case "naver":
-//                id = String.valueOf(jsonNode.get("response").get("id"));
-//                email = jsonNode.get("response").get("email").asText();
-//                nickname = jsonNode.get("response").get("nickname").asText();
-//                break;
+            case "google":
+                id = jsonNode.get("sub").asText();
+                email = jsonNode.get("email").asText();
+                nickname = jsonNode.get("name").asText();
+                break;
+            case "naver":
+                id = String.valueOf(jsonNode.get("response").get("id"));
+                email = jsonNode.get("response").get("email").asText();
+                nickname = jsonNode.get("response").get("nickname").asText();
+                break;
         }
-        log.info("카카오 사용자 정보: " + id + ", " + nickname + ", " + email);
+        log.info("소셜로그인 사용자 정보: " + id + ", " + nickname + ", " + email);
         return new SocialLoginRequestDto(id, nickname, email);
     }
 
@@ -175,35 +174,35 @@ public class SocialLoginService {
             case "kakao":
                 socialUser = userRepository.findByKakaoId(Long.valueOf(socialId)).orElse(null);
                 break;
-//            case "google":
-//                socialUser = userRepository.findByGoogleId(Long.valueOf(socialId)).orElse(null);
-//                break;
-//            case "naver":
-//                socialUser = userRepository.findByNaverId(socialId).orElse(null);
-//                break;
-//            default:
-//                break;
+            case "google":
+                socialUser = userRepository.findByGoogleId(socialId).orElse(null);
+                break;
+            case "naver":
+                socialUser = userRepository.findByNaverId(socialId).orElse(null);
+                break;
+            default:
+                break;
         }
 
         if (socialUser == null) {
-            // 카카오 사용자 email 동일한 email 가진 회원이 있는지 확인
-            String socialEmail = socialUserInfo.getEmail();
+            // 소셜로그인 사용자 email 동일한 email 가진 회원이 있는지 확인
+            String socialEmail = socialUserInfo.getUserEmail();
             User sameEmailUser = userRepository.findByUserEmail(socialEmail).orElse(null);
 
             if (sameEmailUser != null) {
                 socialUser = sameEmailUser;
 
-                // 기존 회원정보에 카카오 Id 추가
+                // 기존 회원정보에 소셜로그인 Id 추가
                 switch (vendor) {
                     case "kakao":
                         socialUser = socialUser.kakaoIdUpdate(Long.valueOf(socialId));
                         break;
-//                    case "google":
-//                        socialUser = socialUser.googleIdUpdate(Long.valueOf(socialId));
-//                        break;
-//                    case "naver":
-//                        socialUser = socialUser.naverIdUpdate(socialId);
-//                        break;
+                    case "google":
+                        socialUser = socialUser.googleIdUpdate(socialId);
+                        break;
+                    case "naver":
+                        socialUser = socialUser.naverIdUpdate(socialId);
+                        break;
                 }
                 socialUser = userRepository.save(socialUser);
             } else {
@@ -212,20 +211,20 @@ public class SocialLoginService {
                 String password = UUID.randomUUID().toString();
                 String encodedPassword = passwordEncoder.encode(password);
 
-                // email: kakao email
-                String userEmail = socialUserInfo.getEmail();
+                // email: 소셜로그인 email
+                String userEmail = socialUserInfo.getUserEmail();
 
                 socialUser = User.of(userEmail, encodedPassword, UserRoleEnum.USER, socialUserInfo.getNickname());
                 switch (vendor) {
                     case "kakao":
                         socialUser = socialUser.kakaoIdUpdate(Long.valueOf(socialId));
                         break;
-//                    case "google":
-//                        socialUser = socialUser.googleIdUpdate(Long.valueOf(socialId));
-//                        break;
-//                    case "naver":
-//                        socialUser = socialUser.naverIdUpdate(socialId);
-//                        break;
+                    case "google":
+                        socialUser = socialUser.googleIdUpdate(socialId);
+                        break;
+                    case "naver":
+                        socialUser = socialUser.naverIdUpdate(socialId);
+                        break;
                 }
                 userRepository.save(socialUser);
             }
@@ -238,7 +237,7 @@ public class SocialLoginService {
         Map<String, String> socialUserMap = new HashMap<>();
         String clientId = "";
         String redirectUri = "";
-//        String clientSecret = "";
+        String clientSecret = "";
         String userInfoUri = "";
         String tokenUri = "";
 
@@ -249,27 +248,27 @@ public class SocialLoginService {
                 userInfoUri = socialLoginVendor.getKakaoUserInfoUri();
                 tokenUri = socialLoginVendor.getKakaoTokenUri();
                 break;
-//            case "google":
-//                clientId = socialLoginVendor.getGoogleClientId();
-//                redirectUri = socialLoginVendor.getGoogleRedirectUri();
-//                userInfoUri = socialLoginVendor.getGoogleUserInfoUri();
-//                tokenUri = socialLoginVendor.getGoogleTokenUri();
-//                clientSecret = socialLoginVendor.getGoogleClientSecret();
-//                break;
-//            case "naver":
-//                clientId = socialLoginVendor.getNaverClientId();
-//                redirectUri = socialLoginVendor.getNaverRedirectUri();
-//                userInfoUri = socialLoginVendor.getNaverUserInfoUri();
-//                tokenUri = socialLoginVendor.getNaverTokenUri();
-//                clientSecret = socialLoginVendor.getNaverClientSecret();
-//                break;
+            case "google":
+                clientId = socialLoginVendor.getGoogleClientId();
+                redirectUri = socialLoginVendor.getGoogleRedirectUri();
+                userInfoUri = socialLoginVendor.getGoogleUserInfoUri();
+                tokenUri = socialLoginVendor.getGoogleTokenUri();
+                clientSecret = socialLoginVendor.getGoogleClientSecret();
+                break;
+            case "naver":
+                clientId = socialLoginVendor.getNaverClientId();
+                redirectUri = socialLoginVendor.getNaverRedirectUri();
+                userInfoUri = socialLoginVendor.getNaverUserInfoUri();
+                tokenUri = socialLoginVendor.getNaverTokenUri();
+                clientSecret = socialLoginVendor.getNaverClientSecret();
+                break;
         }
 
         socialUserMap.put("clientId", clientId);
         socialUserMap.put("redirectUri", redirectUri);
         socialUserMap.put("userInfoUri", userInfoUri);
         socialUserMap.put("tokenUri", tokenUri);
-//        socialUserMap.put("clientSecret", clientSecret);
+        socialUserMap.put("clientSecret", clientSecret);
         return socialUserMap;
     }
 }

@@ -9,12 +9,12 @@ import lombok.NoArgsConstructor;
 public class SocialLoginRequestDto {
     private String id;
     private String nickname;
-    private String email;
+    private String userEmail;
 
     @Builder
-    public SocialLoginRequestDto(String id, String nickname, String email) {
+    public SocialLoginRequestDto(String id, String nickname, String userEmail) {
         this.id = id;
         this.nickname = nickname;
-        this.email = email;
+        this.userEmail = userEmail;
     }
 }

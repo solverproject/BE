@@ -12,7 +12,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     Optional<User> findByKakaoId(Long id);
 
-    Optional<User> findByGoogleId(Long id);
+    Optional<User> findByGoogleId(String id);
 
     Optional<User> findByNaverId(String id);
 }

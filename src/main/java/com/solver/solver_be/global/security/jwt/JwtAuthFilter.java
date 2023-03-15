@@ -1,6 +1,8 @@
 package com.solver.solver_be.global.security.jwt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.nimbusds.oauth2.sdk.ResponseType;
+import com.solver.solver_be.global.response.ResponseCode;
 import com.solver.solver_be.global.security.refreshtoken.RefreshToken;
 import com.solver.solver_be.global.security.refreshtoken.RefreshTokenRepository;
 import io.jsonwebtoken.Claims;
@@ -11,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
@@ -29,27 +32,26 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        String accessToken = jwtUtil.resolveToken(request, "Access");
-        String refreshToken = jwtUtil.resolveToken(request, "Refresh");
-
-        if (accessToken != null && refreshToken != null) {
-            if (!jwtUtil.validateToken(accessToken)) { // access토큰이 유효하지 않지만
-                if (!jwtUtil.refreshTokenValidation(refreshToken)) { // refresh 토큰이 유효하면
-                    jwtExceptionHandler(response, "Token Error", HttpStatus.UNAUTHORIZED);
-                    return;
-                } else {
-                    // refresh토큰과 같은 토큰을 db에서 찾아온후
-                    Optional<RefreshToken> foundToken = refreshTokenRepository.findByRefreshToken("Bearer " + refreshToken);
-                    if (foundToken.isEmpty()) {
-                        throw new IllegalArgumentException("다시 로그인 하세요.");
-                    }
-                    //access토큰을 재발급
-                    response.addHeader(JwtUtil.ACCESS_TOKEN, jwtUtil.createToken(foundToken.get().getUserEmail(), "Access"));
-                }
-            }
-            Claims info = jwtUtil.getUserInfoFromToken(refreshToken);
-            setAuthentication(info.getSubject());
+        String token = jwtUtil.resolveToken(request,JwtUtil.ACCESS_TOKEN);
+        if (token == null) {
+            request.setAttribute("exception", ResponseCode.NOT_VALID_TOKEN);
+            filterChain.doFilter(request, response);
+            return;
         }
+
+        if (!jwtUtil.validateToken(token)) {
+            request.setAttribute("exception",  ResponseCode.NOT_VALID_TOKEN);
+            filterChain.doFilter(request, response);
+            return;
+        }
+
+        Claims info = jwtUtil.getUserInfoFromToken(token);
+        try {
+            setAuthentication(info.getSubject());
+        } catch (UsernameNotFoundException e) {
+            request.setAttribute("exception", ResponseCode.USER_NOT_FOUND);
+        }
+
         filterChain.doFilter(request, response);
     }
 
