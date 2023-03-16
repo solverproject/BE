@@ -81,7 +81,7 @@ jobs:
         host: ${{ secrets.EC2_HOST }}
         username: ${{ secrets.EC2_USERNAME }}
         password: ${{ secrets.EC2_PW }} 
-        port: ${{ secrets.PORT }}
+        port: 22
         script: |
           docker-compose down
           sudo docker rm -f $(docker ps -qa)
