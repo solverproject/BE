@@ -76,16 +76,16 @@ jobs:
       
     # Run Doker Image From Server
     - name: EC2 Docker Run
-      uses: appleboy/ssh-action@v0.1.4
+      uses: appleboy/ssh-action@master
       with:
         host: ${{ secrets.EC2_HOST }}
         username: ${{ secrets.EC2_USERNAME }}
         password: ${{ secrets.EC2_PW }} 
         port: 22
         script: |
-          docker-compose down
-          sudo docker rm -f $(docker ps -qa)
-          sudo docker rmi ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}
+          sudo usermod -aG docker $USER
+          sudo exec su -l $USER
+          sudo docker stop $(docker ps -a -q) 
+          sudo docker rm $(docker ps -a -q)
           sudo docker pull ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}
-          sudo -E docker-compose up -d 
-          docker image prune -f
+          sudo docker run -d -p 80:8080 ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}
