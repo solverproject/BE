@@ -21,7 +21,7 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
         ResponseCode exception = (ResponseCode) request.getAttribute("exception");
 
-        if(exception.equals(ResponseCode.NOT_VALID_REQUEST)){
+        if (exception.equals(ResponseCode.NOT_VALID_REQUEST)) {
             exceptionHandler(response, ResponseCode.NOT_VALID_REQUEST);
             return;
         }

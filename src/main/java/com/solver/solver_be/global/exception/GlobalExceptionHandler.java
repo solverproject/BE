@@ -1,6 +1,7 @@
 package com.solver.solver_be.global.exception;
 
 import com.solver.solver_be.global.exception.exceptionType.GlobalException;
+import com.solver.solver_be.global.exception.exceptionType.QuestionBoardException;
 import com.solver.solver_be.global.exception.exceptionType.S3Exception;
 import com.solver.solver_be.global.exception.exceptionType.UserException;
 import com.solver.solver_be.global.response.GlobalResponseDto;
@@ -18,7 +19,13 @@ public class GlobalExceptionHandler {
 
     // UserException Handler
     @ExceptionHandler(UserException.class)
-    public ResponseEntity<GlobalResponseDto> handleCommentException(UserException e){
+    public ResponseEntity<GlobalResponseDto> handleCommentException(UserException e) {
+        ResponseCode responseCode = e.getStatusCode();
+        log.error(responseCode.getMessage());
+        return ResponseEntity.ok(GlobalResponseDto.of(responseCode));
+    }
+    @ExceptionHandler(QuestionBoardException.class)
+    public ResponseEntity<GlobalResponseDto> handleQuestionBoardException(QuestionBoardException e) {
         ResponseCode responseCode = e.getStatusCode();
         log.error(responseCode.getMessage());
         return ResponseEntity.ok(GlobalResponseDto.of(responseCode));
@@ -26,7 +33,7 @@ public class GlobalExceptionHandler {
 
     // S3Exception Handler
     @ExceptionHandler(S3Exception.class)
-    public ResponseEntity<GlobalResponseDto> handleS3Exception(S3Exception e){
+    public ResponseEntity<GlobalResponseDto> handleS3Exception(S3Exception e) {
         ResponseCode responseCode = e.getStatusCode();
         log.error(responseCode.getMessage());
         return ResponseEntity.ok(GlobalResponseDto.of(responseCode));
@@ -34,7 +41,7 @@ public class GlobalExceptionHandler {
 
     // GlobalException Handler
     @ExceptionHandler(GlobalException.class)
-    public ResponseEntity<GlobalResponseDto> handleGlobalException(GlobalException e){
+    public ResponseEntity<GlobalResponseDto> handleGlobalException(GlobalException e) {
         ResponseCode responseCode = e.getStatusCode();
         log.error(responseCode.getMessage());
         return ResponseEntity.ok(GlobalResponseDto.of(responseCode));
@@ -42,7 +49,7 @@ public class GlobalExceptionHandler {
 
     // Validation Handler
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<GlobalResponseDto> handleMethodException(MethodArgumentNotValidException e){
+    public ResponseEntity<GlobalResponseDto> handleMethodException(MethodArgumentNotValidException e) {
         String message = e.getBindingResult().getAllErrors().get(0).getDefaultMessage();
         log.error(message);
         return ResponseEntity.ok(new GlobalResponseDto(HttpStatus.BAD_REQUEST.value(), message, null));
