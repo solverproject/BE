@@ -16,20 +16,20 @@ public class GlobalResponseDto {
         this.data = data;
     }
 
-    public GlobalResponseDto (int statusCode, String message, Object data){
+    public GlobalResponseDto(int statusCode, String message, Object data) {
         this.statusCode = statusCode;
         this.message = message;
         this.data = data;
     }
 
-    public static GlobalResponseDto of(ResponseCode responseCode, Object data){
+    public static GlobalResponseDto of(ResponseCode responseCode, Object data) {
         return GlobalResponseDto.builder()
                 .responseCode(responseCode)
                 .data(data)
                 .build();
     }
 
-    public static GlobalResponseDto of(ResponseCode responseCode){
+    public static GlobalResponseDto of(ResponseCode responseCode) {
         return GlobalResponseDto.builder()
                 .responseCode(responseCode)
                 .build();

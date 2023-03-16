@@ -10,8 +10,6 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
-
-
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -37,15 +35,7 @@ public class QuestionBoard extends TimeStamped {
         this.contents = contents;
         this.user = user;
     }
-
-    public static QuestionBoard of(QuestionRequestDto questionRequestDto, User user){
-        return builder()
-                .title(questionRequestDto.getTitle())
-                .contents(questionRequestDto.getContents())
-                .user(user)
-                .build();
-    }
-
+    // 이 부분을 나중에 QuestionBoardDto 로 받는 부분으로 고치면 좋을 듯 합니다.
     public static QuestionBoard of(String title, String contents, User user){
         return builder()
                 .title(title)

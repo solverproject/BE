@@ -34,7 +34,7 @@ public class User {
     private String naverId;
 
     @Builder
-    private User(String userEmail, String password, UserRoleEnum role, String nickname, Long kakaoId ,String googleId, String naverId) {
+    private User(String userEmail, String password, UserRoleEnum role, String nickname, Long kakaoId, String googleId, String naverId) {
         this.userEmail = userEmail;
         this.password = password;
         this.role = role;
@@ -50,16 +50,6 @@ public class User {
                 .password(password)
                 .role(role)
                 .nickname(nickname)
-                .build();
-    }
-
-    public static User of(String userEmail, String password, UserRoleEnum role, String nickname, Long kakaoId) {
-        return User.builder()
-                .userEmail(userEmail)
-                .password(password)
-                .role(role)
-                .nickname(nickname)
-                .kakaoId(kakaoId)
                 .build();
     }
 

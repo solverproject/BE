@@ -1,6 +1,5 @@
 package com.solver.solver_be.global.security.webSecurity;
 
-
 import com.solver.solver_be.domain.user.entity.User;
 import com.solver.solver_be.domain.user.entity.UserRoleEnum;
 import org.springframework.security.core.GrantedAuthority;
@@ -15,7 +14,7 @@ public class UserDetailsImpl implements UserDetails {
     private final User user;
     private final String userEmail;
 
-    public UserDetailsImpl(User user, String userEmail){
+    public UserDetailsImpl(User user, String userEmail) {
         this.user = user;
         this.userEmail = userEmail;
     }
@@ -31,7 +30,8 @@ public class UserDetailsImpl implements UserDetails {
 
         return authorities;
     }
-    public User getUser(){
+
+    public User getUser() {
         return user;
     }
 

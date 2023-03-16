@@ -24,7 +24,7 @@ public class RefreshToken {
     @NotBlank
     private String userEmail;
 
-    public RefreshToken(String refreshToken, String userEmail){
+    public RefreshToken(String refreshToken, String userEmail) {
         this.refreshToken = refreshToken;
         this.userEmail = userEmail;
     }

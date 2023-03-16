@@ -31,7 +31,7 @@ public class Follow {
         this.followUser = followUser;
     }
 
-    public static Follow of(User user, User followUser){
+    public static Follow of(User user, User followUser) {
         return Follow.builder()
                 .user(user)
                 .followUser(followUser)

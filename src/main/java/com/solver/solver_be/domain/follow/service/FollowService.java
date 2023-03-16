@@ -22,18 +22,15 @@ public class FollowService {
 
     @Transactional
     public ResponseEntity<GlobalResponseDto> createFollow(Long id, User user) {
-        // 유저가 지금 DB에 있는지를 먼저 판단 후 -> 있으면 그 친구의 id 와 나의 id 를 followRepo 에 저장.
         User followuser = userRepository.findById(id).orElseThrow(
-                ()-> new UserException(ResponseCode.USER_NOT_FOUND)
+                () -> new UserException(ResponseCode.USER_NOT_FOUND)
         );
-        Optional<Follow> follow = followRepository.findByUserIdAndFollowUserId(user.getId(),followuser.getId());
-        if(follow.isEmpty())
-        {
-            followRepository.saveAndFlush(Follow.of(user,followuser));
+        Optional<Follow> follow = followRepository.findByUserIdAndFollowUserId(user.getId(), followuser.getId());
+        if (follow.isEmpty()) {
+            followRepository.saveAndFlush(Follow.of(user, followuser));
             return ResponseEntity.ok(GlobalResponseDto.of(ResponseCode.FOLLOW_SUCCESS));
-        }
-        else{
-            followRepository.deleteByUserIdAndFollowUserId(user.getId(),followuser.getId());
+        } else {
+            followRepository.deleteByUserIdAndFollowUserId(user.getId(), followuser.getId());
             return ResponseEntity.ok(GlobalResponseDto.of(ResponseCode.FOLLOW_CANCEL));
         }
 

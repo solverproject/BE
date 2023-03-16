@@ -24,8 +24,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-@RequiredArgsConstructor
 @Transactional
+@RequiredArgsConstructor
 public class QuestionService {
 
     private final QuestionBoardRepository questionBoardRepository;
@@ -33,22 +33,22 @@ public class QuestionService {
     private final HashTagRepository hashTagRepository;
     private final S3Service s3Service;
 
-    // 질문게시물 등록
     public ResponseEntity<GlobalResponseDto> createBoard(QuestionRequestDto questionRequestDto, List<MultipartFile> multipartFilelist, User user) throws IOException {
 
-        QuestionBoard questionBoard = questionBoardRepository.saveAndFlush(QuestionBoard.of(questionRequestDto.getTitle(),questionRequestDto.getContents(), user));
-        List <String> hashTagList = questionRequestDto.getHashTagList();
-        for(String hashTag : hashTagList)
-        {
-            hashTagRepository.saveAndFlush(HashTag.of(questionBoard,hashTag));
+        QuestionBoard questionBoard = questionBoardRepository.saveAndFlush(QuestionBoard.of(questionRequestDto.getTitle(), questionRequestDto.getContents(), user));
+        List<String> hashTagList = questionRequestDto.getHashTagList();
+        for (String hashTag : hashTagList) {
+            hashTagRepository.saveAndFlush(HashTag.of(questionBoard, hashTag));
         }
         if (multipartFilelist != null) {
             s3Service.upload(multipartFilelist, "static", questionBoard, user);
         }
-        return ResponseEntity.ok(GlobalResponseDto.of(ResponseCode.BOARD_UPLOAD_SUCCESS, QuestionResponseDto.of(questionBoard,hashTagList)));
+        List<String> imagePathList = ImagePathList(questionBoard);
+        List<String> titleList = getTitleList(questionBoard);
+        return ResponseEntity.ok(GlobalResponseDto.of(ResponseCode.BOARD_UPLOAD_SUCCESS, QuestionResponseDto.of(questionBoard, titleList, imagePathList)));
     }
 
-    // 질문게시글 전체 조회
+    // GET 요청이 들어왔을떄, 이는 user 가 사용되지 않으므로, 이 부분도 제외를 해도 되는지에 대해서 이야기 해보면 좋을 것 같습니다.
     @Transactional(readOnly = true)
     public ResponseEntity<GlobalResponseDto> getBoards(User user) {
 
@@ -56,27 +56,25 @@ public class QuestionService {
         List<QuestionResponseDto> responseDtoList = new ArrayList<>();
         for (QuestionBoard questionBoard : questionBoardList) {
             List<String> imagePathList = ImagePathList(questionBoard);
-            responseDtoList.add(QuestionResponseDto
-                    .of(questionBoard, imagePathList));
+            List<String> titleList = getTitleList(questionBoard);
+            responseDtoList.add(QuestionResponseDto.of(questionBoard, titleList, imagePathList));
         }
         return ResponseEntity.ok(GlobalResponseDto.of(ResponseCode.BOARD_LIST_GET_SUCCESS, responseDtoList));
 
     }
 
-    // 질문게시글 단일 조회
     @Transactional(readOnly = true)
     public ResponseEntity<GlobalResponseDto> getBoard(Long id, User user) {
 
         QuestionBoard questionBoard = getQuestionBoardById(id);
         List<String> imagePathList = ImagePathList(questionBoard);
-        QuestionResponseDto questionResponseDto = QuestionResponseDto
-                .of(questionBoard, imagePathList);
+        List<String> titleList = getTitleList(questionBoard);
+        QuestionResponseDto questionResponseDto = QuestionResponseDto.of(questionBoard, titleList, imagePathList);
         return ResponseEntity.ok(GlobalResponseDto.of(ResponseCode.BOARD_LIST_GET_SUCCESS, questionResponseDto));
 
     }
 
-    // 질문게시글 수정
-    public ResponseEntity<GlobalResponseDto> updateBoard(Long id, QuestionRequestDto questionRequestDto, User user) {
+    public ResponseEntity<GlobalResponseDto> updateBoard(Long id, User user, QuestionRequestDto questionRequestDto) {
 
         QuestionBoard questionBoard = getQuestionBoardById(id);
 
@@ -85,14 +83,14 @@ public class QuestionService {
         }
 
         questionBoard.update(questionRequestDto);
-        List<String> imagePathList = ImagePathList(questionBoard);
-        QuestionResponseDto questionResponseDto = QuestionResponseDto
-                .of(questionBoard, imagePathList);
 
-        return ResponseEntity.ok(GlobalResponseDto.of(ResponseCode.BOARD_UPDATE_SUCCESS,questionResponseDto));
+        List<String> imagePathList = ImagePathList(questionBoard);
+        List<String> titleList = getTitleList(questionBoard);
+        QuestionResponseDto questionResponseDto = QuestionResponseDto.of(questionBoard, titleList, imagePathList);
+
+        return ResponseEntity.ok(GlobalResponseDto.of(ResponseCode.BOARD_UPDATE_SUCCESS, questionResponseDto));
     }
 
-    // 질문게시글 삭제
     public ResponseEntity<GlobalResponseDto> deleteBoard(Long id, User user) {
         QuestionBoard questionBoard = getQuestionBoardById(id);
 
@@ -108,10 +106,12 @@ public class QuestionService {
         }
 
         imageRepository.deleteAllByQuestionBoardId(questionBoard.getId());
+        hashTagRepository.deleteAllByQuestionBoardId(questionBoard.getId());
         questionBoardRepository.deleteById(questionBoard.getId());
         return ResponseEntity.ok(GlobalResponseDto.of(ResponseCode.BOARD_DELETE_SUCCESS));
     }
 
+    // 메서드명을 한번 다시 고민하는 것이 좋을 것 같습니다.
     private List<String> ImagePathList(QuestionBoard questionBoard) {
 
         List<Image> imageList = imageRepository.findAllByQuestionBoardId(questionBoard.getId());
@@ -123,11 +123,16 @@ public class QuestionService {
         return imagePathList;
     }
 
+    private List<String> getTitleList(QuestionBoard questionBoard) {
+        List<HashTag> hashTagList = hashTagRepository.findByQuestionBoardId(questionBoard.getId());
+        List<String> titleList = new ArrayList<>();
+        for (HashTag hashTag : hashTagList) {
+            titleList.add(hashTag.getTitle());
+        }
+        return titleList;
+    }
+
     private QuestionBoard getQuestionBoardById(Long id) {
-
-        return questionBoardRepository.findById(id).orElseThrow(
-                () -> new QuestionBoardException(ResponseCode.BOARD_NOT_FOUND)
-        );
-
+        return questionBoardRepository.findById(id).orElseThrow(() -> new QuestionBoardException(ResponseCode.BOARD_NOT_FOUND));
     }
 }

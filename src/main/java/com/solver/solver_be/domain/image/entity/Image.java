@@ -37,7 +37,7 @@ public class Image extends TimeStamped {
         this.questionBoard = questionBoard;
     }
 
-    public static Image of(String uploadPath, User user, QuestionBoard questionBoard){
+    public static Image of(String uploadPath, User user, QuestionBoard questionBoard) {
         return Image.builder()
                 .uploadPath(uploadPath)
                 .user(user)

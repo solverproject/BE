@@ -46,8 +46,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                     this.setAuthentication(userEmail);
                     filterChain.doFilter(request, response);
                     return;
-                }
-                else {
+                } else {
                     request.setAttribute("exception", ResponseCode.NOT_VALID_REFRESH_TOKEN);
                     filterChain.doFilter(request, response);
                     return;

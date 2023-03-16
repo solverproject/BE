@@ -2,9 +2,9 @@ name: Java CI with Gradle
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "main" , "develop" ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ "main" , "develop" ]
 
 permissions:
   contents: read
@@ -35,31 +35,22 @@ jobs:
             
     ## create application-common.yml
     - name: make application-common.yml
-      if: contains(github.ref, 'main')
       run: |
         cd ./src/main/resources
+        
         touch ./application-common.yml
-        echo "${{ secrets.APPLICATION_YML_COMMON }}" > ./application-common.yml
-      shell: bash
-
-    ## create application-db.yml
-    - name: make application-db.yml
-      if: contains(github.ref, 'main')
-      run: |
-          cd ./src/main/resources
-          touch ./application-db.yml
-          echo "${{ secrets.APPLICATION_YML_DB }}" > ./application-db.yml
-      shell: bash
-
-    ## create application-oauth.yml
-    - name: make application-oauth.yml
-      if: contains(github.ref, 'main')
-      run: |
-        cd ./src/main/resources
+        
+        touch ./application-db.yml
+        
         touch ./application-oauth.yml
+        
+        echo "${{ secrets.APPLICATION_YML_COMMON }}" > ./application-common.yml
+        
+        echo "${{ secrets.APPLICATION_YML_DB }}" > ./application-db.yml
+        
         echo "${{ secrets.APPLICATION_YML_OAUTH }}" > ./application-oauth.yml
       shell: bash
-              
+
     - name: Make gradlew executable
       run: chmod +x gradlew
       
@@ -76,16 +67,16 @@ jobs:
       
     # Run Doker Image From Server
     - name: EC2 Docker Run
-      uses: appleboy/ssh-action@v0.1.4
+      uses: appleboy/ssh-action@master
       with:
         host: ${{ secrets.EC2_HOST }}
         username: ${{ secrets.EC2_USERNAME }}
-        password: ${{ secrets.EC2_PW }} 
-        port: ${{ secrets.PORT }}
+        password: ${{ secrets.EC2_PW }}
+        port: 22
         script: |
-          docker-compose down
-          sudo docker rm -f $(docker ps -qa)
-          sudo docker rmi ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}
+          sudo usermod -aG docker $USER
+          sudo exec su -l $USER
+          sudo docker stop $(docker ps -a -q) 
+          sudo docker rm $(docker ps -a -q)
           sudo docker pull ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}
-          docker-compose up -d
-          docker image prune -f
+          sudo docker run -d -p 80:8080 ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}

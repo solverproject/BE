@@ -13,14 +13,12 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.List;
 
-
 @RestController
-@RequestMapping("/api")
 @RequiredArgsConstructor
+@RequestMapping("/api")
 public class QuestionController {
 
     private final QuestionService questionService;
-
 
     @PostMapping("/boards")
     public ResponseEntity<GlobalResponseDto> createBoard(@RequestPart(value = "data") QuestionRequestDto questionRequestDto,
@@ -37,19 +35,19 @@ public class QuestionController {
     @GetMapping("/boards/{id}")
     public ResponseEntity<GlobalResponseDto> getBoard(@PathVariable Long id,
                                                       @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        return questionService.getBoard(id,userDetails.getUser());
+        return questionService.getBoard(id, userDetails.getUser());
     }
 
     @PutMapping("/boards/{id}")
     public ResponseEntity<GlobalResponseDto> updateBoard(@PathVariable Long id,
-                                                           @RequestBody QuestionRequestDto questionRequestDto,
-                                                           @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        return questionService.updateBoard(id, questionRequestDto, userDetails.getUser());
+                                                         @RequestBody QuestionRequestDto questionRequestDto,
+                                                         @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return questionService.updateBoard(id, userDetails.getUser(), questionRequestDto);
     }
 
     @DeleteMapping("/boards/{id}")
     public ResponseEntity<GlobalResponseDto> deleteBoard(@PathVariable Long id,
-                                                           @AuthenticationPrincipal UserDetailsImpl userDetails) {
+                                                         @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return questionService.deleteBoard(id, userDetails.getUser());
     }
 }

@@ -14,10 +14,9 @@ import org.springframework.web.bind.annotation.*;
 public class FollowController {
     private final FollowService followService;
 
-    // 팔로우 등록 및 취소
     @PutMapping("/users/follow/{id}")
-    public ResponseEntity<GlobalResponseDto> createFollow (@PathVariable Long id,
-                                                            @AuthenticationPrincipal UserDetailsImpl userDetails) {
+    public ResponseEntity<GlobalResponseDto> createFollow(@PathVariable Long id,
+                                                          @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return followService.createFollow(id, userDetails.getUser());
     }
 
