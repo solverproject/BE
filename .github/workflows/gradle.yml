@@ -2,9 +2,9 @@ name: Java CI with Gradle
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "main" , "develop" ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ "main" , "develop" ]
 
 permissions:
   contents: read
@@ -35,31 +35,22 @@ jobs:
             
     ## create application-common.yml
     - name: make application-common.yml
-      if: contains(github.ref, 'main')
       run: |
         cd ./src/main/resources
+        
         touch ./application-common.yml
-        echo "${{ secrets.APPLICATION_YML_COMMON }}" > ./application-common.yml
-      shell: bash
-
-    ## create application-db.yml
-    - name: make application-db.yml
-      if: contains(github.ref, 'main')
-      run: |
-          cd ./src/main/resources
-          touch ./application-db.yml
-          echo "${{ secrets.APPLICATION_YML_DB }}" > ./application-db.yml
-      shell: bash
-
-    ## create application-oauth.yml
-    - name: make application-oauth.yml
-      if: contains(github.ref, 'main')
-      run: |
-        cd ./src/main/resources
+        
+        touch ./application-db.yml
+        
         touch ./application-oauth.yml
+        
+        echo "${{ secrets.APPLICATION_YML_COMMON }}" > ./application-common.yml
+        
+        echo "${{ secrets.APPLICATION_YML_DB }}" > ./application-db.yml
+        
         echo "${{ secrets.APPLICATION_YML_OAUTH }}" > ./application-oauth.yml
       shell: bash
-              
+
     - name: Make gradlew executable
       run: chmod +x gradlew
       
