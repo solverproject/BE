@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 public class FavoriteController {
     private final FavoriteService favoriteService;
 
-    // 질문게시글 좋아요
     @PutMapping("/board/favorites/{id}")
     public ResponseEntity<GlobalResponseDto> createPostLike(@PathVariable Long id,
                                                             @AuthenticationPrincipal UserDetailsImpl userDetails) {

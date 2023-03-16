@@ -1,7 +1,5 @@
 package com.solver.solver_be.global.security.jwt;
 
-import com.solver.solver_be.global.security.refreshtoken.RefreshToken;
-import com.solver.solver_be.global.security.refreshtoken.RefreshTokenRepository;
 import com.solver.solver_be.global.security.refreshtoken.TokenDto;
 import com.solver.solver_be.global.security.webSecurity.UserDetailsServiceImpl;
 import io.jsonwebtoken.*;
@@ -21,7 +19,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.security.Key;
 import java.util.Base64;
 import java.util.Date;
-import java.util.Optional;
 
 @Slf4j
 @Component
@@ -29,7 +26,6 @@ import java.util.Optional;
 public class JwtUtil {
 
     private final UserDetailsServiceImpl userDetailsService;
-    private final RefreshTokenRepository refreshTokenRepository;
     private static final long ACCESS_TIME = 2 * 60 * 60 * 1000L;
     private static final long REFRESH_TIME = 7 * 24 * 60 * 60 * 1000L;
     public static final String ACCESS_TOKEN = "Authorization";
@@ -42,15 +38,15 @@ public class JwtUtil {
     private final SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
 
     @PostConstruct
-    public void init(){
+    public void init() {
         byte[] bytes = Base64.getDecoder().decode(secretKey);
         key = Keys.hmacShaKeyFor(bytes);
     }
 
-     // header 토큰을 가져오기
+    // header 토큰을 가져오기
     public String resolveToken(HttpServletRequest request, String type) {
-        String bearerToken  = type.equals("Access") ? request.getHeader(ACCESS_TOKEN) :request.getHeader(REFRESH_TOKEN);
-        if(bearerToken == null) {
+        String bearerToken = type.equals("Access") ? request.getHeader(ACCESS_TOKEN) : request.getHeader(REFRESH_TOKEN);
+        if (bearerToken == null) {
             return null;
         }
         if (StringUtils.hasText(bearerToken) && bearerToken.startsWith(BEARER_PREFIX)) {
@@ -59,11 +55,12 @@ public class JwtUtil {
         return null;
     }
 
-    // 토큰 생성
+    // 전체 토큰 생성.
     public TokenDto createAllToken(String userEmail) {
         return new TokenDto(createToken(userEmail, "Access"), createToken(userEmail, "Refresh"));
     }
 
+    // 토큰 생성. (Access / Refresh)
     public String createToken(String userEmail, String type) {
 
         Date date = new Date();
@@ -96,30 +93,22 @@ public class JwtUtil {
         return false;
     }
 
-    // refreshToken 토큰 검증
-    public Boolean refreshTokenValidation(String userEmail) {
-        // 1차 토큰 검증
-        if(!validateToken(userEmail)) return false;
-        // DB에 저장한 토큰 비교
-        Optional<RefreshToken> refreshToken = refreshTokenRepository.findAllByUserEmail(userEmail);
-        return refreshToken.isPresent() && userEmail.equals(refreshToken.get().getUserEmail());
-    }
-
     // 토큰에서 사용자 정보 가져오기
-    public Claims getUserInfoFromToken(String token){
+    public Claims getUserInfoFromToken(String token) {
         return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
     }
+    // 토큰에서 사용자 이메일 가져오기
     public String getUserEmail(String token) {
         return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().getSubject();
     }
 
     // 인증 객체 생성
-    public Authentication createAuthentication(String userEmail){
+    public Authentication createAuthentication(String userEmail) {
         UserDetails userDetails = userDetailsService.loadUserByUsername(userEmail);
         return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
     }
 
-    // set cookie를 넣은 상황이라 set cookie를 사용하지 않을꺼면 주석을 풀고 이 메서드를 사용하면 됨
+    // Header 에 AccessToken, RefreshToken 추가.
     public void setHeader(HttpServletResponse response, TokenDto tokenDto) {
         response.addHeader(JwtUtil.ACCESS_TOKEN, tokenDto.getAccessToken());
         response.addHeader(JwtUtil.REFRESH_TOKEN, tokenDto.getRefreshToken());

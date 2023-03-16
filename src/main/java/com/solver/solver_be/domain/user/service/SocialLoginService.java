@@ -27,7 +27,6 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
 import java.util.Map;
@@ -103,7 +102,7 @@ public class SocialLoginService {
         // HTTP 요청 보내기
         HttpEntity<MultiValueMap<String, String>> socialTokenRequest = new HttpEntity<>(body, headers);
         RestTemplate rt = new RestTemplate();
-        ResponseEntity <String> response = rt.exchange(
+        ResponseEntity<String> response = rt.exchange(
                 tokenUri,
                 HttpMethod.POST,
                 socialTokenRequest,
@@ -193,17 +192,7 @@ public class SocialLoginService {
                 socialUser = sameEmailUser;
 
                 // 기존 회원정보에 소셜로그인 Id 추가
-                switch (vendor) {
-                    case "kakao":
-                        socialUser = socialUser.kakaoIdUpdate(Long.valueOf(socialId));
-                        break;
-                    case "google":
-                        socialUser = socialUser.googleIdUpdate(socialId);
-                        break;
-                    case "naver":
-                        socialUser = socialUser.naverIdUpdate(socialId);
-                        break;
-                }
+                putSocialId(vendor,socialUser,socialId);
                 socialUser = userRepository.save(socialUser);
             } else {
                 // 신규 회원가입
@@ -215,17 +204,7 @@ public class SocialLoginService {
                 String userEmail = socialUserInfo.getUserEmail();
 
                 socialUser = User.of(userEmail, encodedPassword, UserRoleEnum.USER, socialUserInfo.getNickname());
-                switch (vendor) {
-                    case "kakao":
-                        socialUser = socialUser.kakaoIdUpdate(Long.valueOf(socialId));
-                        break;
-                    case "google":
-                        socialUser = socialUser.googleIdUpdate(socialId);
-                        break;
-                    case "naver":
-                        socialUser = socialUser.naverIdUpdate(socialId);
-                        break;
-                }
+                putSocialId(vendor,socialUser,socialId);
                 userRepository.save(socialUser);
             }
         }
@@ -271,4 +250,19 @@ public class SocialLoginService {
         socialUserMap.put("clientSecret", clientSecret);
         return socialUserMap;
     }
+
+    void putSocialId(String vendor, User socialUser, String socialId){
+        switch (vendor) {
+            case "kakao":
+                socialUser = socialUser.kakaoIdUpdate(Long.valueOf(socialId));
+                break;
+            case "google":
+                socialUser = socialUser.googleIdUpdate(socialId);
+                break;
+            case "naver":
+                socialUser = socialUser.naverIdUpdate(socialId);
+                break;
+        }
+    }
+
 }

@@ -34,10 +34,10 @@ public class S3Service {
     private final AmazonS3 S3Client;
     private final ImageRepository imageRepository;
 
-    public void upload(List<MultipartFile> multipartFilelist, String dirName, QuestionBoard questionBoard , User user) throws IOException {
+    public void upload(List<MultipartFile> multipartFilelist, String dirName, QuestionBoard questionBoard, User user) throws IOException {
 
-        for (MultipartFile multipartFile : multipartFilelist){
-            if (multipartFile != null){
+        for (MultipartFile multipartFile : multipartFilelist) {
+            if (multipartFile != null) {
                 File uploadFile = convert(multipartFile).orElseThrow(() -> new IllegalArgumentException("파일 전환 실패"));
                 Image image = Image.of(upload(uploadFile, dirName), user, questionBoard);
                 imageRepository.save(image);
@@ -78,11 +78,7 @@ public class S3Service {
         return Optional.empty();
     }
 
-    public String getThumbnailPath(String path) {
-        return S3Client.getUrl(bucketName, path).toString();
-    }
-
-    public void deleteFile(String fileName){
+    public void deleteFile(String fileName) {
         DeleteObjectRequest request = new DeleteObjectRequest(bucketName, fileName);
         S3Client.deleteObject(request);
     }

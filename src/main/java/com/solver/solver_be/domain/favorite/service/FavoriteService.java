@@ -1,6 +1,5 @@
 package com.solver.solver_be.domain.favorite.service;
 
-import com.solver.solver_be.domain.board.questionBoard.dto.QuestionResponseDto;
 import com.solver.solver_be.domain.board.questionBoard.entity.QuestionBoard;
 import com.solver.solver_be.domain.board.questionBoard.repository.QuestionBoardRepository;
 import com.solver.solver_be.domain.favorite.entity.Favorite;
@@ -14,8 +13,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
-
 @Service
 @RequiredArgsConstructor
 public class FavoriteService {
@@ -26,7 +23,7 @@ public class FavoriteService {
     @Transactional
     public ResponseEntity<GlobalResponseDto> createFavorite(Long id, User user) {
         QuestionBoard questionBoard = getQuestionBoardById(id);
-        favoriteRepository.saveAndFlush(Favorite.of(questionBoard,user));
+        favoriteRepository.saveAndFlush(Favorite.of(questionBoard, user));
         return ResponseEntity.ok(GlobalResponseDto.of(ResponseCode.FAVORITE_SUCCESS));
 
     }

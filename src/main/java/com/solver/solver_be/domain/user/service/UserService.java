@@ -78,16 +78,16 @@ public class UserService {
 
         Optional<RefreshToken> refreshToken = refreshTokenRepository.findAllByUserEmail(userEmail);
 
-        if(refreshToken.isPresent()) {
+        if (refreshToken.isPresent()) {
             refreshTokenRepository.save(refreshToken.get().updateToken(tokenDto.getRefreshToken()));
-        }else {
+        } else {
             RefreshToken newToken = new RefreshToken(tokenDto.getRefreshToken(), userEmail);
             refreshTokenRepository.save(newToken);
         }
 
         jwtUtil.setHeader(response, tokenDto);
 
-        String token =  jwtUtil.createToken(userEmail, "Access");
+        String token = jwtUtil.createToken(userEmail, "Access");
 
         Cookie cookie = new Cookie("token", token.substring(7));
         cookie.setPath("/");
