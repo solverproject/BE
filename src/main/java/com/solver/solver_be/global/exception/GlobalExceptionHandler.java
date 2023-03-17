@@ -22,13 +22,15 @@ public class GlobalExceptionHandler {
     public ResponseEntity<GlobalResponseDto> handleCommentException(UserException e) {
         ResponseCode responseCode = e.getStatusCode();
         log.error(responseCode.getMessage());
-        return ResponseEntity.ok(GlobalResponseDto.of(responseCode));
+        return ResponseEntity.badRequest()
+                .body(GlobalResponseDto.of(responseCode));
     }
     @ExceptionHandler(QuestionBoardException.class)
     public ResponseEntity<GlobalResponseDto> handleQuestionBoardException(QuestionBoardException e) {
         ResponseCode responseCode = e.getStatusCode();
         log.error(responseCode.getMessage());
-        return ResponseEntity.ok(GlobalResponseDto.of(responseCode));
+        return ResponseEntity.badRequest()
+                .body(GlobalResponseDto.of(responseCode));
     }
 
     // S3Exception Handler
@@ -36,7 +38,8 @@ public class GlobalExceptionHandler {
     public ResponseEntity<GlobalResponseDto> handleS3Exception(S3Exception e) {
         ResponseCode responseCode = e.getStatusCode();
         log.error(responseCode.getMessage());
-        return ResponseEntity.ok(GlobalResponseDto.of(responseCode));
+        return ResponseEntity.badRequest()
+                .body(GlobalResponseDto.of(responseCode));
     }
 
     // GlobalException Handler
@@ -44,7 +47,8 @@ public class GlobalExceptionHandler {
     public ResponseEntity<GlobalResponseDto> handleGlobalException(GlobalException e) {
         ResponseCode responseCode = e.getStatusCode();
         log.error(responseCode.getMessage());
-        return ResponseEntity.ok(GlobalResponseDto.of(responseCode));
+        return ResponseEntity.badRequest()
+                .body(GlobalResponseDto.of(responseCode));
     }
 
     // Validation Handler
@@ -52,6 +56,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<GlobalResponseDto> handleMethodException(MethodArgumentNotValidException e) {
         String message = e.getBindingResult().getAllErrors().get(0).getDefaultMessage();
         log.error(message);
-        return ResponseEntity.ok(new GlobalResponseDto(HttpStatus.BAD_REQUEST.value(), message, null));
+        return ResponseEntity.badRequest()
+                .body(new GlobalResponseDto(HttpStatus.BAD_REQUEST.value(), message, null));
     }
 }

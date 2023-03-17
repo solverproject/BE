@@ -34,7 +34,7 @@ jobs:
           ${{ runner.os }}-gradle-
             
     ## create application-common.yml
-    - name: make application-common.yml
+    - name: make application.yml
       run: |
         cd ./src/main/resources
         
