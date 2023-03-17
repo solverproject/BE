@@ -26,7 +26,6 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
 import java.util.Map;
@@ -66,15 +65,6 @@ public class SocialLoginService {
             refreshTokenRepository.save(newToken);
         }
         jwtUtil.setHeader(response, tokenDto);
-
-        String token = jwtUtil.createToken(socialUser.getUserEmail(), "Access");
-
-        Cookie cookie = new Cookie("token", token.substring(7));
-        cookie.setPath("/");
-        cookie.setHttpOnly(true);
-        cookie.setMaxAge(3600);
-        response.addCookie(cookie);
-
         return ResponseEntity.ok(GlobalResponseDto.of(ResponseCode.LOG_IN_SUCCESS));
 
     }

@@ -19,7 +19,7 @@ public class SocialLoginVendor {
     private String kakaoRedirectUri;
     @Value("${spring.security.oauth2.client.provider.kakao.user-info-uri}")
     private String kakaoUserInfoUri;
-    @Value("${spring.security.oauth2.client.provider.kakao.token-uri}")
+    @Value("${spring.security.oauth2.client.provider.kakao.token_uri}")
     private String kakaoTokenUri;
 
     // naver
