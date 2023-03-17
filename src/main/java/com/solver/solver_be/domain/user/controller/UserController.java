@@ -50,5 +50,4 @@ public class UserController {
     public ResponseEntity<GlobalResponseDto> googleLogin(@RequestParam String code, HttpServletResponse response) throws JsonProcessingException {
         return socialLoginService.socialLogin(google, code, null, response);
     }
-
 }

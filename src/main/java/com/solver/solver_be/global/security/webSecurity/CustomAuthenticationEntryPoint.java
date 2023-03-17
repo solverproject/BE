@@ -35,7 +35,10 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
             exceptionHandler(response, ResponseCode.NOT_VALID_TOKEN);
             return;
         }
-
+        if (exception.equals(ResponseCode.NOT_VALID_REFRESH_TOKEN)) {
+            exceptionHandler(response, ResponseCode.NOT_VALID_REFRESH_TOKEN);
+            return;
+        }
         if (exception.equals(ResponseCode.USER_NOT_FOUND)) {
             exceptionHandler(response, ResponseCode.USER_NOT_FOUND);
         }

@@ -26,11 +26,14 @@ public enum ResponseCode {
     FOLLOW_SUCCESS(200, "팔로우에 성공했습니다."),
     FOLLOW_CANCEL(200, "팔로우를 취소했습니다."),
 
+    // Token 관련
+
+    TOKEN_UPDATE_SUCCESS(200, "토큰 업데이트 성공했습니다."),
     /*============================ FAIL ================================*/
 
     //Global
     NOT_VALID_REQUEST(400, "유효하지 않은 요청입니다."),
-    NOT_VALID_TOKEN(400, "유효한 토큰이 아닙니다."),
+    NOT_VALID_TOKEN(401, "유효한 토큰이 아닙니다."),
     TOKEN_NOT_FOUND(400, "토큰이 없습니다."),
     NOT_VALID_REFRESH_TOKEN(400, "리프레시 토큰이 유효하지 않습니다."),
 
