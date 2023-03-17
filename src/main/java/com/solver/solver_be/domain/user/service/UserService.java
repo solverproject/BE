@@ -13,15 +13,13 @@ import com.solver.solver_be.global.security.refreshtoken.RefreshToken;
 import com.solver.solver_be.global.security.refreshtoken.RefreshTokenRepository;
 import com.solver.solver_be.global.security.refreshtoken.TokenDto;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
+
 import javax.servlet.http.HttpServletResponse;
 import java.util.Optional;
 
@@ -62,7 +60,7 @@ public class UserService {
     }
 
     // 로그인
-    @Transactional(readOnly = true)
+    @Transactional
     public ResponseEntity<GlobalResponseDto> login(LoginRequestDto loginRequestDto, HttpServletResponse response) {
         String userEmail = loginRequestDto.getUserEmail();
         String password = loginRequestDto.getPassword();
