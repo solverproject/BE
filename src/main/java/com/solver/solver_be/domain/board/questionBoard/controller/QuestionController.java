@@ -15,7 +15,6 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api")
 public class QuestionController {
 
     private final QuestionService questionService;
@@ -32,20 +31,20 @@ public class QuestionController {
         return questionService.getBoards(userDetails.getUser());
     }
 
-    @GetMapping("/boards/{id}")
+    @GetMapping("/board/{id}")
     public ResponseEntity<GlobalResponseDto> getBoard(@PathVariable Long id,
                                                       @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return questionService.getBoard(id, userDetails.getUser());
     }
 
-    @PutMapping("/boards/{id}")
+    @PutMapping("/board/{id}")
     public ResponseEntity<GlobalResponseDto> updateBoard(@PathVariable Long id,
                                                          @RequestBody QuestionRequestDto questionRequestDto,
                                                          @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return questionService.updateBoard(id, userDetails.getUser(), questionRequestDto);
     }
 
-    @DeleteMapping("/boards/{id}")
+    @DeleteMapping("/board/{id}")
     public ResponseEntity<GlobalResponseDto> deleteBoard(@PathVariable Long id,
                                                          @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return questionService.deleteBoard(id, userDetails.getUser());

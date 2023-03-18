@@ -8,8 +8,12 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 public class QuestionRequestDto {
+    private Long parentBoardId;
+    private Long myBoardId;
     private String title;
     private String contents;
+    private Long x;
+    private Long y;
     private List<String> hashTagList;
 
 }

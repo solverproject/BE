@@ -13,27 +13,36 @@ import java.util.List;
 public class QuestionResponseDto {
 
     private Long id;
+    private Long parentBoardId;
     private String title;
     private String contents;
     private List<String> imageUrlList;
     private List<String> titleList;
+    private Long x;
+    private Long y;
 
     @Builder
-    private QuestionResponseDto(Long id, String title, String contents, List<String> imageUrlList, List<String> titleList) {
+    private QuestionResponseDto(Long id, Long parentBoardId, String title, String contents, List<String> imageUrlList, List<String> titleList, Long x, Long y) {
         this.id = id;
+        this.parentBoardId = parentBoardId;
         this.title = title;
         this.contents = contents;
         this.imageUrlList = imageUrlList;
         this.titleList = titleList;
+        this.x = x;
+        this.y = y;
     }
 
     public static QuestionResponseDto of(QuestionBoard questionBoard, List<String> titleList, List<String> imageUrlList) {
         return QuestionResponseDto.builder()
                 .id(questionBoard.getId())
+                .parentBoardId(questionBoard.getParentBoardId())
                 .title(questionBoard.getTitle())
                 .contents(questionBoard.getContents())
                 .imageUrlList(imageUrlList)
                 .titleList(titleList)
+                .y(questionBoard.getY())
+                .x(questionBoard.getX())
                 .build();
     }
 
