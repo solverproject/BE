@@ -34,17 +34,23 @@ public class QuestionService {
     private final S3Service s3Service;
 
     public ResponseEntity<GlobalResponseDto> createBoard(QuestionRequestDto questionRequestDto, List<MultipartFile> multipartFilelist, User user) throws IOException {
+        QuestionBoard questionBoard = questionBoardRepository.saveAndFlush(QuestionBoard.of(questionRequestDto,user));
 
-        QuestionBoard questionBoard = questionBoardRepository.saveAndFlush(QuestionBoard.of(questionRequestDto.getTitle(), questionRequestDto.getContents(), user));
+        // 2. Dto에서 hashTagList는 HashTagList DB 에 저장.
         List<String> hashTagList = questionRequestDto.getHashTagList();
         for (String hashTag : hashTagList) {
             hashTagRepository.saveAndFlush(HashTag.of(questionBoard, hashTag));
         }
+
+        // 3. 이미지 저장.
         if (multipartFilelist != null) {
             s3Service.upload(multipartFilelist, "static", questionBoard, user);
         }
+
+        // 4. Image 와 title(hashTagList 의 TitleList 값) 반환.
         List<String> imagePathList = ImagePathList(questionBoard);
         List<String> titleList = getTitleList(questionBoard);
+
         return ResponseEntity.ok(GlobalResponseDto.of(ResponseCode.BOARD_UPLOAD_SUCCESS, QuestionResponseDto.of(questionBoard, titleList, imagePathList)));
     }
 
