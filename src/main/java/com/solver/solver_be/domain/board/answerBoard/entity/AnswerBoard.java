@@ -45,4 +45,9 @@ public class AnswerBoard extends TimeStamped {
                 .contents(answerRequestDto.getContents())
                 .build();
     }
+
+    public AnswerBoard updateAnswer(AnswerRequestDto answerRequestDto) {
+        this.contents = answerRequestDto.getContents();
+        return this;
+    }
 }

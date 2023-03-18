@@ -21,6 +21,10 @@ public enum ResponseCode {
     BOARD_DELETE_SUCCESS(200, "질문 삭제 완료되었습니다."),
     FAVORITE_SUCCESS(200, "즐겨찾기 성공했습니다."),
 
+    ANSWER_UPLOAD_SUCCESS(200, "답변등록이 완료되었습니다."),
+    ANSWER_UPDATE_SUCCESS(200, "답변 업데이트 완료되었습니다."),
+    ANSWER_DELETE_SUCCESS(200, "답변 삭제가 완료되엇습니다." ),
+
     // Follow 관련
 
     FOLLOW_SUCCESS(200, "팔로우에 성공했습니다."),
@@ -49,7 +53,9 @@ public enum ResponseCode {
 
     // BOARD 관련
     BOARD_NOT_FOUND(400, "질문을 찾지 못했습니다."),
-    BOARD_UPDATE_FAILED(400, "질문 업데이트에 실패하였습니다.");
+    BOARD_UPDATE_FAILED(400, "질문 업데이트에 실패하였습니다."),
+    ANSWER_NOT_FOUND(400, "답글을 찾지 못했습니다.");
+
 
     private final int statusCode;
     private final String message;
