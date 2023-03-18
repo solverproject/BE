@@ -36,17 +36,17 @@ public class UserController {
         return userService.login(loginRequestDto, response);
     }
 
-    @GetMapping("/kakao/callback")
+    @GetMapping("kakao/callback")
     public ResponseEntity<GlobalResponseDto> kakaoLogin(@RequestParam String code, HttpServletResponse response) throws JsonProcessingException {
         return socialLoginService.socialLogin(kakao, code, null, response);
     }
 
-    @GetMapping("/naver/callback")
+    @GetMapping("naver/callback")
     public ResponseEntity<GlobalResponseDto> naverLogin(@RequestParam String code, @RequestParam String state, HttpServletResponse response) throws JsonProcessingException {
         return socialLoginService.socialLogin(naver, code, state, response);
     }
 
-    @GetMapping("/google/callback")
+    @GetMapping("google/callback")
     public ResponseEntity<GlobalResponseDto> googleLogin(@RequestParam String code, HttpServletResponse response) throws JsonProcessingException {
         return socialLoginService.socialLogin(google, code, null, response);
     }

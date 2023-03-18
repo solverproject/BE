@@ -26,7 +26,6 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
 import java.util.Map;
@@ -66,15 +65,6 @@ public class SocialLoginService {
             refreshTokenRepository.save(newToken);
         }
         jwtUtil.setHeader(response, tokenDto);
-
-        String token = jwtUtil.createToken(socialUser.getUserEmail(), "Access");
-
-        Cookie cookie = new Cookie("token", token.substring(7));
-        cookie.setPath("/");
-        cookie.setHttpOnly(true);
-        cookie.setMaxAge(3600);
-        response.addCookie(cookie);
-
         return ResponseEntity.ok(GlobalResponseDto.of(ResponseCode.LOG_IN_SUCCESS));
 
     }
@@ -116,7 +106,7 @@ public class SocialLoginService {
         return jsonNode.get("access_token").asText();
     }
 
-    // 2. 토큰으로 카카오 API 호출 : "액세스 토큰"으로 "카카오 사용자 정보" 가져오기
+    // 2. 토큰으로 카카오 API 호출 : "액세스 토큰"으로 "카카오 사용자 정보" 가져오기 
     private SocialLoginRequestDto getSocialUserInfo(String vendor, String accessToken) throws JsonProcessingException {
         // HTTP Header 생성
         HttpHeaders headers = new HttpHeaders();
@@ -128,7 +118,7 @@ public class SocialLoginService {
         RestTemplate rt = new RestTemplate();
         ResponseEntity<String> response = rt.exchange(
                 switchVendor(vendor).get("userInfoUri"),
-                HttpMethod.GET,
+                HttpMethod.POST,
                 socialUserInfoRequest,
                 String.class
         );
@@ -137,25 +127,67 @@ public class SocialLoginService {
         String responseBody = response.getBody();
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode jsonNode = objectMapper.readTree(responseBody);
+        System.out.print(jsonNode);
 
         String id = "";
         String email = "";
         String nickname = "";
         switch (vendor) {
             case "kakao":
-                id = jsonNode.get("id").asText();
-                email = jsonNode.get("kakao_account").get("email").asText();
-                nickname = jsonNode.get("properties").get("nickname").asText();
+                if (jsonNode.get("id") != null) {
+                    id = jsonNode.get("id").asText();
+                } else {
+                    log.warn("Failed to get ID from Kakao JSON response.");
+                }
+                if (jsonNode.get("kakao_account") != null && jsonNode.get("kakao_account").get("email") != null) {
+                    email = jsonNode.get("kakao_account").get("email").asText();
+                } else {
+                    log.warn("Failed to get email from Kakao JSON response.");
+                }
+                if (jsonNode.get("properties") != null && jsonNode.get("properties").get("nickname") != null) {
+                    nickname = jsonNode.get("properties").get("nickname").asText();
+                } else {
+                    log.warn("Failed to get nickname from Kakao JSON response.");
+                }
                 break;
             case "google":
-                id = jsonNode.get("sub").asText();
-                email = jsonNode.get("email").asText();
-                nickname = jsonNode.get("name").asText();
+                if (jsonNode.get("sub") != null) {
+                    id = jsonNode.get("sub").asText();
+                } else {
+                    log.warn("Failed to get ID from Google JSON response.");
+                }
+                if (jsonNode.get("email") != null) {
+                    email = jsonNode.get("email").asText();
+                } else {
+                    log.warn("Failed to get email from Google JSON response.");
+                }
+                if (jsonNode.get("name") != null) {
+                    nickname = jsonNode.get("name").asText();
+                } else {
+                    log.warn("Failed to get nickname from Google JSON response.");
+                }
                 break;
             case "naver":
-                id = String.valueOf(jsonNode.get("response").get("id"));
-                email = jsonNode.get("response").get("email").asText();
-                nickname = jsonNode.get("response").get("nickname").asText();
+                if (jsonNode.get("response") != null) {
+                    JsonNode responseNode = jsonNode.get("response");
+                    if (responseNode.get("id") != null) {
+                        id = responseNode.get("id").asText();
+                    } else {
+                        log.warn("Failed to get ID from Naver JSON response.");
+                    }
+                    if (responseNode.get("email") != null) {
+                        email = responseNode.get("email").asText();
+                    } else {
+                        log.warn("Failed to get email from Naver JSON response.");
+                    }
+                    if (responseNode.get("nickname") != null) {
+                        nickname = responseNode.get("nickname").asText();
+                    } else {
+                        log.warn("Failed to get nickname from Naver JSON response.");
+                    }
+                } else {
+                    log.warn("Failed to get response from Naver JSON response.");
+                }
                 break;
         }
         log.info("소셜로그인 사용자 정보: " + id + ", " + nickname + ", " + email);
