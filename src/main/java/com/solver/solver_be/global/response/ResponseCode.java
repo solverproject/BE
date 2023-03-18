@@ -54,7 +54,8 @@ public enum ResponseCode {
     // BOARD 관련
     BOARD_NOT_FOUND(400, "질문을 찾지 못했습니다."),
     BOARD_UPDATE_FAILED(400, "질문 업데이트에 실패하였습니다."),
-    ANSWER_NOT_FOUND(400, "답글을 찾지 못했습니다.");
+    ANSWER_NOT_FOUND(400, "답글을 찾지 못했습니다."),
+    ANSWER_UPDATE_FAILED(400, "답글 업데이트에 실패하였습니다." );
 
 
     private final int statusCode;

@@ -36,6 +36,10 @@ public class AnswerService {
         public ResponseEntity<GlobalResponseDto> updateAnswer(Long id, AnswerRequestDto answerRequestDto, User user) {
 
             AnswerBoard answerBoard = getAnswerBoardById(id);
+
+            if (!answerBoard.getUser().equals(user)) {
+                throw new AnswerBoardException(ResponseCode.ANSWER_UPDATE_FAILED);
+            }
             answerBoard.updateAnswer(answerRequestDto);
             return ResponseEntity.ok(GlobalResponseDto.of(ResponseCode.ANSWER_UPDATE_SUCCESS, AnswerResponseDto.of(answerBoard)));
         }
@@ -44,6 +48,9 @@ public class AnswerService {
         public ResponseEntity<GlobalResponseDto> deleteAnswer(Long id, User user){
 
             AnswerBoard answerBoard = getAnswerBoardById(id);
+            if (!answerBoard.getUser().equals(user)) {
+                throw new AnswerBoardException(ResponseCode.ANSWER_UPDATE_FAILED);
+            }
             answerBoardRepository.deleteById(id);
             return ResponseEntity.ok(GlobalResponseDto.of(ResponseCode.ANSWER_DELETE_SUCCESS));
         }
