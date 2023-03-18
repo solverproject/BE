@@ -106,7 +106,7 @@ public class SocialLoginService {
         return jsonNode.get("access_token").asText();
     }
 
-    // 2. 토큰으로 카카오 API 호출 : "액세스 토큰"으로 "카카오 사용자 정보" 가져오기
+    // 2. 토큰으로 카카오 API 호출 : "액세스 토큰"으로 "카카오 사용자 정보" 가져오기 
     private SocialLoginRequestDto getSocialUserInfo(String vendor, String accessToken) throws JsonProcessingException {
         // HTTP Header 생성
         HttpHeaders headers = new HttpHeaders();
@@ -118,7 +118,7 @@ public class SocialLoginService {
         RestTemplate rt = new RestTemplate();
         ResponseEntity<String> response = rt.exchange(
                 switchVendor(vendor).get("userInfoUri"),
-                HttpMethod.GET,
+                HttpMethod.POST,
                 socialUserInfoRequest,
                 String.class
         );
