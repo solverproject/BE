@@ -127,25 +127,67 @@ public class SocialLoginService {
         String responseBody = response.getBody();
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode jsonNode = objectMapper.readTree(responseBody);
+        System.out.print(jsonNode);
 
         String id = "";
         String email = "";
         String nickname = "";
         switch (vendor) {
             case "kakao":
-                id = jsonNode.get("id").asText();
-                email = jsonNode.get("kakao_account").get("email").asText();
-                nickname = jsonNode.get("properties").get("nickname").asText();
+                if (jsonNode.get("id") != null) {
+                    id = jsonNode.get("id").asText();
+                } else {
+                    log.warn("Failed to get ID from Kakao JSON response.");
+                }
+                if (jsonNode.get("kakao_account") != null && jsonNode.get("kakao_account").get("email") != null) {
+                    email = jsonNode.get("kakao_account").get("email").asText();
+                } else {
+                    log.warn("Failed to get email from Kakao JSON response.");
+                }
+                if (jsonNode.get("properties") != null && jsonNode.get("properties").get("nickname") != null) {
+                    nickname = jsonNode.get("properties").get("nickname").asText();
+                } else {
+                    log.warn("Failed to get nickname from Kakao JSON response.");
+                }
                 break;
             case "google":
-                id = jsonNode.get("sub").asText();
-                email = jsonNode.get("email").asText();
-                nickname = jsonNode.get("name").asText();
+                if (jsonNode.get("sub") != null) {
+                    id = jsonNode.get("sub").asText();
+                } else {
+                    log.warn("Failed to get ID from Google JSON response.");
+                }
+                if (jsonNode.get("email") != null) {
+                    email = jsonNode.get("email").asText();
+                } else {
+                    log.warn("Failed to get email from Google JSON response.");
+                }
+                if (jsonNode.get("name") != null) {
+                    nickname = jsonNode.get("name").asText();
+                } else {
+                    log.warn("Failed to get nickname from Google JSON response.");
+                }
                 break;
             case "naver":
-                id = String.valueOf(jsonNode.get("response").get("id"));
-                email = jsonNode.get("response").get("email").asText();
-                nickname = jsonNode.get("response").get("nickname").asText();
+                if (jsonNode.get("response") != null) {
+                    JsonNode responseNode = jsonNode.get("response");
+                    if (responseNode.get("id") != null) {
+                        id = responseNode.get("id").asText();
+                    } else {
+                        log.warn("Failed to get ID from Naver JSON response.");
+                    }
+                    if (responseNode.get("email") != null) {
+                        email = responseNode.get("email").asText();
+                    } else {
+                        log.warn("Failed to get email from Naver JSON response.");
+                    }
+                    if (responseNode.get("nickname") != null) {
+                        nickname = responseNode.get("nickname").asText();
+                    } else {
+                        log.warn("Failed to get nickname from Naver JSON response.");
+                    }
+                } else {
+                    log.warn("Failed to get response from Naver JSON response.");
+                }
                 break;
         }
         log.info("소셜로그인 사용자 정보: " + id + ", " + nickname + ", " + email);
