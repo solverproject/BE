@@ -1,5 +1,6 @@
 package com.solver.solver_be.domain.board.questionBoard.controller;
 
+import com.solver.solver_be.domain.board.questionBoard.dto.KeywordRequestDto;
 import com.solver.solver_be.domain.board.questionBoard.dto.QuestionRequestDto;
 import com.solver.solver_be.domain.board.questionBoard.service.QuestionService;
 import com.solver.solver_be.global.response.GlobalResponseDto;
@@ -48,5 +49,11 @@ public class QuestionController {
     public ResponseEntity<GlobalResponseDto> deleteBoard(@PathVariable Long id,
                                                          @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return questionService.deleteBoard(id, userDetails.getUser());
+    }
+
+    @GetMapping("/keyword")
+    public ResponseEntity<GlobalResponseDto> getKeyWordBoard(@RequestBody KeywordRequestDto keywordRequestDto,
+                                                             @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return questionService.getKeyWordBoard(keywordRequestDto, userDetails.getUser());
     }
 }
