@@ -25,6 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -38,7 +39,7 @@ public class QuestionService {
     private final S3Service s3Service;
 
     public ResponseEntity<GlobalResponseDto> createBoard(QuestionRequestDto questionRequestDto, List<MultipartFile> multipartFilelist, User user) throws IOException {
-        QuestionBoard questionBoard = questionBoardRepository.saveAndFlush(QuestionBoard.of(questionRequestDto,user));
+        QuestionBoard questionBoard = questionBoardRepository.saveAndFlush(QuestionBoard.of(questionRequestDto, user));
 
         // 2. Dto에서 hashTagList는 HashTagList DB 에 저장.
         List<String> hashTagList = questionRequestDto.getHashTagList();
@@ -104,6 +105,7 @@ public class QuestionService {
     }
 
     public ResponseEntity<GlobalResponseDto> deleteBoard(Long id, User user) {
+
         QuestionBoard questionBoard = getQuestionBoardById(id);
 
         if (!questionBoard.getUser().equals(user)) {
@@ -121,6 +123,13 @@ public class QuestionService {
         imageRepository.deleteAllByQuestionBoardId(questionBoard.getId());
         hashTagRepository.deleteAllByQuestionBoardId(questionBoard.getId());
         questionBoardRepository.deleteById(questionBoard.getId());
+
+        Optional<List<QuestionBoard>> checkIdList = questionBoardRepository.findByParentBoardId(id);
+        if (checkIdList.isPresent()) {
+            for (QuestionBoard questionBoard1 : checkIdList.get()) {
+                deleteBoard(questionBoard1.getId(), user);
+            }
+        }
         return ResponseEntity.ok(GlobalResponseDto.of(ResponseCode.BOARD_DELETE_SUCCESS));
     }
 
