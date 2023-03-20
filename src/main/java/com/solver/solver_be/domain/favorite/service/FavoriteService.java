@@ -28,14 +28,14 @@ public class FavoriteService {
 
         boolean favoritePush = false;
 
-        Optional<Favorite> favorite = favoriteRepository.findByQuestionBoardAndUserId(id, user.getId());
+        Optional<Favorite> favorite = favoriteRepository.findByQuestionBoardIdAndUserId(id, user.getId());
 
         if (favorite.isEmpty()) {
             favoriteRepository.saveAndFlush(Favorite.of(questionBoard, user));
             return ResponseEntity.ok(GlobalResponseDto.of(ResponseCode.FAVORITE_SUCCESS, favoritePush));
 
         }else {
-            favoriteRepository.deleteByByQuestionBoardAndUserId(id, user.getId());
+            favoriteRepository.deleteByQuestionBoardIdAndUserId(id, user.getId());
             return ResponseEntity.ok(GlobalResponseDto.of(ResponseCode.FAVORITE_SUCCESS, favoritePush));
         }
     }

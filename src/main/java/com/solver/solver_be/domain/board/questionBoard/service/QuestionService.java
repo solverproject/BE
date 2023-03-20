@@ -7,7 +7,6 @@ import com.solver.solver_be.domain.board.questionBoard.dto.QuestionRequestDto;
 import com.solver.solver_be.domain.board.questionBoard.dto.QuestionResponseDto;
 import com.solver.solver_be.domain.board.questionBoard.entity.QuestionBoard;
 import com.solver.solver_be.domain.board.questionBoard.repository.QuestionBoardRepository;
-import com.solver.solver_be.domain.favorite.repository.FavoriteRepository;
 import com.solver.solver_be.domain.hashtag.entity.HashTag;
 import com.solver.solver_be.domain.hashtag.repository.HashTagRepository;
 import com.solver.solver_be.domain.image.entity.Image;
@@ -36,7 +35,6 @@ public class QuestionService {
     private final AnswerBoardRepository answerBoardRepository;
     private final ImageRepository imageRepository;
     private final HashTagRepository hashTagRepository;
-    private final FavoriteRepository favoriteRepository;
     private final S3Service s3Service;
 
     public ResponseEntity<GlobalResponseDto> createBoard(QuestionRequestDto questionRequestDto, List<MultipartFile> multipartFilelist, User user) throws IOException {
