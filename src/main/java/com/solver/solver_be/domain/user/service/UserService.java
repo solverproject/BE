@@ -1,6 +1,7 @@
 package com.solver.solver_be.domain.user.service;
 
 import com.solver.solver_be.domain.user.dto.LoginRequestDto;
+import com.solver.solver_be.domain.user.dto.LoginResponseDto;
 import com.solver.solver_be.domain.user.dto.SignupRequestDto;
 import com.solver.solver_be.domain.user.entity.User;
 import com.solver.solver_be.domain.user.entity.UserRoleEnum;
@@ -86,7 +87,7 @@ public class UserService {
         }
 
         jwtUtil.setHeader(response, tokenDto);
-        return ResponseEntity.ok(GlobalResponseDto.of(ResponseCode.LOG_IN_SUCCESS,user.getNickname()));
+        return ResponseEntity.ok(GlobalResponseDto.of(ResponseCode.LOG_IN_SUCCESS, LoginResponseDto.of(user)));
     }
 
 }

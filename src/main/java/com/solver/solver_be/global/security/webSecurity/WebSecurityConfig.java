@@ -63,7 +63,12 @@ public class WebSecurityConfig {
 
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
-        http.authorizeRequests().antMatchers("/api/users/**").permitAll()
+        http.authorizeRequests()
+                .antMatchers("/signup").permitAll()
+                .antMatchers("/login").permitAll()
+                .antMatchers("/kakao/callback").permitAll()
+                .antMatchers("/naver/callback").permitAll()
+                .antMatchers("/google/callback").permitAll()
                 .anyRequest().authenticated()
                 .and().exceptionHandling().authenticationEntryPoint(new CustomAuthenticationEntryPoint())
                 .and().addFilterBefore(new JwtAuthFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class);
