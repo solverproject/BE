@@ -3,6 +3,7 @@ package com.solver.solver_be.domain.board.questionBoard.service;
 import com.solver.solver_be.domain.board.answerBoard.dto.AnswerResponseDto;
 import com.solver.solver_be.domain.board.answerBoard.entity.AnswerBoard;
 import com.solver.solver_be.domain.board.answerBoard.repository.AnswerBoardRepository;
+import com.solver.solver_be.domain.board.questionBoard.dto.KeywordRequestDto;
 import com.solver.solver_be.domain.board.questionBoard.dto.QuestionRequestDto;
 import com.solver.solver_be.domain.board.questionBoard.dto.QuestionResponseDto;
 import com.solver.solver_be.domain.board.questionBoard.entity.QuestionBoard;
@@ -38,6 +39,7 @@ public class QuestionService {
     private final HashTagRepository hashTagRepository;
     private final S3Service s3Service;
 
+    @Transactional
     public ResponseEntity<GlobalResponseDto> createBoard(QuestionRequestDto questionRequestDto, List<MultipartFile> multipartFilelist, User user) throws IOException {
         QuestionBoard questionBoard = questionBoardRepository.saveAndFlush(QuestionBoard.of(questionRequestDto, user));
 
@@ -87,6 +89,7 @@ public class QuestionService {
 
     }
 
+    @Transactional
     public ResponseEntity<GlobalResponseDto> updateBoard(Long id, User user, QuestionRequestDto questionRequestDto) {
 
         QuestionBoard questionBoard = getQuestionBoardById(id);
@@ -104,6 +107,7 @@ public class QuestionService {
         return ResponseEntity.ok(GlobalResponseDto.of(ResponseCode.BOARD_UPDATE_SUCCESS, questionResponseDto));
     }
 
+    @Transactional
     public ResponseEntity<GlobalResponseDto> deleteBoard(Long id, User user) {
 
         QuestionBoard questionBoard = getQuestionBoardById(id);
@@ -133,6 +137,14 @@ public class QuestionService {
         return ResponseEntity.ok(GlobalResponseDto.of(ResponseCode.BOARD_DELETE_SUCCESS));
     }
 
+    @Transactional
+    public ResponseEntity<GlobalResponseDto> getKeyWordBoard(KeywordRequestDto keywordRequestDto, User user) {
+        String keyword = keywordRequestDto.getKeyword();
+        List<QuestionBoard> questionBoardList = questionBoardRepository.findQuestionBoardListByContentsContains(keyword);
+        return ResponseEntity.ok(GlobalResponseDto.of(ResponseCode.BOARD_UPDATE_SUCCESS,questionBoardList));
+    }
+
+    // ==================================== METHOD =======================================//
     // 메서드명을 한번 다시 고민하는 것이 좋을 것 같습니다.
     private List<String> ImagePathList(QuestionBoard questionBoard) {
 
