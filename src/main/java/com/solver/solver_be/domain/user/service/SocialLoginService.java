@@ -3,6 +3,7 @@ package com.solver.solver_be.domain.user.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.solver.solver_be.domain.user.dto.LoginResponseDto;
 import com.solver.solver_be.domain.user.dto.SocialLoginRequestDto;
 import com.solver.solver_be.domain.user.dto.SocialLoginVendor;
 import com.solver.solver_be.domain.user.entity.User;
@@ -65,7 +66,7 @@ public class SocialLoginService {
             refreshTokenRepository.save(newToken);
         }
         jwtUtil.setHeader(response, tokenDto);
-        return ResponseEntity.ok(GlobalResponseDto.of(ResponseCode.LOG_IN_SUCCESS));
+        return ResponseEntity.ok(GlobalResponseDto.of(ResponseCode.LOG_IN_SUCCESS, LoginResponseDto.of(socialUser)));
 
     }
 

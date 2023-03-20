@@ -1,9 +1,13 @@
 package com.solver.solver_be.domain.board.questionBoard.service;
 
+import com.solver.solver_be.domain.board.answerBoard.dto.AnswerResponseDto;
+import com.solver.solver_be.domain.board.answerBoard.entity.AnswerBoard;
+import com.solver.solver_be.domain.board.answerBoard.repository.AnswerBoardRepository;
 import com.solver.solver_be.domain.board.questionBoard.dto.QuestionRequestDto;
 import com.solver.solver_be.domain.board.questionBoard.dto.QuestionResponseDto;
 import com.solver.solver_be.domain.board.questionBoard.entity.QuestionBoard;
 import com.solver.solver_be.domain.board.questionBoard.repository.QuestionBoardRepository;
+import com.solver.solver_be.domain.favorite.repository.FavoriteRepository;
 import com.solver.solver_be.domain.hashtag.entity.HashTag;
 import com.solver.solver_be.domain.hashtag.repository.HashTagRepository;
 import com.solver.solver_be.domain.image.entity.Image;
@@ -29,8 +33,10 @@ import java.util.List;
 public class QuestionService {
 
     private final QuestionBoardRepository questionBoardRepository;
+    private final AnswerBoardRepository answerBoardRepository;
     private final ImageRepository imageRepository;
     private final HashTagRepository hashTagRepository;
+    private final FavoriteRepository favoriteRepository;
     private final S3Service s3Service;
 
     public ResponseEntity<GlobalResponseDto> createBoard(QuestionRequestDto questionRequestDto, List<MultipartFile> multipartFilelist, User user) throws IOException {
@@ -63,7 +69,8 @@ public class QuestionService {
         for (QuestionBoard questionBoard : questionBoardList) {
             List<String> imagePathList = ImagePathList(questionBoard);
             List<String> titleList = getTitleList(questionBoard);
-            responseDtoList.add(QuestionResponseDto.of(questionBoard, titleList, imagePathList));
+            List<AnswerResponseDto> answerResponseDtoList = getAnswerResponseDtoList(questionBoard);
+            responseDtoList.add(QuestionResponseDto.of(questionBoard, titleList, imagePathList, answerResponseDtoList));
         }
         return ResponseEntity.ok(GlobalResponseDto.of(ResponseCode.BOARD_LIST_GET_SUCCESS, responseDtoList));
 
@@ -75,7 +82,8 @@ public class QuestionService {
         QuestionBoard questionBoard = getQuestionBoardById(id);
         List<String> imagePathList = ImagePathList(questionBoard);
         List<String> titleList = getTitleList(questionBoard);
-        QuestionResponseDto questionResponseDto = QuestionResponseDto.of(questionBoard, titleList, imagePathList);
+        List<AnswerResponseDto> answerResponseDtoList = getAnswerResponseDtoList(questionBoard);
+        QuestionResponseDto questionResponseDto = QuestionResponseDto.of(questionBoard, titleList, imagePathList, answerResponseDtoList);
         return ResponseEntity.ok(GlobalResponseDto.of(ResponseCode.BOARD_LIST_GET_SUCCESS, questionResponseDto));
 
     }
@@ -111,6 +119,7 @@ public class QuestionService {
             s3Service.deleteFile(filename);
         }
 
+        answerBoardRepository.deleteAllByQuestionBoardId(questionBoard.getId());
         imageRepository.deleteAllByQuestionBoardId(questionBoard.getId());
         hashTagRepository.deleteAllByQuestionBoardId(questionBoard.getId());
         questionBoardRepository.deleteById(questionBoard.getId());
@@ -140,5 +149,15 @@ public class QuestionService {
 
     private QuestionBoard getQuestionBoardById(Long id) {
         return questionBoardRepository.findById(id).orElseThrow(() -> new QuestionBoardException(ResponseCode.BOARD_NOT_FOUND));
+    }
+
+    private List<AnswerResponseDto> getAnswerResponseDtoList(QuestionBoard questionBoard) {
+
+        List<AnswerBoard> answerBoardList = answerBoardRepository.findAllByQuestionBoardId(questionBoard.getId());
+        List<AnswerResponseDto> answerResponseDtoList = new ArrayList<>();
+        for (AnswerBoard answerBoard : answerBoardList) {
+            answerResponseDtoList.add(AnswerResponseDto.of(answerBoard));
+        }
+        return answerResponseDtoList;
     }
 }
