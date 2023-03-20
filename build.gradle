@@ -1,7 +1,14 @@
+buildscript {
+    ext {
+        queryDslVersion = "5.0.0"
+    }
+}
+
 plugins {
     id 'java'
     id 'org.springframework.boot' version '2.7.9'
     id 'io.spring.dependency-management' version '1.0.15.RELEASE'
+    id 'com.ewerk.gradle.plugins.querydsl' version '1.0.10'
 }
 
 group = 'com.solver'
@@ -19,35 +26,58 @@ repositories {
 }
 
 dependencies {
-// Spring Data JPA 관련 의존성 제공
+    // Spring Data JPA 관련 의존성 제공
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-// 검증(validation) 관련 의존성 제공
+    // 검증(validation) 관련 의존성 제공
     implementation 'org.springframework.boot:spring-boot-starter-validation'
-// Spring MVC 관련 의존성 제공
+    // Spring MVC 관련 의존성 제공
     implementation 'org.springframework.boot:spring-boot-starter-web'
-// Spring Security 관련 의존성 제공
+    // Spring Security 관련 의존성 제공
     implementation 'org.springframework.boot:spring-boot-starter-security'
-// boilerplate 코드를 줄여주는 Lombok 라이브러리 제공
+    // boilerplate 코드를 줄여주는 Lombok 라이브러리 제공
     compileOnly 'org.projectlombok:lombok'
-// 개발 및 테스트용으로 사용되는 H2 in-memory 데이터베이스 제공
+    // 개발 및 테스트용으로 사용되는 H2 in-memory 데이터베이스 제공
     runtimeOnly 'com.h2database:h2'
-// 런타임 시 MySQL 드라이버 제공
+    // 런타임 시 MySQL 드라이버 제공
     runtimeOnly 'com.mysql:mysql-connector-j'
-// Lombok 어노테이션 프로세싱 제공
+    // Lombok 어노테이션 프로세싱 제공
     annotationProcessor 'org.projectlombok:lombok'
-// 테스트용 라이브러리 제공
+    // 테스트용 라이브러리 제공
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
-// JSON Web Token (JWT) 라이브러리 제공
+    // JSON Web Token (JWT) 라이브러리 제공
     compileOnly group: 'io.jsonwebtoken', name: 'jjwt-api', version: '0.11.2'
     runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-impl', version: '0.11.2'
     runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: '0.11.2'
-// Amazon Web Services (AWS) 관련 라이브러리 제공
+    // Amazon Web Services (AWS) 관련 라이브러리 제공
     implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
-// OAuth2 클라이언트 라이브러리 제공
+    // OAuth2 클라이언트 라이브러리 제공
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+    //querydsl 관련 의존성 주입
+    implementation "com.querydsl:querydsl-jpa:${queryDslVersion}"
+    implementation "com.querydsl:querydsl-apt:${queryDslVersion}"
 }
 
 tasks.named('test') {
     useJUnitPlatform()
+}
+
+def querydslDir = "$buildDir/generated/querydsl"
+
+querydsl {
+    library = "com.querydsl:querydsl-apt"
+    jpa = true
+    querydslSourcesDir = querydslDir
+}
+sourceSets {
+    main.java.srcDir querydslDir
+}
+compileQuerydsl {
+    options.annotationProcessorPath = configurations.querydsl
+}
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+    querydsl.extendsFrom compileClasspath
 }
