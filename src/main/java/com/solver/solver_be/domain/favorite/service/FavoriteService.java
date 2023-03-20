@@ -13,6 +13,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class FavoriteService {
@@ -23,9 +25,19 @@ public class FavoriteService {
     @Transactional
     public ResponseEntity<GlobalResponseDto> createFavorite(Long id, User user) {
         QuestionBoard questionBoard = getQuestionBoardById(id);
-        favoriteRepository.saveAndFlush(Favorite.of(questionBoard, user));
-        return ResponseEntity.ok(GlobalResponseDto.of(ResponseCode.FAVORITE_SUCCESS));
 
+        boolean favoritePush = false;
+
+        Optional<Favorite> favorite = favoriteRepository.findByQuestionBoardIdAndUserId(id, user.getId());
+
+        if (favorite.isEmpty()) {
+            favoriteRepository.saveAndFlush(Favorite.of(questionBoard, user));
+            return ResponseEntity.ok(GlobalResponseDto.of(ResponseCode.FAVORITE_SUCCESS, favoritePush));
+
+        }else {
+            favoriteRepository.deleteByQuestionBoardIdAndUserId(id, user.getId());
+            return ResponseEntity.ok(GlobalResponseDto.of(ResponseCode.FAVORITE_SUCCESS, favoritePush));
+        }
     }
 
     private QuestionBoard getQuestionBoardById(Long id) {
