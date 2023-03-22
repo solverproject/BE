@@ -20,11 +20,12 @@ public class QuestionController {
 
     private final QuestionService questionService;
 
-    @PostMapping("/boards")
-    public ResponseEntity<GlobalResponseDto> createBoard(@RequestPart(value = "data") QuestionRequestDto questionRequestDto,
+    @PostMapping("/boards/{id}")
+    public ResponseEntity<GlobalResponseDto> createBoard(@PathVariable Long id,
+                                                         @RequestPart(value = "data") QuestionRequestDto questionRequestDto,
                                                          @RequestPart(value = "file") List<MultipartFile> multipartFilelist,
                                                          @AuthenticationPrincipal UserDetailsImpl userDetails) throws IOException {
-        return questionService.createBoard(questionRequestDto, multipartFilelist, userDetails.getUser());
+        return questionService.createBoard(id, questionRequestDto, multipartFilelist, userDetails.getUser());
     }
 
     @GetMapping("/boards")

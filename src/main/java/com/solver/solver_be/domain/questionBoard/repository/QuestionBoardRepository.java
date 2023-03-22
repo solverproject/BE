@@ -8,5 +8,6 @@ import java.util.Optional;
 
 public interface QuestionBoardRepository extends JpaRepository<QuestionBoard, Long>, CustomQuestionBoardRepository {
     List<QuestionBoard> findAllByOrderByCreatedAtDesc();
+    List<QuestionBoard> findAllByMindMapId(Long mindMapId);
     Optional<List<QuestionBoard>> findByParentBoardId(Long id);
 }
