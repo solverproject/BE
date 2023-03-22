@@ -1,5 +1,6 @@
 package com.solver.solver_be.domain.questionBoard.entity;
 
+import com.solver.solver_be.domain.mindmap.entity.MindMap;
 import com.solver.solver_be.domain.questionBoard.dto.QuestionRequestDto;
 import com.solver.solver_be.domain.user.entity.User;
 import com.solver.solver_be.global.util.TimeStamped;
@@ -36,6 +37,10 @@ public class QuestionBoard extends TimeStamped {
     @ManyToOne
     @JoinColumn(name = "USER_ID", nullable = false)
     private User user;
+
+    @ManyToOne
+    @JoinColumn(name = "MINDMAP_ID", nullable = false)
+    private MindMap mindMap;
 
     @Builder
     private QuestionBoard(Long myBoardId, Long parentBoardId, String title, String contents, Long x, Long y, User user) {
