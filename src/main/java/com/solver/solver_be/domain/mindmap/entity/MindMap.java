@@ -44,4 +44,11 @@ public class MindMap {
                 .user(user)
                 .build();
     }
+
+    public static MindMap of(WorkSpace workSpace, User user){
+        return MindMap.builder()
+                .workSpace(workSpace)
+                .user(user)
+                .build();
+    }
 }

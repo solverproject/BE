@@ -43,7 +43,7 @@ public class QuestionBoard extends TimeStamped {
     private MindMap mindMap;
 
     @Builder
-    private QuestionBoard(Long myBoardId, Long parentBoardId, String title, String contents, Long x, Long y, User user) {
+    private QuestionBoard(Long myBoardId, Long parentBoardId, String title, String contents, Long x, Long y, User user, MindMap mindMap) {
         this.title = title;
         this.contents = contents;
         this.parentBoardId = parentBoardId;
@@ -51,6 +51,7 @@ public class QuestionBoard extends TimeStamped {
         this.user = user;
         this.x = x;
         this.y = y;
+        this.mindMap = mindMap;
     }
 
     // 이 부분을 나중에 QuestionBoardDto 로 받는 부분으로 고치면 좋을 듯 합니다.
@@ -62,6 +63,18 @@ public class QuestionBoard extends TimeStamped {
                 .myBoardId(questionRequestDto.getMyBoardId())
                 .x(questionRequestDto.getX())
                 .y(questionRequestDto.getY())
+                .user(user)
+                .build();
+    }
+
+
+    public static QuestionBoard of(MindMap mindMap, User user) {
+        return builder()
+                .parentBoardId(0L)
+                .myBoardId(1L)
+                .x(0L)
+                .y(0L)
+                .mindMap(mindMap)
                 .user(user)
                 .build();
     }
