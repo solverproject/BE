@@ -1,6 +1,6 @@
 package com.solver.solver_be.domain.hashtag.entity;
 
-import com.solver.solver_be.domain.board.questionBoard.entity.QuestionBoard;
+import com.solver.solver_be.domain.questionBoard.entity.QuestionBoard;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
