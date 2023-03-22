@@ -4,7 +4,7 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.PutObjectRequest;
-import com.solver.solver_be.domain.board.questionBoard.entity.QuestionBoard;
+import com.solver.solver_be.domain.questionBoard.entity.QuestionBoard;
 import com.solver.solver_be.domain.image.entity.Image;
 import com.solver.solver_be.domain.image.repository.ImageRepository;
 import com.solver.solver_be.domain.user.entity.User;

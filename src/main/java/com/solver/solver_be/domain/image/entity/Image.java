@@ -1,6 +1,6 @@
 package com.solver.solver_be.domain.image.entity;
 
-import com.solver.solver_be.domain.board.questionBoard.entity.QuestionBoard;
+import com.solver.solver_be.domain.questionBoard.entity.QuestionBoard;
 import com.solver.solver_be.domain.user.entity.User;
 import com.solver.solver_be.global.util.TimeStamped;
 import lombok.AccessLevel;
