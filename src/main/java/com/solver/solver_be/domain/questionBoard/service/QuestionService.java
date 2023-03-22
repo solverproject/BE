@@ -3,6 +3,8 @@ package com.solver.solver_be.domain.questionBoard.service;
 import com.solver.solver_be.domain.answerBoard.dto.AnswerResponseDto;
 import com.solver.solver_be.domain.answerBoard.entity.AnswerBoard;
 import com.solver.solver_be.domain.answerBoard.repository.AnswerBoardRepository;
+import com.solver.solver_be.domain.mindmap.entity.MindMap;
+import com.solver.solver_be.domain.mindmap.repository.MindMapRepository;
 import com.solver.solver_be.domain.questionBoard.dto.KeywordRequestDto;
 import com.solver.solver_be.domain.questionBoard.dto.QuestionRequestDto;
 import com.solver.solver_be.domain.questionBoard.dto.QuestionResponseDto;
@@ -35,13 +37,16 @@ public class QuestionService {
 
     private final QuestionBoardRepository questionBoardRepository;
     private final AnswerBoardRepository answerBoardRepository;
+    private final MindMapRepository mindMapRepository;
     private final ImageRepository imageRepository;
     private final HashTagRepository hashTagRepository;
     private final S3Service s3Service;
 
     @Transactional
-    public ResponseEntity<GlobalResponseDto> createBoard(QuestionRequestDto questionRequestDto, List<MultipartFile> multipartFilelist, User user) throws IOException {
-        QuestionBoard questionBoard = questionBoardRepository.saveAndFlush(QuestionBoard.of(questionRequestDto, user));
+    public ResponseEntity<GlobalResponseDto> createBoard(Long id, QuestionRequestDto questionRequestDto, List<MultipartFile> multipartFilelist, User user) throws IOException {
+
+        MindMap mindMap = getMindMapById(id);
+        QuestionBoard questionBoard = questionBoardRepository.saveAndFlush(QuestionBoard.of(questionRequestDto, user, mindMap));
 
         // 2. Dto에서 hashTagList는 HashTagList DB 에 저장.
         List<String> hashTagList = questionRequestDto.getHashTagList();
@@ -141,7 +146,7 @@ public class QuestionService {
     public ResponseEntity<GlobalResponseDto> getKeyWordBoard(KeywordRequestDto keywordRequestDto, User user) {
         String keyword = keywordRequestDto.getKeyword();
         List<QuestionBoard> questionBoardList = questionBoardRepository.findQuestionBoardListByContentsContains(keyword);
-        return ResponseEntity.ok(GlobalResponseDto.of(ResponseCode.BOARD_UPDATE_SUCCESS,questionBoardList));
+        return ResponseEntity.ok(GlobalResponseDto.of(ResponseCode.BOARD_UPDATE_SUCCESS, questionBoardList));
     }
 
     // ==================================== METHOD =======================================//
@@ -178,5 +183,11 @@ public class QuestionService {
             answerResponseDtoList.add(AnswerResponseDto.of(answerBoard));
         }
         return answerResponseDtoList;
+    }
+
+    private MindMap getMindMapById(Long id) {
+        return mindMapRepository.findById(id).orElseThrow(
+                () -> new QuestionBoardException(ResponseCode.MINDMAP_NOT_FOUND)
+        );
     }
 }

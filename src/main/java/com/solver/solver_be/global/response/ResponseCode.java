@@ -32,6 +32,12 @@ public enum ResponseCode {
     // Token 관련
     TOKEN_UPDATE_SUCCESS(200, "토큰이 업데이트되었습니다."),
 
+    // MindMap 관련
+    MINDMAP_UPLODAD_SUCCESS(200, "마인드 맵이 생성 되었습니다." ),
+    MINDMAP_CHANGE_SUCCESS(200, "마인드 맵이 변경 되었습니다." ),
+    MINDMAP_UPDATE_SUCCESS(200, "마인드 맵 제목이 수정 되었습니다." ),
+    MINDMAP_DELETE_SUCCESS(200, "마인드 맵이 삭제 되었습니다." ),
+
     /*============================ FAIL ================================*/
 //Global
     NOT_VALID_REQUEST(400, "유효하지 않은 요청입니다."),
@@ -53,7 +59,14 @@ public enum ResponseCode {
     BOARD_NOT_FOUND(400, "질문을 찾을 수 없습니다."),
     BOARD_UPDATE_FAILED(400, "질문 수정에 실패했습니다."),
     ANSWER_NOT_FOUND(400, "답변을 찾을 수 없습니다."),
-    ANSWER_UPDATE_FAILED(400, "답변 수정에 실패했습니다.");
+    ANSWER_UPDATE_FAILED(400, "답변 수정에 실패했습니다."),
+
+    // MindMap 관련
+    MINDMAP_NOT_FOUND(400, "마인드 맵을 찾을 수 없습니다." ),
+    MINDMAP_UPDATE_FAILED(400, "본인의 마인드 맵이 아닙니다." ),
+
+    // WorkSpace 관련
+    WORKSPACE_NOT_FOUND(400, "워크스페이스를 찾을 수 없습니다." );
 
     private final int statusCode;
     private final String message;
