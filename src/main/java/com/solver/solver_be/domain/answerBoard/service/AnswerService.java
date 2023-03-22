@@ -55,6 +55,7 @@ public class AnswerService {
             return ResponseEntity.ok(GlobalResponseDto.of(ResponseCode.ANSWER_DELETE_SUCCESS));
         }
 
+        // ==================================== METHOD =======================================//
         private QuestionBoard getQuestionBoardById(Long id) {
                 return questionBoardRepository.findById(id).orElseThrow(() -> new AnswerBoardException(ResponseCode.BOARD_NOT_FOUND));
         }
