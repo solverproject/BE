@@ -67,6 +67,7 @@ public class WorkSpaceService {
         }
 
         return ResponseEntity.ok(GlobalResponseDto.of(ResponseCode.WORKSPACE_GET_SUCCESS, WorkSpaceResponseDto.of(workSpace, mindMapResponseDtoList)));
+
     }
 
 
