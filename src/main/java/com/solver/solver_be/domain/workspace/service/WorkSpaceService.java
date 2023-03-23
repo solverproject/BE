@@ -6,7 +6,6 @@ import com.solver.solver_be.domain.mindmap.dto.MindMapResponseDto;
 import com.solver.solver_be.domain.mindmap.entity.MindMap;
 import com.solver.solver_be.domain.mindmap.repository.MindMapRepository;
 import com.solver.solver_be.domain.questionBoard.dto.QuestionBoardResponseDto;
-import com.solver.solver_be.domain.questionBoard.dto.QuestionRequestDto;
 import com.solver.solver_be.domain.questionBoard.dto.QuestionResponseDto;
 import com.solver.solver_be.domain.questionBoard.entity.QuestionBoard;
 import com.solver.solver_be.domain.questionBoard.repository.QuestionBoardRepository;
@@ -15,7 +14,6 @@ import com.solver.solver_be.domain.workspace.dto.WorkSpaceRequestDto;
 import com.solver.solver_be.domain.workspace.dto.WorkSpaceResponseDto;
 import com.solver.solver_be.domain.workspace.entity.WorkSpace;
 import com.solver.solver_be.domain.workspace.repository.WorkSpaceRepository;
-import com.solver.solver_be.global.exception.exceptionType.QuestionBoardException;
 import com.solver.solver_be.global.exception.exceptionType.WorkSpaceException;
 import com.solver.solver_be.global.response.GlobalResponseDto;
 import com.solver.solver_be.global.response.ResponseCode;
@@ -52,7 +50,7 @@ public class WorkSpaceService {
     public ResponseEntity<GlobalResponseDto> getWorkSpace(Long id, User user) {
 
         WorkSpace workSpace = workSpaceRepository.findById(id).orElseThrow(
-                () -> new WorkSpaceException(ResponseCode.BOARD_NOT_FOUND)
+                () -> new WorkSpaceException(ResponseCode.WORKSPACE_NOT_FOUND)
         );
 
         List<MindMap> mindMapList = mindMapRepository.findAllByWorkSpaceId(id);
@@ -68,7 +66,7 @@ public class WorkSpaceService {
             mindMapResponseDtoList.add(MindMapResponseDto.of(mindMap, questionBoardResponseDtoList));
         }
 
-        return ResponseEntity.ok(GlobalResponseDto.of(ResponseCode.BOARD_LIST_GET_SUCCESS, WorkSpaceResponseDto.of(workSpace, mindMapResponseDtoList)));
+        return ResponseEntity.ok(GlobalResponseDto.of(ResponseCode.WORKSPACE_GET_SUCCESS, WorkSpaceResponseDto.of(workSpace, mindMapResponseDtoList)));
     }
 
 
