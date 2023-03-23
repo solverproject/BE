@@ -22,8 +22,8 @@ public class WorkSpaceController {
     }
 
     @GetMapping("/workSpace/{id}")
-    public ResponseEntity<GlobalResponseDto> changeWorkSpace(@PathVariable Long id,
+    public ResponseEntity<GlobalResponseDto> getWorkSpace(@PathVariable Long id,
                                                              @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        return workSpaceService.changeWorkSpace(id, userDetails.getUser());
+        return workSpaceService.getWorkSpace(id, userDetails.getUser());
     }
 }

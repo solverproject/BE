@@ -1,9 +1,6 @@
 package com.solver.solver_be.global.exception;
 
-import com.solver.solver_be.global.exception.exceptionType.GlobalException;
-import com.solver.solver_be.global.exception.exceptionType.QuestionBoardException;
-import com.solver.solver_be.global.exception.exceptionType.S3Exception;
-import com.solver.solver_be.global.exception.exceptionType.UserException;
+import com.solver.solver_be.global.exception.exceptionType.*;
 import com.solver.solver_be.global.response.GlobalResponseDto;
 import com.solver.solver_be.global.response.ResponseCode;
 import lombok.extern.slf4j.Slf4j;
@@ -25,6 +22,7 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest()
                 .body(GlobalResponseDto.of(responseCode));
     }
+    // QuestionBoardException Handler
     @ExceptionHandler(QuestionBoardException.class)
     public ResponseEntity<GlobalResponseDto> handleQuestionBoardException(QuestionBoardException e) {
         ResponseCode responseCode = e.getStatusCode();
@@ -32,7 +30,14 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest()
                 .body(GlobalResponseDto.of(responseCode));
     }
-
+    // WorkSpaceException Handler
+    @ExceptionHandler(QuestionBoardException.class)
+    public ResponseEntity<GlobalResponseDto> handleWorkSpaceException(WorkSpaceException e) {
+        ResponseCode responseCode = e.getStatusCode();
+        log.error(responseCode.getMessage());
+        return ResponseEntity.badRequest()
+                .body(GlobalResponseDto.of(responseCode));
+    }
     // S3Exception Handler
     @ExceptionHandler(S3Exception.class)
     public ResponseEntity<GlobalResponseDto> handleS3Exception(S3Exception e) {
