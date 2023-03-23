@@ -12,15 +12,15 @@ import java.util.List;
 @NoArgsConstructor
 public class MindMapResponseDto {
 
-    private Long id;
-    private String title;
+    private Long mindMapId;
+    private String mindMapTitle;
     private List<QuestionBoardResponseDto> questionBoardList;
 
     @Builder
-    private MindMapResponseDto(List<QuestionBoardResponseDto> questionBoardList, Long id, String title){
-        this.id = id;
-        this.title = title;
-        this.questionBoardList = questionBoardList;
+    private MindMapResponseDto(List<QuestionBoardResponseDto> questionBoardResponseDtoList, Long id, String title){
+        this.mindMapId = id;
+        this.mindMapTitle = title;
+        this.questionBoardList = questionBoardResponseDtoList;
     }
 
     public static MindMapResponseDto of(MindMap mindMap){
@@ -30,12 +30,12 @@ public class MindMapResponseDto {
                 .build();
     }
 
-    public static MindMapResponseDto of(MindMap mindMap, List<QuestionBoardResponseDto> questionBoardList){
+
+    public static MindMapResponseDto of(MindMap mindMap, List<QuestionBoardResponseDto> questionBoardResponseDtoList){
         return MindMapResponseDto.builder()
                 .id(mindMap.getId())
                 .title(mindMap.getTitle())
-                .questionBoardList(questionBoardList)
+                .questionBoardResponseDtoList(questionBoardResponseDtoList)
                 .build();
     }
-
 }

@@ -27,6 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -41,15 +42,19 @@ public class MindMapService {
     private final S3Service s3Service;
 
     @Transactional
-    public ResponseEntity<GlobalResponseDto> createMindMap(/*Long id,*/ MindMapRequestDto mindMapRequestDto, User user){
+    public ResponseEntity<GlobalResponseDto> createMindMap(Long id, MindMapRequestDto mindMapRequestDto, User user) {
 
-        /*WorkSpace workSpace = getWorkSpaceById(id);*/
-        MindMap mindMap = mindMapRepository.save(MindMap.of(mindMapRequestDto, /*workSpace,*/ user));
+        Optional<WorkSpace> workSpace = workSpaceRepository.findById(id);
+        if(workSpace.isEmpty()){
+            throw new MindMapException(ResponseCode.MINDMAP_UPDATE_FAILED);
+        }
+        MindMap mindMap = mindMapRepository.save(MindMap.of(mindMapRequestDto, workSpace.get(), user));
         return ResponseEntity.ok(GlobalResponseDto.of(ResponseCode.MINDMAP_UPLODAD_SUCCESS, MindMapResponseDto.of(mindMap)));
+
     }
 
     @Transactional(readOnly = true)
-    public ResponseEntity<GlobalResponseDto>  changeMindMap(Long id, User user){
+    public ResponseEntity<GlobalResponseDto> changeMindMap(Long id, User user) {
 
         MindMap mindMap = getMindMapById(id);
         List<QuestionBoardResponseDto> questionBoardResponseDtoList = getQuestionResponseDtoList(mindMap);
@@ -58,11 +63,11 @@ public class MindMapService {
     }
 
     @Transactional
-    public ResponseEntity<GlobalResponseDto>  updateMindMap(Long id, MindMapRequestDto mindMapRequestDto, User user){
+    public ResponseEntity<GlobalResponseDto> updateMindMap(Long id, MindMapRequestDto mindMapRequestDto, User user) {
 
         MindMap mindMap = getMindMapById(id);
 
-        if (! mindMap.getUser().equals(user)){
+        if (!mindMap.getUser().equals(user)) {
             throw new MindMapException(ResponseCode.MINDMAP_UPDATE_FAILED);
         }
         mindMap.updateMindMap(mindMapRequestDto);
@@ -70,27 +75,27 @@ public class MindMapService {
     }
 
     @Transactional
-    public ResponseEntity<GlobalResponseDto> deleteMindMap(Long id, Long questionBoardId, User user){
+    public ResponseEntity<GlobalResponseDto> deleteMindMap(Long id, User user) {
 
         MindMap mindMap = getMindMapById(id);
 
-        if (! mindMap.getUser().equals(user)){
+        if (!mindMap.getUser().equals(user)) {
             throw new MindMapException(ResponseCode.MINDMAP_UPDATE_FAILED);
         }
 
-        QuestionBoard questionBoard = getQuestionBoardById(questionBoardId);
-
-        List<Image> imagePathList = imageRepository.findAllByQuestionBoardId(questionBoard.getId());
-        for (Image image : imagePathList) {
-            String uploadPath = image.getUploadPath();
-            String filename = uploadPath.substring(61);
-            s3Service.deleteFile(filename);
+        List<QuestionBoard> questionBoardList = getQuestionBoardByMindMapId(id);
+        for (QuestionBoard questionBoard : questionBoardList) {
+            List<Image> imagePathList = imageRepository.findAllByQuestionBoardId(questionBoard.getId());
+            for (Image image : imagePathList) {
+                String uploadPath = image.getUploadPath();
+                String filename = uploadPath.substring(61);
+                s3Service.deleteFile(filename);
+            }
+            answerBoardRepository.deleteAllByQuestionBoardId(questionBoard.getId());
+            imageRepository.deleteAllByQuestionBoardId(questionBoard.getId());
+            hashTagRepository.deleteAllByQuestionBoardId(questionBoard.getId());
+            questionBoardRepository.deleteById(questionBoard.getId());
         }
-
-        answerBoardRepository.deleteAllByQuestionBoardId(questionBoard.getId());
-        imageRepository.deleteAllByQuestionBoardId(questionBoard.getId());
-        hashTagRepository.deleteAllByQuestionBoardId(questionBoard.getId());
-        questionBoardRepository.deleteAllByMindMapId(mindMap.getId());
         mindMapRepository.deleteById(mindMap.getId());
         return ResponseEntity.ok(GlobalResponseDto.of(ResponseCode.MINDMAP_DELETE_SUCCESS));
     }
@@ -129,7 +134,7 @@ public class MindMapService {
         return titleList;
     }
 
-    private QuestionBoard getQuestionBoardById(Long id) {
-        return questionBoardRepository.findById(id).orElseThrow(() -> new QuestionBoardException(ResponseCode.BOARD_NOT_FOUND));
+    private List<QuestionBoard> getQuestionBoardByMindMapId(Long id) {
+        return questionBoardRepository.findAllByMindMapId(id);
     }
 }

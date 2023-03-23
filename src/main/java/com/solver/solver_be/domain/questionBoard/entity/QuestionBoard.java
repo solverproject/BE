@@ -68,6 +68,18 @@ public class QuestionBoard extends TimeStamped {
                 .build();
     }
 
+
+    public static QuestionBoard of(MindMap mindMap, User user) {
+        return builder()
+                .parentBoardId(0L)
+                .myBoardId(1L)
+                .x(0L)
+                .y(0L)
+                .mindMap(mindMap)
+                .user(user)
+                .build();
+    }
+
     public void update(QuestionRequestDto questionRequestDto) {
         this.contents = questionRequestDto.getContents();
     }

@@ -38,6 +38,12 @@ public enum ResponseCode {
     MINDMAP_UPDATE_SUCCESS(200, "마인드 맵 제목이 수정 되었습니다." ),
     MINDMAP_DELETE_SUCCESS(200, "마인드 맵이 삭제 되었습니다." ),
 
+    // WorkSpace 관련
+
+    WORKSPACE_UPLOAD_SUCCESS(200, "워크스페이스 생성 완료되었습니다."),
+    WORKSPACE_UPDATE_SUCCESS(200, "워크스페이스 업데이트 완료되었습니다."),
+    WORKSPACE_DELETE_SUCCESS(200, "워크스페이스 삭제 완료되었습니다."),
+
     /*============================ FAIL ================================*/
 //Global
     NOT_VALID_REQUEST(400, "유효하지 않은 요청입니다."),

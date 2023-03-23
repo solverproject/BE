@@ -6,7 +6,6 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 public class MindMapRequestDto {
-
     private String title;
 
 }

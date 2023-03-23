@@ -12,9 +12,9 @@ import java.util.List;
 @NoArgsConstructor
 public class QuestionBoardResponseDto {
 
-    private Long id;
+    private Long questionBoardId;
     private Long parentBoardId;
-    private String title;
+    private String boardTitle;
     private List<String> titleList;
     private Long x;
     private Long y;
@@ -22,11 +22,11 @@ public class QuestionBoardResponseDto {
     private LocalDateTime modifiedAt;
 
     @Builder
-    private QuestionBoardResponseDto(Long id, Long parentBoardId, String title,
+    private QuestionBoardResponseDto(Long id, Long parentBoardId, String boardTitle,
                                 List<String> titleList, Long x, Long y, LocalDateTime createdAt, LocalDateTime modifiedAt) {
-        this.id = id;
+        this.questionBoardId = id;
         this.parentBoardId = parentBoardId;
-        this.title = title;
+        this.boardTitle = boardTitle;
         this.titleList = titleList;
         this.x = x;
         this.y = y;
@@ -38,12 +38,23 @@ public class QuestionBoardResponseDto {
         return QuestionBoardResponseDto.builder()
                 .id(questionBoard.getId())
                 .parentBoardId(questionBoard.getParentBoardId())
-                .title(questionBoard.getTitle())
+                .boardTitle(questionBoard.getTitle())
                 .x(questionBoard.getX())
                 .y(questionBoard.getY())
                 .createdAt(questionBoard.getCreatedAt())
                 .modifiedAt(questionBoard.getModifiedAt())
                 .titleList(titleList)
+                .build();
+    }
+    public static QuestionBoardResponseDto of(QuestionBoard questionBoard) {
+        return QuestionBoardResponseDto.builder()
+                .id(questionBoard.getId())
+                .parentBoardId(questionBoard.getParentBoardId())
+                .x(questionBoard.getX())
+                .y(questionBoard.getY())
+                .boardTitle(questionBoard.getTitle())
+                .createdAt(questionBoard.getCreatedAt())
+                .modifiedAt(questionBoard.getModifiedAt())
                 .build();
     }
 }

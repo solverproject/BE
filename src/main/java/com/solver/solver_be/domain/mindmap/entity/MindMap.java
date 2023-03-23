@@ -20,7 +20,7 @@ public class MindMap extends TimeStamped {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column
     private String title;
 
     @ManyToOne
@@ -32,20 +32,27 @@ public class MindMap extends TimeStamped {
     private WorkSpace workSpace;
 
     @Builder
-    private MindMap(WorkSpace workSpace, User user, String title){
+    private MindMap(WorkSpace workSpace, User user, String title) {
         this.title = title;
         this.workSpace = workSpace;
         this.user = user;
     }
 
-    public static MindMap of(MindMapRequestDto mindMapRequestDto,User user){
+    public static MindMap of(WorkSpace workSpace, User user) {
+        return MindMap.builder()
+                .workSpace(workSpace)
+                .user(user)
+                .build();
+    }
+
+    public static MindMap of(MindMapRequestDto mindMapRequestDto, User user) {
         return MindMap.builder()
                 .title(mindMapRequestDto.getTitle())
                 .user(user)
                 .build();
     }
 
-    public static MindMap of(MindMapRequestDto mindMapRequestDto, WorkSpace workSpace, User user){
+    public static MindMap of(MindMapRequestDto mindMapRequestDto, WorkSpace workSpace, User user) {
         return MindMap.builder()
                 .title(mindMapRequestDto.getTitle())
                 .workSpace(workSpace)
@@ -53,8 +60,9 @@ public class MindMap extends TimeStamped {
                 .build();
     }
 
-    public MindMap updateMindMap(MindMapRequestDto mindMapRequestDto){
+    public MindMap updateMindMap(MindMapRequestDto mindMapRequestDto) {
         this.title = mindMapRequestDto.getTitle();
         return this;
     }
+
 }
