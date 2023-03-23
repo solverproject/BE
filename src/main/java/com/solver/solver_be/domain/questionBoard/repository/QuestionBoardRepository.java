@@ -10,4 +10,7 @@ public interface QuestionBoardRepository extends JpaRepository<QuestionBoard, Lo
     List<QuestionBoard> findAllByOrderByCreatedAtDesc();
     List<QuestionBoard> findAllByMindMapId(Long mindMapId);
     Optional<List<QuestionBoard>> findByParentBoardId(Long id);
+
+
+    void deleteAllByMindMapId(Long id);
 }
