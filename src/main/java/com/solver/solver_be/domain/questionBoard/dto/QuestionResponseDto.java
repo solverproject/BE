@@ -79,8 +79,12 @@ public class QuestionResponseDto {
     public static QuestionResponseDto of(QuestionBoard questionBoard, List<String> titleList) {
         return QuestionResponseDto.builder()
                 .id(questionBoard.getId())
+                .parentBoardId(questionBoard.getParentBoardId())
                 .title(questionBoard.getTitle())
-                .contents(questionBoard.getContents())
+                .x(questionBoard.getX())
+                .y(questionBoard.getY())
+                .createdAt(questionBoard.getCreatedAt())
+                .modifiedAt(questionBoard.getModifiedAt())
                 .titleList(titleList)
                 .build();
     }
