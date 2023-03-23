@@ -15,27 +15,27 @@ public class MindMapController {
 
     private final MindMapService mindMapService;
 
-    @PostMapping("/mindmap/{id}")
+    @PostMapping("/mindMap/{id}")
     public ResponseEntity<GlobalResponseDto> createMindMap(@PathVariable Long id,
                                                            @RequestBody MindMapRequestDto mindMapRequestDto,
                                                            @AuthenticationPrincipal UserDetailsImpl userDetails){
         return mindMapService.createMindMap(id, mindMapRequestDto, userDetails.getUser());
     }
 
-    @GetMapping("/mindmap/{id}")
+    @GetMapping("/mindMap/{id}")
     public ResponseEntity<GlobalResponseDto> changeMindMap(@PathVariable Long id,
                                                            @AuthenticationPrincipal UserDetailsImpl userDetails){
         return mindMapService.changeMindMap(id, userDetails.getUser());
     }
 
-    @PutMapping("/mindmap/{id}")
+    @PutMapping("/mindMap/{id}")
     public ResponseEntity<GlobalResponseDto> updateMindMap(@PathVariable Long id,
                                                            @RequestBody MindMapRequestDto mindMapRequestDto,
                                                            @AuthenticationPrincipal UserDetailsImpl userDetails){
         return mindMapService.updateMindMap(id, mindMapRequestDto, userDetails.getUser());
     }
 
-    @DeleteMapping("/mindmap/{id}")
+    @DeleteMapping("/mindMap/{id}")
     public ResponseEntity<GlobalResponseDto> deleteMindMap(@PathVariable Long id,
                                                            @AuthenticationPrincipal UserDetailsImpl userDetails){
         return mindMapService.deleteMindMap(id, userDetails.getUser());
