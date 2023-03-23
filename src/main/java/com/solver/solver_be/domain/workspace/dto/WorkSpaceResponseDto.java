@@ -39,12 +39,12 @@ public class WorkSpaceResponseDto {
                 .build();
     }
 
-    public static WorkSpaceResponseDto of(List<QuestionResponseDto> questionResponseDtoList) {
-        return WorkSpaceResponseDto.builder()
-                .workSpaceId(workSpace.getId())
-                .workSpaceTitle(workSpace.getTitle())
-                .mindMapList(mindMapList)
-                .questionBoardList(questionBoardList)
-                .build();
-    }
+//    public static WorkSpaceResponseDto of(List<QuestionResponseDto> questionResponseDtoList) {
+//        return WorkSpaceResponseDto.builder()
+//                .workSpaceId(workSpace.getId())
+//                .workSpaceTitle(workSpace.getTitle())
+//                .mindMapList(mindMapList)
+//                .questionBoardList(questionBoardList)
+//                .build();
+//    }
 }

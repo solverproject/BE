@@ -31,8 +31,16 @@ public class GlobalExceptionHandler {
                 .body(GlobalResponseDto.of(responseCode));
     }
     // WorkSpaceException Handler
-    @ExceptionHandler(QuestionBoardException.class)
+    @ExceptionHandler(WorkSpaceException.class)
     public ResponseEntity<GlobalResponseDto> handleWorkSpaceException(WorkSpaceException e) {
+        ResponseCode responseCode = e.getStatusCode();
+        log.error(responseCode.getMessage());
+        return ResponseEntity.badRequest()
+                .body(GlobalResponseDto.of(responseCode));
+    }
+    // MindMapException Handler
+    @ExceptionHandler(MindMapException.class)
+    public ResponseEntity<GlobalResponseDto> handleMindMapException(WorkSpaceException e) {
         ResponseCode responseCode = e.getStatusCode();
         log.error(responseCode.getMessage());
         return ResponseEntity.badRequest()

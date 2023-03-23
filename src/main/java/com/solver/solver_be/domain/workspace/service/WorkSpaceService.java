@@ -43,9 +43,7 @@ public class WorkSpaceService {
 
         QuestionBoard questionBoard = QuestionBoard.of(mindMap, user);
 
-        WorkSpaceResponseDto workSpaceResponseDto = WorkSpaceResponseDto.of(workSpace, mindMap, questionBoard);
-
-        return ResponseEntity.ok(GlobalResponseDto.of(ResponseCode.ANSWER_UPLOAD_SUCCESS, workSpaceResponseDto));
+        return ResponseEntity.ok(GlobalResponseDto.of(ResponseCode.ANSWER_UPLOAD_SUCCESS));
     }
 
     // 2. 내가 가지고 있는 다른 워크 스페이스를 들어갈때.
@@ -61,8 +59,8 @@ public class WorkSpaceService {
 
         List<WorkSpaceResponseDto> workSpaceResponseDtoList = new ArrayList<>();
         for (MindMap mindMap : mindMapList) {
-            List<QuestionResponseDto> questionResponseDtoList = getQuestionResponseDtoList(mindMap,workSpace);
-            workSpaceResponseDtoList.add(WorkSpaceResponseDto.of(questionResponseDtoList));
+            List<QuestionResponseDto> questionResponseDtoList = getQuestionResponseDtoList(mindMap);
+//            workSpaceResponseDtoList.add(WorkSpaceResponseDto.of(questionResponseDtoList));
         }
 
         return ResponseEntity.ok(GlobalResponseDto.of(ResponseCode.BOARD_LIST_GET_SUCCESS, workSpaceResponseDtoList));
@@ -76,7 +74,7 @@ public class WorkSpaceService {
     // 2) 그렇게 된다면 워크스페이스 참가자가 이 메일을 클릭하면 자연스럽게 참가가 가능할 것이라고 생각이 든다.장
     @Transactional
     public ResponseEntity<GlobalResponseDto> participateWorkSpace(Long id, User user) {
-
+        return ResponseEntity.ok(GlobalResponseDto.of(ResponseCode.BOARD_LIST_GET_SUCCESS));
     }
 
 
