@@ -2,7 +2,9 @@ package com.solver.solver_be.domain.workspace.dto;
 
 import com.solver.solver_be.domain.answerBoard.dto.AnswerResponseDto;
 import com.solver.solver_be.domain.answerBoard.entity.AnswerBoard;
+import com.solver.solver_be.domain.mindmap.dto.MindMapResponseDto;
 import com.solver.solver_be.domain.mindmap.entity.MindMap;
+import com.solver.solver_be.domain.questionBoard.dto.QuestionBoardResponseDto;
 import com.solver.solver_be.domain.questionBoard.dto.QuestionResponseDto;
 import com.solver.solver_be.domain.questionBoard.entity.QuestionBoard;
 import com.solver.solver_be.domain.workspace.entity.WorkSpace;
@@ -19,32 +21,26 @@ public class WorkSpaceResponseDto {
 
     private Long workSpaceId;
     private String workSpaceTitle;
-    private List<MindMap> mindMapList;
-    private List<QuestionBoard> questionBoardList;
+    private List<MindMapResponseDto> mindMapList;
 
     @Builder
-    private WorkSpaceResponseDto(Long workSpaceId, String workSpaceTitle, List<MindMap> mindMapList, List<QuestionBoard> questionBoardList) {
-        this.mindMapList = mindMapList;
+    private WorkSpaceResponseDto(Long workSpaceId, String workSpaceTitle, List<MindMapResponseDto> mindMapList) {
         this.workSpaceId = workSpaceId;
         this.workSpaceTitle = workSpaceTitle;
-        this.questionBoardList = questionBoardList;
+        this.mindMapList = mindMapList;
     }
-
-    public static WorkSpaceResponseDto of(WorkSpace workSpace, List<MindMap> mindMapList, List<QuestionBoard> questionBoardList) {
+    public static WorkSpaceResponseDto of(WorkSpace workSpace) {
+        return WorkSpaceResponseDto.builder()
+                .workSpaceId(workSpace.getId())
+                .workSpaceTitle(workSpace.getTitle())
+                .build();
+    }
+    public static WorkSpaceResponseDto of(WorkSpace workSpace, List<MindMapResponseDto> mindMapList) {
         return WorkSpaceResponseDto.builder()
                 .workSpaceId(workSpace.getId())
                 .workSpaceTitle(workSpace.getTitle())
                 .mindMapList(mindMapList)
-                .questionBoardList(questionBoardList)
                 .build();
     }
 
-//    public static WorkSpaceResponseDto of(List<QuestionResponseDto> questionResponseDtoList) {
-//        return WorkSpaceResponseDto.builder()
-//                .workSpaceId(workSpace.getId())
-//                .workSpaceTitle(workSpace.getTitle())
-//                .mindMapList(mindMapList)
-//                .questionBoardList(questionBoardList)
-//                .build();
-//    }
 }

@@ -15,11 +15,11 @@ public class MindMapController {
 
     private final MindMapService mindMapService;
 
-    @PostMapping("/mindmap")
-    public ResponseEntity<GlobalResponseDto> createMindMap(/*@PathVariable Long id,*/
+    @PostMapping("/mindmap/{id}")
+    public ResponseEntity<GlobalResponseDto> createMindMap(@PathVariable Long id,
                                                            @RequestBody MindMapRequestDto mindMapRequestDto,
                                                            @AuthenticationPrincipal UserDetailsImpl userDetails){
-        return mindMapService.createMindMap(/*id,*/ mindMapRequestDto, userDetails.getUser());
+        return mindMapService.createMindMap(id, mindMapRequestDto, userDetails.getUser());
     }
 
     @GetMapping("/mindmap/{id}")

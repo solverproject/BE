@@ -27,6 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -41,10 +42,15 @@ public class MindMapService {
     private final S3Service s3Service;
 
     @Transactional
-    public ResponseEntity<GlobalResponseDto> createMindMap(MindMapRequestDto mindMapRequestDto, User user) {
+    public ResponseEntity<GlobalResponseDto> createMindMap(Long id, MindMapRequestDto mindMapRequestDto, User user) {
 
-        MindMap mindMap = mindMapRepository.save(MindMap.of(mindMapRequestDto, user));
+        Optional<WorkSpace> workSpace = workSpaceRepository.findById(id);
+        if(workSpace.isEmpty()){
+            throw new MindMapException(ResponseCode.MINDMAP_UPDATE_FAILED);
+        }
+        MindMap mindMap = mindMapRepository.save(MindMap.of(mindMapRequestDto, workSpace.get(), user));
         return ResponseEntity.ok(GlobalResponseDto.of(ResponseCode.MINDMAP_UPLODAD_SUCCESS, MindMapResponseDto.of(mindMap)));
+
     }
 
     @Transactional(readOnly = true)
