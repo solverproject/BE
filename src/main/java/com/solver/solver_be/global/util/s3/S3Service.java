@@ -45,6 +45,18 @@ public class S3Service {
         }
     }
 
+    public String uploadTest(List<MultipartFile> multipartFilelist, String dirName) throws IOException {
+
+        String image = "";
+        for (MultipartFile multipartFile : multipartFilelist) {
+            if (multipartFile != null) {
+                File uploadFile = convert(multipartFile).orElseThrow(() -> new IllegalArgumentException("파일 전환 실패"));
+                image = upload(uploadFile, dirName);
+            }
+        }
+        return image;
+    }
+
     private String upload(File uploadFile, String dirName) {
         String fileName = dirName + "/" + UUID.randomUUID(); // S3에 저장된 파일 이름
         String uploadImageUrl = putS3(uploadFile, fileName); // s3로 업로드

@@ -34,13 +34,15 @@ public enum ResponseCode {
 
     // MindMap 관련
     MINDMAP_UPLODAD_SUCCESS(200, "마인드 맵이 생성 되었습니다." ),
-    MINDMAP_CHANGE_SUCCESS(200, "마인드 맵이 변경 되었습니다." ),
+    MINDMAP_CHANGE_SUCCESS(200, "마인드 맵이 가져오는데 되었습니다." ),
     MINDMAP_UPDATE_SUCCESS(200, "마인드 맵 제목이 수정 되었습니다." ),
     MINDMAP_DELETE_SUCCESS(200, "마인드 맵이 삭제 되었습니다." ),
 
     // WorkSpace 관련
 
     WORKSPACE_UPLOAD_SUCCESS(200, "워크스페이스 생성 완료되었습니다."),
+    WORKSPACE_GET_SUCCESS(200, "워크스페이스를 가져오는데 성공했습니다."),
+
     WORKSPACE_UPDATE_SUCCESS(200, "워크스페이스 업데이트 완료되었습니다."),
     WORKSPACE_DELETE_SUCCESS(200, "워크스페이스 삭제 완료되었습니다."),
 

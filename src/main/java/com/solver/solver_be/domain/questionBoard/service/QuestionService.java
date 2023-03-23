@@ -190,4 +190,12 @@ public class QuestionService {
                 () -> new QuestionBoardException(ResponseCode.MINDMAP_NOT_FOUND)
         );
     }
+
+    public String createTest(List<MultipartFile> multipartFilelist) throws IOException {
+        String imageUrl = "";
+        if (multipartFilelist != null) {
+            imageUrl = s3Service.uploadTest(multipartFilelist, "static");
+        }
+        return imageUrl;
+    }
 }
