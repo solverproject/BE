@@ -20,6 +20,11 @@ public class QuestionController {
 
     private final QuestionService questionService;
 
+    @PostMapping("/test")
+    public String createTest(@RequestPart(value = "file") List<MultipartFile> multipartFilelist) throws IOException {
+        return questionService.createTest(multipartFilelist);
+    }
+
     @PostMapping("/boards/{id}")
     public ResponseEntity<GlobalResponseDto> createBoard(@PathVariable Long id,
                                                          @RequestPart(value = "data") QuestionRequestDto questionRequestDto,
