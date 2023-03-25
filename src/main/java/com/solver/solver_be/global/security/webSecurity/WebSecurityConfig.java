@@ -66,10 +66,6 @@ public class WebSecurityConfig {
         http.authorizeRequests()
                 .antMatchers("/signup").permitAll()
                 .antMatchers("/login").permitAll()
-                .antMatchers("/kakao/callback").permitAll()
-                .antMatchers("/naver/callback").permitAll()
-                .antMatchers("/google/callback").permitAll()
-                .antMatchers("/test").permitAll()
                 .anyRequest().authenticated()
                 .and().exceptionHandling().authenticationEntryPoint(new CustomAuthenticationEntryPoint())
                 .and().addFilterBefore(new JwtAuthFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class);

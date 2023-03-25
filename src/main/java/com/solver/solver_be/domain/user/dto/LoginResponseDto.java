@@ -12,15 +12,12 @@ public class LoginResponseDto {
     private String nickname;
 
     @Builder
-    private LoginResponseDto(String nickname)
-    {
+    private LoginResponseDto(String nickname) {
         this.nickname = nickname;
     }
 
-    public static LoginResponseDto of(User user)
-    {
+    public static LoginResponseDto of(User user) {
         return LoginResponseDto.builder()
-                .nickname(user.getNickname())
                 .build();
     }
 }

@@ -19,8 +19,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-
-
 import javax.servlet.http.HttpServletResponse;
 import java.util.Optional;
 
@@ -28,59 +26,74 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class UserService {
 
-    private final UserRepository userRepository;
+    private static final String COMPANY_TOKEN = "AAABnvxRVklrnYxKZ0aHgTBcXukeZygoC"; // 나중에 발급해야 하므로 이를 발급하는 코드도 필요함.
     private final RefreshTokenRepository refreshTokenRepository;
-    private final JwtUtil jwtUtil;
+    private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final JwtUtil jwtUtil;
 
     //회원 가입
     @Transactional
     public ResponseEntity<GlobalResponseDto> signup(SignupRequestDto signupRequestDto) {
+
         String userId = signupRequestDto.getUserId();
+        String phoneNumber = signupRequestDto.getPhoneNumber();
         String password = passwordEncoder.encode(signupRequestDto.getPassword());
 
-        //회원 중복 확인
-        Optional<User> found = userRepository.findByUserEmail(userId);
+        // 회원 중복 확인
+        Optional<User> found = userRepository.findByUserId(userId);
         if (found.isPresent()) {
-            throw new UserException(ResponseCode.USER_EMAIL_EXIST);
+            throw new UserException(ResponseCode.USER_ID_EXIST);
         }
 
         // 사용자 권한
         UserRoleEnum role = UserRoleEnum.USER;
+        if (signupRequestDto.getIsAdmin()) {
+            if (!signupRequestDto.getCompanyToken().equals(COMPANY_TOKEN)) {
+                throw new UserException(ResponseCode.INVALID_COMPANY_TOKEN);
+            }
+            role = UserRoleEnum.ADMIN;
+        }
 
-        User user = User.of(userId, password, role);
+        // 객체 생성 및 저장.
+        User user = User.of(userId, password, phoneNumber, role);
         userRepository.save(user);
-        return ResponseEntity.ok(GlobalResponseDto.of(ResponseCode.SIGN_UP_SUCCESS));
+
+        return ResponseEntity.ok(GlobalResponseDto.of(ResponseCode.SIGN_UP_SUCCESS,user));
     }
 
     // 로그인
     @Transactional
     public ResponseEntity<GlobalResponseDto> login(LoginRequestDto loginRequestDto, HttpServletResponse response) {
-        String userEmail = loginRequestDto.getUserEmail();
+
+        String userId = loginRequestDto.getUserId();
         String password = loginRequestDto.getPassword();
 
-        if (userRepository.findByUserEmail(userEmail).isEmpty()) {
+        // 유저가 존재하는지 확인.
+        if (userRepository.findByUserId(userId).isEmpty()) {
             throw new UserException(ResponseCode.USER_ACCOUNT_NOT_EXIST);
         }
 
-        User user = userRepository.findByUserEmail(userEmail).get();
+        // 비밀번호를 확인.
+        User user = userRepository.findByUserId(userId).get();
         if (!passwordEncoder.matches(password, user.getPassword())) {
             throw new UserException(ResponseCode.PASSWORD_MISMATCH);
         }
 
-        TokenDto tokenDto = jwtUtil.createAllToken(userEmail);
+        // AccessToken 발행.
+        TokenDto tokenDto = jwtUtil.createAllToken(userId);
 
-        Optional<RefreshToken> refreshToken = refreshTokenRepository.findAllByUserEmail(userEmail);
-
+        // RefreshToken 발행.
+        Optional<RefreshToken> refreshToken = refreshTokenRepository.findAllByUserEmail(userId);
         if (refreshToken.isPresent()) {
             refreshTokenRepository.save(refreshToken.get().updateToken(tokenDto.getRefreshToken()));
         } else {
-            RefreshToken newToken = new RefreshToken(tokenDto.getRefreshToken(), userEmail);
+            RefreshToken newToken = new RefreshToken(tokenDto.getRefreshToken(), userId);
             refreshTokenRepository.save(newToken);
         }
-
         jwtUtil.setHeader(response, tokenDto);
-        return ResponseEntity.ok(GlobalResponseDto.of(ResponseCode.LOG_IN_SUCCESS, LoginResponseDto.of(user)));
+
+        return ResponseEntity.ok(GlobalResponseDto.of(ResponseCode.LOG_IN_SUCCESS, user));
     }
 
 }

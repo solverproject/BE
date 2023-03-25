@@ -1,5 +1,7 @@
 package com.solver.solver_be.domain.user.entity;
 
+import com.solver.solver_be.domain.user.dto.LoginRequestDto;
+import com.solver.solver_be.domain.user.dto.LoginResponseDto;
 import lombok.*;
 
 import javax.persistence.*;
@@ -14,58 +16,41 @@ public class User {
     private Long id;
 
     @Column(nullable = false, unique = true)
-    private String userEmail;
-
-    @Column(nullable = false, unique = true)
-    private String nickname;
+    private String userId;
 
     @Column(nullable = false)
     private String password;
 
     @Column(nullable = false)
+    private String phoneNumber;
+
+    @Column(nullable = false)
     @Enumerated(value = EnumType.STRING)
     private UserRoleEnum role;
 
-    @Column
-    private Long kakaoId;
-    @Column
-    private String googleId;
-    @Column
-    private String naverId;
-
     @Builder
-    private User(String userEmail, String password, UserRoleEnum role, String nickname, Long kakaoId, String googleId, String naverId) {
-        this.userEmail = userEmail;
+    private User(String userId, String password, String phoneNumber, UserRoleEnum role) {
+        this.userId = userId;
         this.password = password;
+        this.phoneNumber = phoneNumber;
         this.role = role;
-        this.nickname = nickname;
-        this.kakaoId = kakaoId;
-        this.googleId = googleId;
-        this.naverId = naverId;
     }
 
-    public static User of(String userEmail, String password, UserRoleEnum role) {
+    public static User of(String userId, String password, String phoneNumber, UserRoleEnum role) {
         return User.builder()
-                .userEmail(userEmail)
+                .userId(userId)
                 .password(password)
+                .phoneNumber(phoneNumber)
                 .role(role)
                 .build();
     }
 
-    public User kakaoIdUpdate(Long kakaoId) {
-        this.kakaoId = kakaoId;
-        return this;
+    public static User of(LoginRequestDto loginRequestDto, UserRoleEnum role) {
+        return User.builder()
+                .userId(loginRequestDto.getUserId())
+                .password(loginRequestDto.getPassword())
+                .role(role)
+                .build();
     }
-
-    public User googleIdUpdate(String googleId) {
-        this.googleId = googleId;
-        return this;
-    }
-
-    public User naverIdUpdate(String naverId) {
-        this.naverId = naverId;
-        return this;
-    }
-
 }
 

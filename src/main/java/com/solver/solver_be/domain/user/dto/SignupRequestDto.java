@@ -17,11 +17,9 @@ public class SignupRequestDto {
     private String password;
 
     @NotBlank(message = "전화번호는 필수입니다.")
-    @Pattern(regexp = "^\\\\d{3}-\\\\d{3,4}-\\\\d{4}$", message = "전화번호는 010-XXXX-XXXX 형식입니다.")
+    @Pattern(regexp = "^\\d{3}-\\d{3,4}-\\d{4}$", message = "전화번호는 010-XXXX-XXXX 형식입니다.")
     private String phoneNumber;
-
-    private boolean isAdmin;
-
+    private Boolean isAdmin;
     private String companyToken = "";
 
 }
