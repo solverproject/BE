@@ -44,12 +44,11 @@ public class User {
         this.naverId = naverId;
     }
 
-    public static User of(String userEmail, String password, UserRoleEnum role, String nickname) {
+    public static User of(String userEmail, String password, UserRoleEnum role) {
         return User.builder()
                 .userEmail(userEmail)
                 .password(password)
                 .role(role)
-                .nickname(nickname)
                 .build();
     }
 

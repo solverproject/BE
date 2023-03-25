@@ -17,10 +17,10 @@ public class TimeStamped {
 
     @CreatedDate
     @Column(updatable = false)
-    private LocalDateTime createdAt;
+    private LocalDateTime visitTime;
 
     @LastModifiedDate
     @Column
-    private LocalDateTime modifiedAt;
+    private LocalDateTime outTime;
 
 }
