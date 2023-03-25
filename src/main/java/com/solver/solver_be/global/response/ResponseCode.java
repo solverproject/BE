@@ -54,7 +54,7 @@ public enum ResponseCode {
     NOT_VALID_REFRESH_TOKEN(400, "유효하지 않은 리프레시 토큰입니다."),
 
     //User 관련
-    USER_EMAIL_EXIST(400, "이미 존재하는 이메일입니다."),
+    USER_ID_EXIST(400, "이미 존재하는 아이디입니다."),
     USER_NICKNAME_EXIST(400, "이미 존재하는 닉네임입니다."),
     USER_ACCOUNT_NOT_EXIST(400, "존재하지 않는 계정입니다."),
     USER_NOT_FOUND(400, "존재하지 않는 사용자입니다."),
@@ -74,7 +74,8 @@ public enum ResponseCode {
     MINDMAP_UPDATE_FAILED(400, "본인의 마인드 맵이 아닙니다." ),
 
     // WorkSpace 관련
-    WORKSPACE_NOT_FOUND(400, "워크스페이스를 찾을 수 없습니다." );
+    WORKSPACE_NOT_FOUND(400, "워크스페이스를 찾을 수 없습니다." ),
+    INVALID_COMPANY_TOKEN(400, "유효하지 않은 회사 코드입니다." );
 
     private final int statusCode;
     private final String message;
