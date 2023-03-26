@@ -13,6 +13,13 @@ public enum ResponseCode {
     SIGN_UP_SUCCESS(200, "회원 가입이 완료되었습니다."),
     LOG_IN_SUCCESS(200, "로그인이 완료되었습니다."),
 
+    // Visitor 관련
+    VISITOR_WIRTE_SUCCESS(200, "방문 문서 작성 성공"),
+    VISITOR_GET_SUCCESS(200, "방문 신청 내용 조회 성공"),
+    VISITOR_UPDATE_SUCCESS(200, "방문 기록 수정 성공" ),
+    VISITOR_DELETE_SUCCESS(200,"방문 기록 삭제 성공" ),
+
+    /*============================ ORD ================================*/
     //Board 관련
     BOARD_UPLOAD_SUCCESS(200, "질문 등록이 완료되었습니다."),
     BOARD_LIST_GET_SUCCESS(200, "질문 리스트를 가져오는데 성공했습니다."),
@@ -59,6 +66,10 @@ public enum ResponseCode {
     USER_ACCOUNT_NOT_EXIST(400, "존재하지 않는 계정입니다."),
     USER_NOT_FOUND(400, "존재하지 않는 사용자입니다."),
     PASSWORD_MISMATCH(400, "비밀번호가 일치하지 않습니다."),
+
+    //Visitor 관련
+    VISITOR_NOT_FOUND(400,"방문 신청 기록이 없습니다." ),
+    VISITOR_UPDATE_FAILED(400,"본인은 방문 기록이 아닙니다." ),
 
     //Image 관련
     IMAGE_NOT_FOUND(400, "존재하지 않는 이미지입니다."),

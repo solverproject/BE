@@ -1,6 +1,5 @@
 package com.solver.solver_be.domain.branch.entity;
 
-import com.solver.solver_be.domain.department.entity.Department;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -26,16 +25,12 @@ public class Branch {
     private String address;
 
     // 3. 보안부서
-    @ManyToOne
-    @JoinColumn(name = "DEPARTMENT_ID", nullable = false)
-    private Department department;
 
 
     @Builder
-    private Branch(String title, String address, Department department) {
+    private Branch(String title, String address) {
         this.title = title;
         this.address = address;
-        this.department = department;
     }
 
     public static Branch of() {
