@@ -1,5 +1,7 @@
 package com.solver.solver_be.domain.user.entity;
 
+import com.solver.solver_be.domain.user.dto.BusinessSignupRequestDto;
+import com.solver.solver_be.domain.user.dto.GuestSignupRequestDto;
 import lombok.*;
 
 import javax.persistence.*;
@@ -14,59 +16,66 @@ public class User {
     private Long id;
 
     @Column(nullable = false, unique = true)
-    private String userEmail;
-
-    @Column(nullable = false, unique = true)
-    private String nickname;
+    private String userId;
 
     @Column(nullable = false)
     private String password;
 
     @Column(nullable = false)
+    private String phoneNum;
+
+    @Column(nullable = false)
+    private String name;
+    @Column
+    private String businessNum;
+
+    @Column
+    private String businessName;
+
+    @Column(nullable = false)
     @Enumerated(value = EnumType.STRING)
     private UserRoleEnum role;
 
-    @Column
-    private Long kakaoId;
-    @Column
-    private String googleId;
-    @Column
-    private String naverId;
-
     @Builder
-    private User(String userEmail, String password, UserRoleEnum role, String nickname, Long kakaoId, String googleId, String naverId) {
-        this.userEmail = userEmail;
+    private User(String userId, String password, String phoneNum, String name, String businessNum, String businessName, UserRoleEnum role) {
+        this.userId = userId;
         this.password = password;
+        this.phoneNum = phoneNum;
+        this.name = name;
+        this.businessName = businessName;
+        this.businessNum = businessNum;
         this.role = role;
-        this.nickname = nickname;
-        this.kakaoId = kakaoId;
-        this.googleId = googleId;
-        this.naverId = naverId;
     }
 
-    public static User of(String userEmail, String password, UserRoleEnum role, String nickname) {
+    public static User of(String userId, String password, String phoneNum, UserRoleEnum role) {
         return User.builder()
-                .userEmail(userEmail)
+                .userId(userId)
                 .password(password)
+                .phoneNum(phoneNum)
                 .role(role)
-                .nickname(nickname)
                 .build();
     }
 
-    public User kakaoIdUpdate(Long kakaoId) {
-        this.kakaoId = kakaoId;
-        return this;
+    public static User of(BusinessSignupRequestDto signupRequestDto, String userId, String password, UserRoleEnum role) {
+        return User.builder()
+                .userId(userId)
+                .password(password)
+                .phoneNum(signupRequestDto.getPhoneNum())
+                .name(signupRequestDto.getName())
+                .businessName(signupRequestDto.getBusinessName())
+                .businessNum(signupRequestDto.getBusinessNum())
+                .role(role)
+                .build();
     }
 
-    public User googleIdUpdate(String googleId) {
-        this.googleId = googleId;
-        return this;
+    public static User of(GuestSignupRequestDto signupRequestDto, String userId, String password, UserRoleEnum role) {
+        return User.builder()
+                .userId(userId)
+                .password(password)
+                .phoneNum(signupRequestDto.getPhoneNum())
+                .name(signupRequestDto.getName())
+                .role(role)
+                .build();
     }
-
-    public User naverIdUpdate(String naverId) {
-        this.naverId = naverId;
-        return this;
-    }
-
 }
 

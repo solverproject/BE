@@ -16,39 +16,21 @@ public class GlobalExceptionHandler {
 
     // UserException Handler
     @ExceptionHandler(UserException.class)
-    public ResponseEntity<GlobalResponseDto> handleCommentException(UserException e) {
+    public ResponseEntity<GlobalResponseDto> handleUserException(UserException e) {
         ResponseCode responseCode = e.getStatusCode();
         log.error(responseCode.getMessage());
         return ResponseEntity.badRequest()
                 .body(GlobalResponseDto.of(responseCode));
     }
-    // QuestionBoardException Handler
-    @ExceptionHandler(QuestionBoardException.class)
-    public ResponseEntity<GlobalResponseDto> handleQuestionBoardException(QuestionBoardException e) {
+    @ExceptionHandler(CompanyException.class)
+    public ResponseEntity<GlobalResponseDto> handleCompanyException(CompanyException e) {
         ResponseCode responseCode = e.getStatusCode();
         log.error(responseCode.getMessage());
         return ResponseEntity.badRequest()
                 .body(GlobalResponseDto.of(responseCode));
     }
-    // WorkSpaceException Handler
-    @ExceptionHandler(WorkSpaceException.class)
-    public ResponseEntity<GlobalResponseDto> handleWorkSpaceException(WorkSpaceException e) {
-        ResponseCode responseCode = e.getStatusCode();
-        log.error(responseCode.getMessage());
-        return ResponseEntity.badRequest()
-                .body(GlobalResponseDto.of(responseCode));
-    }
-    // MindMapException Handler
-    @ExceptionHandler(MindMapException.class)
-    public ResponseEntity<GlobalResponseDto> handleMindMapException(WorkSpaceException e) {
-        ResponseCode responseCode = e.getStatusCode();
-        log.error(responseCode.getMessage());
-        return ResponseEntity.badRequest()
-                .body(GlobalResponseDto.of(responseCode));
-    }
-    // S3Exception Handler
-    @ExceptionHandler(S3Exception.class)
-    public ResponseEntity<GlobalResponseDto> handleS3Exception(S3Exception e) {
+    @ExceptionHandler(VisitFormException.class)
+    public ResponseEntity<GlobalResponseDto> handleVisitFormException(VisitFormException e) {
         ResponseCode responseCode = e.getStatusCode();
         log.error(responseCode.getMessage());
         return ResponseEntity.badRequest()
