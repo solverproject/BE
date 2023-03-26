@@ -1,6 +1,5 @@
 package com.solver.solver_be.domain.visitform.service;
 
-import com.solver.solver_be.domain.branch.entity.Branch;
 import com.solver.solver_be.domain.user.entity.User;
 import com.solver.solver_be.domain.user.repository.UserRepository;
 import com.solver.solver_be.domain.visitform.dto.VisitFormRequestDto;
