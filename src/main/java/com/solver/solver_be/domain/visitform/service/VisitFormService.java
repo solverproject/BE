@@ -24,20 +24,20 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class VisitFormService {
 
-    private final VisitFormRepository visitorRepository;
+    private final VisitFormRepository visitFormRepository;
     private final UserRepository userRepository;
 
     // 1. 방문신청서 작성
     @Transactional
-    public ResponseEntity<GlobalResponseDto> createVisitForm(VisitFormRequestDto visitorRequestDto, User user) {
+    public ResponseEntity<GlobalResponseDto> createVisitForm(VisitFormRequestDto visitFormRequestDto, User user) {
 
         // 담당자가 존재를 하는지.
-        Optional<User> target = userRepository.findByName(visitorRequestDto.getTarget());
+        Optional<User> target = userRepository.findByName(visitFormRequestDto.getTarget());
         if (target.isEmpty()) {
             throw new UserException(ResponseCode.ADMIN_NOT_FOUND);
         }
 
-        VisitForm visitorForm = visitorRepository.saveAndFlush(VisitForm.of(visitorRequestDto, user));
+        VisitForm visitorForm = visitFormRepository.saveAndFlush(VisitForm.of(visitFormRequestDto, user));
 
         return ResponseEntity.ok(GlobalResponseDto.of(ResponseCode.VISITOR_WIRTE_SUCCESS, VisitFromResponseDto.of(visitorForm, user)));
     }
@@ -49,28 +49,28 @@ public class VisitFormService {
         List<VisitForm> visiFormUserList = new ArrayList<>();
 
         if (user.getRole() == UserRoleEnum.ADMIN) {
-            visiFormUserList = visitorRepository.findByTarget(user.getName());
+            visiFormUserList = visitFormRepository.findByTarget(user.getName());
         } else {
-            visiFormUserList = visitorRepository.findByUserId(user.getId());
+            visiFormUserList = visitFormRepository.findByUserId(user.getId());
         }
 
         if (visiFormUserList.isEmpty()) {
             throw new VisitFormException(ResponseCode.VISITOR_NOT_FOUND);
         }
 
-        List<VisitFromResponseDto> visitorResponseDtoList = new ArrayList<>();
+        List<VisitFromResponseDto> visitFromResponseDtos = new ArrayList<>();
         for (VisitForm visitorForm : visiFormUserList) {
-            visitorResponseDtoList.add(VisitFromResponseDto.of(visitorForm, user));
+            visitFromResponseDtos.add(VisitFromResponseDto.of(visitorForm, user));
         }
 
-        return ResponseEntity.ok(GlobalResponseDto.of(ResponseCode.VISITOR_GET_SUCCESS, visitorResponseDtoList));
+        return ResponseEntity.ok(GlobalResponseDto.of(ResponseCode.VISITOR_GET_SUCCESS, visitFromResponseDtos));
     }
 
     // 3. 방문신청서 수정
     @Transactional
     public ResponseEntity<GlobalResponseDto> updateVisitForm(Long id, VisitFormRequestDto visitFormRequestDto, User user) {
 
-        VisitForm visitorForm = getVisitorById(id);
+        VisitForm visitorForm = getVisitFormById(id);
 
         if (!visitorForm.getUser().equals(user)) {
             throw new VisitFormException(ResponseCode.VISITOR_UPDATE_FAILED);
@@ -78,28 +78,28 @@ public class VisitFormService {
 
         visitorForm.update(visitFormRequestDto);
 
-        VisitFromResponseDto visitorResponseDto = VisitFromResponseDto.of(visitorForm, user);
-        return ResponseEntity.ok(GlobalResponseDto.of(ResponseCode.VISITOR_UPDATE_SUCCESS, visitorResponseDto));
+        VisitFromResponseDto visitFromResponseDto = VisitFromResponseDto.of(visitorForm, user);
+        return ResponseEntity.ok(GlobalResponseDto.of(ResponseCode.VISITOR_UPDATE_SUCCESS, visitFromResponseDto));
     }
 
     // 4. 방문신청서 삭제
     @Transactional
     public ResponseEntity<GlobalResponseDto> deleteVisitForm(Long id, User user) {
 
-        VisitForm visitor = getVisitorById(id);
+        VisitForm visitForm = getVisitFormById(id);
 
-        if (!visitor.getUser().equals(user)) {
+        if (!visitForm.getUser().equals(user)) {
             throw new VisitFormException(ResponseCode.VISITOR_UPDATE_FAILED);
         }
 
-        visitorRepository.deleteById(id);
+        visitFormRepository.deleteById(id);
 
         return ResponseEntity.ok(GlobalResponseDto.of(ResponseCode.VISITOR_DELETE_SUCCESS));
     }
 
     // ======================================= METHOD ======================================== //
 
-    private VisitForm getVisitorById(Long id) {
-        return visitorRepository.findById(id).orElseThrow(() -> new VisitFormException(ResponseCode.VISITOR_NOT_FOUND));
+    private VisitForm getVisitFormById(Long id) {
+        return visitFormRepository.findById(id).orElseThrow(() -> new VisitFormException(ResponseCode.VISITOR_NOT_FOUND));
     }
 }

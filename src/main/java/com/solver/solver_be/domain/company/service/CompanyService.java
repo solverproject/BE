@@ -12,6 +12,7 @@ import com.solver.solver_be.global.response.ResponseCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 
 import java.util.ArrayList;
@@ -24,6 +25,7 @@ public class CompanyService {
     private final CompanyRepository companyRepository;
 
     // 1. 회사 등록
+    @Transactional
     public ResponseEntity<GlobalResponseDto> createCompany(CompanyRequestDto companyRequestDto, User user) {
 
         // 원래 등록된 회사 였는지.
@@ -38,6 +40,7 @@ public class CompanyService {
     }
 
     // 2. 회사 목록 가져오기
+    @Transactional(readOnly = true)
     public ResponseEntity<GlobalResponseDto> getCompanies(User user) {
 
         List<Company> companyList = companyRepository.findAllByOrderByCreatedAtDesc();
@@ -51,6 +54,6 @@ public class CompanyService {
             companyResponseDtoList.add(CompanyResponseDto.of(company));
         }
 
-        return  ResponseEntity.ok(GlobalResponseDto.of(ResponseCode.VISITOR_GET_SUCCESS, companyResponseDtoList));
+        return  ResponseEntity.ok(GlobalResponseDto.of(ResponseCode.COMPANY_GET_SUCCESS, companyResponseDtoList));
     }
 }
