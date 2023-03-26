@@ -44,7 +44,7 @@ public class VisitForm extends TimeStamped {
     private String endTime;
 
     @Column(nullable = false)           // 승인 여부 -> 이게 대기/삭제/승인
-    private Boolean isSign;
+    private String status;
 
     @ManyToOne
     @JoinColumn(name = "USER_ID", nullable = false)
@@ -61,7 +61,7 @@ public class VisitForm extends TimeStamped {
                 .endDate(visitorRequestDto.getEndDate())
                 .startTime(visitorRequestDto.getStartTime())
                 .endTime(visitorRequestDto.getEndTime())
-                .isSign(false)
+                .status(visitorRequestDto.getStatus())
                 .user(user)
                 .build();
     }

@@ -2,12 +2,15 @@ package com.solver.solver_be.domain.visitform.dto;
 
 import com.solver.solver_be.domain.user.entity.User;
 import com.solver.solver_be.domain.visitform.entity.VisitForm;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
+@Builder
 @NoArgsConstructor
+@AllArgsConstructor
 public class VisitFromResponseDto {
 
     private Long id;
@@ -21,24 +24,7 @@ public class VisitFromResponseDto {
     private String endTime;
     private String visitor;
     private String phoneNum;
-
-
-    @Builder
-    private VisitFromResponseDto(Long id, String location, String place, String target, String purpose,
-                                 String startDate, String endDate, String startTime, String endTime,
-                                 String visitor, String phoneNum) {
-        this.id = id;
-        this.location = location;
-        this.place = place;
-        this.target = target;
-        this.purpose = purpose;
-        this.startDate = startDate;
-        this.startTime = startTime;
-        this.endDate = endDate;
-        this.endTime = endTime;
-        this.visitor = visitor;
-        this.phoneNum = phoneNum;
-    }
+    private String status;
 
     public static VisitFromResponseDto of(VisitForm visitForm, User user){
         return VisitFromResponseDto.builder()
@@ -53,6 +39,7 @@ public class VisitFromResponseDto {
                 .endTime(visitForm.getEndTime())
                 .visitor(user.getName())
                 .phoneNum(user.getPhoneNum())
+                .status(visitForm.getStatus())
                 .build();
     }
 }

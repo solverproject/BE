@@ -7,8 +7,7 @@ import java.util.List;
 
 public interface VisitFormRepository extends JpaRepository<VisitForm, Long> {
 
-    List<VisitForm> findAllByOrderByVisitTimeDesc();
-
     List<VisitForm> findByUserId(Long userId);
 
+    List<VisitForm> findByTarget(String name);
 }

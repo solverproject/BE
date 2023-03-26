@@ -1,6 +1,7 @@
 package com.solver.solver_be.domain.visitform.service;
 
 import com.solver.solver_be.domain.user.entity.User;
+import com.solver.solver_be.domain.user.entity.UserRoleEnum;
 import com.solver.solver_be.domain.user.repository.UserRepository;
 import com.solver.solver_be.domain.visitform.dto.VisitFormRequestDto;
 import com.solver.solver_be.domain.visitform.dto.VisitFromResponseDto;
@@ -28,45 +29,50 @@ public class VisitFormService {
 
     // 1. 방문신청서 작성
     @Transactional
-    public ResponseEntity<GlobalResponseDto> createVisitForm(VisitFormRequestDto visitorRequestDto, User user){
+    public ResponseEntity<GlobalResponseDto> createVisitForm(VisitFormRequestDto visitorRequestDto, User user) {
 
         // 담당자가 존재를 하는지.
         Optional<User> target = userRepository.findByName(visitorRequestDto.getTarget());
-        if(target.isEmpty())
-        {
+        if (target.isEmpty()) {
             throw new UserException(ResponseCode.ADMIN_NOT_FOUND);
         }
 
         VisitForm visitorForm = visitorRepository.saveAndFlush(VisitForm.of(visitorRequestDto, user));
 
-        return ResponseEntity.ok(GlobalResponseDto.of(ResponseCode.VISITOR_WIRTE_SUCCESS, VisitFromResponseDto.of(visitorForm,user)));
+        return ResponseEntity.ok(GlobalResponseDto.of(ResponseCode.VISITOR_WIRTE_SUCCESS, VisitFromResponseDto.of(visitorForm, user)));
     }
 
     // 2. 방문신청서 가져오기
     @Transactional(readOnly = true)
-    public ResponseEntity<GlobalResponseDto> getVisitForm(User user){
+    public ResponseEntity<GlobalResponseDto> getVisitForm(User user) {
 
-        List<VisitForm> visiFormUserList = visitorRepository.findByUserId(user.getId());
+        List<VisitForm> visiFormUserList = new ArrayList<>();
+
+        if (user.getRole() == UserRoleEnum.ADMIN) {
+            visiFormUserList = visitorRepository.findByTarget(user.getName());
+        } else {
+            visiFormUserList = visitorRepository.findByUserId(user.getId());
+        }
 
         if (visiFormUserList.isEmpty()) {
             throw new VisitFormException(ResponseCode.VISITOR_NOT_FOUND);
         }
 
         List<VisitFromResponseDto> visitorResponseDtoList = new ArrayList<>();
-        for (VisitForm visitorForm : visiFormUserList){
+        for (VisitForm visitorForm : visiFormUserList) {
             visitorResponseDtoList.add(VisitFromResponseDto.of(visitorForm, user));
         }
 
-        return  ResponseEntity.ok(GlobalResponseDto.of(ResponseCode.VISITOR_GET_SUCCESS, visitorResponseDtoList));
+        return ResponseEntity.ok(GlobalResponseDto.of(ResponseCode.VISITOR_GET_SUCCESS, visitorResponseDtoList));
     }
 
     // 3. 방문신청서 수정
     @Transactional
-    public ResponseEntity<GlobalResponseDto> updateVisitForm(Long id, VisitFormRequestDto visitFormRequestDto,User user){
+    public ResponseEntity<GlobalResponseDto> updateVisitForm(Long id, VisitFormRequestDto visitFormRequestDto, User user) {
 
         VisitForm visitorForm = getVisitorById(id);
 
-        if (!visitorForm.getUser().equals(user)){
+        if (!visitorForm.getUser().equals(user)) {
             throw new VisitFormException(ResponseCode.VISITOR_UPDATE_FAILED);
         }
 
@@ -78,11 +84,11 @@ public class VisitFormService {
 
     // 4. 방문신청서 삭제
     @Transactional
-    public ResponseEntity<GlobalResponseDto> deleteVisitForm(Long id, User user){
+    public ResponseEntity<GlobalResponseDto> deleteVisitForm(Long id, User user) {
 
         VisitForm visitor = getVisitorById(id);
 
-        if (!visitor.getUser().equals(user)){
+        if (!visitor.getUser().equals(user)) {
             throw new VisitFormException(ResponseCode.VISITOR_UPDATE_FAILED);
         }
 

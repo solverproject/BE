@@ -23,14 +23,14 @@ public class GlobalExceptionHandler {
                 .body(GlobalResponseDto.of(responseCode));
     }
     @ExceptionHandler(CompanyException.class)
-    public ResponseEntity<GlobalResponseDto> handleCompanyException(UserException e) {
+    public ResponseEntity<GlobalResponseDto> handleCompanyException(CompanyException e) {
         ResponseCode responseCode = e.getStatusCode();
         log.error(responseCode.getMessage());
         return ResponseEntity.badRequest()
                 .body(GlobalResponseDto.of(responseCode));
     }
     @ExceptionHandler(VisitFormException.class)
-    public ResponseEntity<GlobalResponseDto> handleVisitFormException(UserException e) {
+    public ResponseEntity<GlobalResponseDto> handleVisitFormException(VisitFormException e) {
         ResponseCode responseCode = e.getStatusCode();
         log.error(responseCode.getMessage());
         return ResponseEntity.badRequest()

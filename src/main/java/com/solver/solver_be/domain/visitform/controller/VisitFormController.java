@@ -35,7 +35,6 @@ public class VisitFormController {
         return visitorService.updateVisitForm(id, visitorRequestDto, userDetails.getUser());
     }
 
-
     @DeleteMapping("/visit/{id}")
     public ResponseEntity<GlobalResponseDto> deleteVisitForm(@PathVariable Long id,
                                                           @AuthenticationPrincipal UserDetailsImpl userDetails){
