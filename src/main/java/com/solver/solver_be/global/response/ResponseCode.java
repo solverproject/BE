@@ -52,6 +52,7 @@ public enum ResponseCode {
 
     WORKSPACE_UPDATE_SUCCESS(200, "워크스페이스 업데이트 완료되었습니다."),
     WORKSPACE_DELETE_SUCCESS(200, "워크스페이스 삭제 완료되었습니다."),
+    COMPANY_REGISTER_SUCCESS(200, "회사 등록 대기 완료했습니다." ),
 
     /*============================ FAIL ================================*/
 //Global
@@ -87,7 +88,9 @@ public enum ResponseCode {
     // WorkSpace 관련
     WORKSPACE_NOT_FOUND(400, "워크스페이스를 찾을 수 없습니다." ),
     INVALID_COMPANY_TOKEN(400, "유효하지 않은 회사 코드입니다." ),
-    ADMIN_NOT_FOUND(400, "담당자가 없습니다."  );
+    ADMIN_NOT_FOUND(400, "담당자가 없습니다."  ),
+    COMPANY_ALREADY_EXIST(400, "등록된 회사가 이미 존재합니다."  ),
+    COMPANY_NOT_FOUND(400, "회사를 찾을 수 없습니다."  );
 
     private final int statusCode;
     private final String message;
