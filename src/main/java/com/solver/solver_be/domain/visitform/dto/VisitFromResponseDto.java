@@ -1,5 +1,6 @@
 package com.solver.solver_be.domain.visitform.dto;
 
+import com.solver.solver_be.domain.user.entity.User;
 import com.solver.solver_be.domain.visitform.entity.VisitForm;
 import lombok.Builder;
 import lombok.Getter;
@@ -39,7 +40,7 @@ public class VisitFromResponseDto {
         this.phoneNum = phoneNum;
     }
 
-    public static VisitFromResponseDto of(VisitForm visitForm){
+    public static VisitFromResponseDto of(VisitForm visitForm, User user){
         return VisitFromResponseDto.builder()
                 .id(visitForm.getId())
                 .location(visitForm.getLocation())
@@ -50,8 +51,8 @@ public class VisitFromResponseDto {
                 .startTime(visitForm.getStartTime())
                 .endDate(visitForm.getEndDate())
                 .endTime(visitForm.getEndTime())
-                .visitor(visitForm.getVisitor())
-                .phoneNum(visitForm.getPhoneNum())
+                .visitor(user.getName())
+                .phoneNum(user.getPhoneNum())
                 .build();
     }
 }

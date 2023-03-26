@@ -4,53 +4,46 @@ import com.solver.solver_be.domain.branch.entity.Branch;
 import com.solver.solver_be.domain.user.entity.User;
 import com.solver.solver_be.domain.visitform.dto.VisitFormRequestDto;
 import com.solver.solver_be.global.util.TimeStamped;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 
 @Entity
+@Builder
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 public class VisitForm extends TimeStamped {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false)           // 방문할 회사
     private String location;
 
-    @Column(nullable = false)
+    @Column(nullable = false)           // 방문할 회사의 자세한 공간
     private String place;
 
-    @Column(nullable = false)
+    @Column(nullable = false)           // 찾아갈 사람
     private String target;
 
-    @Column(nullable = false)
+    @Column(nullable = false)           // 목적
     private String purpose;
 
-    @Column(nullable = false)
+    @Column(nullable = false)           // 방문 날짜
     private String startDate;
 
-    @Column(nullable = false)
+    @Column(nullable = false)           // 방문 시간
     private String startTime;
 
-    @Column(nullable = false)
+    @Column(nullable = false)           // 퇴실 날짜
     private String endDate;
 
-    @Column(nullable = false)
+    @Column(nullable = false)           // 퇴실 시간
     private String endTime;
 
-    @Column(nullable = false)
-    private String visitor;
-
-    @Column(nullable = false)
-    private String phoneNum;
-
-    @Column(nullable = false)
+    @Column(nullable = false)           // 승인 여부 -> 이게 대기/삭제/승인
     private Boolean isSign;
 
     @ManyToOne
@@ -58,25 +51,7 @@ public class VisitForm extends TimeStamped {
     private User user;
 
 
-    @Builder
-    private VisitForm(String location, String place, String target, String purpose,
-                      String startDate, String endDate, String startTime, String endTime, String visitor, String phoneNum,
-                      Boolean isSign, User user) {
-        this.location = location;
-        this.target = target;
-        this.place = place;
-        this.purpose = purpose;
-        this.startDate = startDate;
-        this.endDate = endDate;
-        this.startTime = startTime;
-        this.endTime = endTime;
-        this.visitor = visitor;
-        this.phoneNum = phoneNum;
-        this.isSign = isSign;
-        this.user = user;
-    }
-
-    public static VisitForm of(VisitFormRequestDto visitorRequestDto, Branch branch, User user) {
+    public static VisitForm of(VisitFormRequestDto visitorRequestDto, User user) {
         return VisitForm.builder()
                 .location(visitorRequestDto.getLocation())
                 .target(visitorRequestDto.getTarget())
@@ -86,14 +61,12 @@ public class VisitForm extends TimeStamped {
                 .endDate(visitorRequestDto.getEndDate())
                 .startTime(visitorRequestDto.getStartTime())
                 .endTime(visitorRequestDto.getEndTime())
-                .visitor(visitorRequestDto.getVisitor())
-                .phoneNum(visitorRequestDto.getPhoneNum())
                 .isSign(false)
                 .user(user)
                 .build();
     }
 
-    public void update(VisitFormRequestDto visitorRequestDto){
+    public void update(VisitFormRequestDto visitorRequestDto) {
         this.location = visitorRequestDto.getLocation();
         this.target = visitorRequestDto.getTarget();
         this.place = visitorRequestDto.getPlace();
@@ -102,7 +75,5 @@ public class VisitForm extends TimeStamped {
         this.endDate = visitorRequestDto.getEndDate();
         this.startTime = visitorRequestDto.getStartTime();
         this.endTime = visitorRequestDto.getEndTime();
-        this.visitor = visitorRequestDto.getVisitor();
-        this.phoneNum = visitorRequestDto.getPhoneNum();
     }
 }

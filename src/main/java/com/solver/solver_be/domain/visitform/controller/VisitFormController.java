@@ -1,6 +1,5 @@
 package com.solver.solver_be.domain.visitform.controller;
 
-import com.solver.solver_be.domain.branch.entity.Branch;
 import com.solver.solver_be.domain.visitform.dto.VisitFormRequestDto;
 import com.solver.solver_be.domain.visitform.service.VisitFormService;
 import com.solver.solver_be.global.response.GlobalResponseDto;
@@ -14,20 +13,19 @@ import javax.validation.Valid;
 
 @RestController
 @RequiredArgsConstructor
-public class VisitForm {
+public class VisitFormController {
 
     private final VisitFormService visitorService;
 
     @PostMapping("/visit")
-    public ResponseEntity<GlobalResponseDto> createVisitForm(@Valid @RequestBody VisitFormRequestDto visitorRequestDto, Branch branch,
+    public ResponseEntity<GlobalResponseDto> createVisitForm(@Valid @RequestBody VisitFormRequestDto visitorRequestDto,
                                                              @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        return visitorService.createVisitForm(visitorRequestDto, branch, userDetails.getUser());
+        return visitorService.createVisitForm(visitorRequestDto, userDetails.getUser());
     }
 
     @GetMapping("/visit")
-    public ResponseEntity<GlobalResponseDto> getVisitForm(@RequestParam(value = "userId") String userId,
-                                                        @AuthenticationPrincipal UserDetailsImpl userDetails){
-        return visitorService.getVisitForm(userId, userDetails.getUser());
+    public ResponseEntity<GlobalResponseDto> getVisitForm(@AuthenticationPrincipal UserDetailsImpl userDetails){
+        return visitorService.getVisitForm(userDetails.getUser());
     }
 
     @PutMapping("/visit/{id}")

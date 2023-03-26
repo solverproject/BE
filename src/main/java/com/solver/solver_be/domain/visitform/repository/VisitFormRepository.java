@@ -9,5 +9,6 @@ public interface VisitFormRepository extends JpaRepository<VisitForm, Long> {
 
     List<VisitForm> findAllByOrderByVisitTimeDesc();
 
-    List<VisitForm> findByUserId(String userId);
+    List<VisitForm> findByUserId(Long userId);
+
 }
