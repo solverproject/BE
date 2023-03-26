@@ -1,7 +1,7 @@
 package com.solver.solver_be.domain.user.entity;
 
 public enum UserRoleEnum {
-    USER(Authority.USER),
+    GUEST(Authority.GUEST),
     ADMIN(Authority.ADMIN);
 
     private final String authority;
@@ -15,7 +15,7 @@ public enum UserRoleEnum {
     }
 
     public static class Authority {
-        public static final String USER = "ROLE_USER";
+        public static final String GUEST = "ROLE_GUEST";
         public static final String ADMIN = "ROLE_ADMIN";
     }
 

@@ -1,9 +1,10 @@
 package com.solver.solver_be.domain.user.service;
 
+import com.solver.solver_be.domain.user.dto.BusinessSignupRequestDto;
+import com.solver.solver_be.domain.user.dto.GuestSignupRequestDto;
 import com.solver.solver_be.domain.user.dto.LoginRequestDto;
-import com.solver.solver_be.domain.user.dto.SignupRequestDto;
-import com.solver.solver_be.domain.user.entity.User;
 import com.solver.solver_be.domain.user.dto.LoginResponseDto;
+import com.solver.solver_be.domain.user.entity.User;
 import com.solver.solver_be.domain.user.entity.UserRoleEnum;
 import com.solver.solver_be.domain.user.repository.UserRepository;
 import com.solver.solver_be.global.exception.exceptionType.UserException;
@@ -32,12 +33,11 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
 
-    //회원 가입
+    // Admin 회원 가입
     @Transactional
-    public ResponseEntity<GlobalResponseDto> signup(SignupRequestDto signupRequestDto) {
+    public ResponseEntity<GlobalResponseDto> signupBusiness(BusinessSignupRequestDto signupRequestDto) {
 
         String userId = signupRequestDto.getUserId();
-        String phoneNumber = signupRequestDto.getPhoneNumber();
         String password = passwordEncoder.encode(signupRequestDto.getPassword());
 
         // 회원 중복 확인
@@ -47,22 +47,42 @@ public class UserService {
         }
 
         // 사용자 권한
-        UserRoleEnum role = UserRoleEnum.USER;
-        if (signupRequestDto.getIsAdmin()) {
-            if (!signupRequestDto.getCompanyToken().equals(COMPANY_TOKEN)) {
-                throw new UserException(ResponseCode.INVALID_COMPANY_TOKEN);
-            }
-            role = UserRoleEnum.ADMIN;
+        if (!signupRequestDto.getCompanyToken().equals(COMPANY_TOKEN)) {
+            throw new UserException(ResponseCode.INVALID_COMPANY_TOKEN);
         }
+        UserRoleEnum role = UserRoleEnum.ADMIN;
 
         // 객체 생성 및 저장.
-        User user = User.of(userId, password, phoneNumber, role);
+        User user = User.of(signupRequestDto, userId, password, role);
         userRepository.save(user);
 
-        return ResponseEntity.ok(GlobalResponseDto.of(ResponseCode.SIGN_UP_SUCCESS,user));
+        return ResponseEntity.ok(GlobalResponseDto.of(ResponseCode.SIGN_UP_SUCCESS, user));
     }
 
-    // 로그인
+    // Guest 회원가입
+    @Transactional
+    public ResponseEntity<GlobalResponseDto> signupGuest(GuestSignupRequestDto signupRequestDto) {
+
+        String userId = signupRequestDto.getUserId();
+        String password = passwordEncoder.encode(signupRequestDto.getPassword());
+
+        // 회원 중복 확인
+        Optional<User> found = userRepository.findByUserId(userId);
+        if (found.isPresent()) {
+            throw new UserException(ResponseCode.USER_ID_EXIST);
+        }
+
+        // 사용자 권한
+        UserRoleEnum role = UserRoleEnum.GUEST;
+
+        // 객체 생성 및 저장.
+        User user = User.of(signupRequestDto, userId, password, role);
+        userRepository.save(user);
+
+        return ResponseEntity.ok(GlobalResponseDto.of(ResponseCode.SIGN_UP_SUCCESS, user));
+    }
+
+    // Admin 로그인
     @Transactional
     public ResponseEntity<GlobalResponseDto> login(LoginRequestDto loginRequestDto, HttpServletResponse response) {
 
@@ -93,7 +113,8 @@ public class UserService {
         }
         jwtUtil.setHeader(response, tokenDto);
 
-        return ResponseEntity.ok(GlobalResponseDto.of(ResponseCode.LOG_IN_SUCCESS, user));
+        return ResponseEntity.ok(GlobalResponseDto.of(ResponseCode.LOG_IN_SUCCESS, LoginResponseDto.of(user)));
+
     }
 
 }
