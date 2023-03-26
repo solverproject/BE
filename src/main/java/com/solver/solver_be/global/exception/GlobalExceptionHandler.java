@@ -16,7 +16,7 @@ public class GlobalExceptionHandler {
 
     // UserException Handler
     @ExceptionHandler(UserException.class)
-    public ResponseEntity<GlobalResponseDto> handleCommentException(UserException e) {
+    public ResponseEntity<GlobalResponseDto> handleUserException(UserException e) {
         ResponseCode responseCode = e.getStatusCode();
         log.error(responseCode.getMessage());
         return ResponseEntity.badRequest()
