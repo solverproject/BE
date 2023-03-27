@@ -30,7 +30,7 @@ public class CompanyService {
     public ResponseEntity<GlobalResponseDto> createCompany(CompanyRequestDto companyRequestDto, User user) {
 
         // 원래 등록된 회사 였는지.
-        if (companyRepository.findByBusinessName(companyRequestDto.getBusinessName()).isPresent()) {
+        if (companyRepository.findByCompanyName(companyRequestDto.getCompanyName()).isPresent()) {
             throw new UserException(ResponseCode.COMPANY_ALREADY_EXIST);
         }
 
@@ -59,6 +59,7 @@ public class CompanyService {
     }
 
     // 3. 회사 내용 수정하기
+    @Transactional
     public ResponseEntity<GlobalResponseDto> updateCompany(Long id, CompanyRequestDto companyRequestDto, User user){
 
         Optional<Company> company = companyRepository.findById(id);
@@ -74,6 +75,7 @@ public class CompanyService {
     }
 
     // 4. 회사 정보 삭제하기
+    @Transactional
     public ResponseEntity<GlobalResponseDto> deleteCompany(Long id, User user){
 
         Optional<Company> company = companyRepository.findById(id);

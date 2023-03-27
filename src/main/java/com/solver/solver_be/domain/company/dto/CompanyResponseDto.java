@@ -15,19 +15,19 @@ public class CompanyResponseDto {
 
     private String businessCode;
 
-    private String businessName;
+    private String companyName;
 
     private Integer x;
 
     private Integer y;
 
     @Builder
-    public CompanyResponseDto(Long id, String businessNum, String businessCode, String businessName,
+    public CompanyResponseDto(Long id, String businessNum, String businessCode, String companyName,
                               Integer x, Integer y){
         this.id = id;
         this.businessNum = businessNum;
         this.businessCode = businessCode;
-        this.businessName = businessName;
+        this.companyName = companyName;
         this.x = x;
         this.y = y;
     }
@@ -36,7 +36,7 @@ public class CompanyResponseDto {
         return CompanyResponseDto.builder()
                 .businessNum(user.getBusinessNum())
                 .businessCode(businessCode)
-                .businessName(user.getBusinessName())
+                .companyName(user.getCompanyName())
                 .x(x)
                 .y(y)
                 .build();
@@ -47,7 +47,7 @@ public class CompanyResponseDto {
                 .id(company.getId())
                 .businessNum(company.getBusinessNum())
                 .businessCode(company.getBusinessCode())
-                .businessName(company.getBusinessName())
+                .companyName(company.getCompanyName())
                 .x(company.getX())
                 .y(company.getY())
                 .build();

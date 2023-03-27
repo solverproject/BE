@@ -24,7 +24,7 @@ public class Company extends TimeStamped {
     private String businessCode;
 
     @Column(nullable = false, unique = true)
-    private String businessName;
+    private String companyName;
 
     @Column
     private Integer x;
@@ -32,11 +32,11 @@ public class Company extends TimeStamped {
     @Column
     private Integer y;
 
-    public static Company of(String businessNum, String businessCode, String businessName, Integer x, Integer y) {
+    public static Company of(String businessNum, String businessCode, String companyName, Integer x, Integer y) {
         return Company.builder()
                 .businessNum(businessNum)
                 .businessCode(businessCode)
-                .businessName(businessName)
+                .companyName(companyName)
                 .x(x)
                 .y(y)
                 .build();
@@ -46,7 +46,7 @@ public class Company extends TimeStamped {
         return Company.builder()
                 .businessNum(companyRequestDto.getBusinessNum())
                 .businessCode(companyRequestDto.getBusinessCode())
-                .businessName(companyRequestDto.getBusinessName())
+                .companyName(companyRequestDto.getCompanyName())
                 .x(companyRequestDto.getX())
                 .y(companyRequestDto.getY())
                 .build();
@@ -55,7 +55,7 @@ public class Company extends TimeStamped {
     public void update(CompanyRequestDto companyRequestDto) {
         this.businessNum = companyRequestDto.getBusinessNum();
         this.businessCode = companyRequestDto.getBusinessCode();
-        this.businessName = companyRequestDto.getBusinessName();
+        this.companyName = companyRequestDto.getCompanyName();
         this.x = companyRequestDto.getX();
         this.y = companyRequestDto.getY();
     }

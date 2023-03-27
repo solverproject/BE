@@ -30,19 +30,19 @@ public class User {
     private String businessNum;
 
     @Column
-    private String businessName;
+    private String companyName;
 
     @Column(nullable = false)
     @Enumerated(value = EnumType.STRING)
     private UserRoleEnum role;
 
     @Builder
-    private User(String userId, String password, String phoneNum, String name, String businessNum, String businessName, UserRoleEnum role) {
+    private User(String userId, String password, String phoneNum, String name, String businessNum, String companyName, UserRoleEnum role) {
         this.userId = userId;
         this.password = password;
         this.phoneNum = phoneNum;
         this.name = name;
-        this.businessName = businessName;
+        this.companyName = companyName;
         this.businessNum = businessNum;
         this.role = role;
     }
@@ -62,7 +62,7 @@ public class User {
                 .password(password)
                 .phoneNum(signupRequestDto.getPhoneNum())
                 .name(signupRequestDto.getName())
-                .businessName(signupRequestDto.getBusinessName())
+                .companyName(signupRequestDto.getCompanyName())
                 .businessNum(signupRequestDto.getBusinessNum())
                 .role(role)
                 .build();
