@@ -9,13 +9,16 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class LoginResponseDto {
 
+
     private String companyName;
+
 
     private String name;
 
     private String phoneNum;
 
     @Builder
+
     private LoginResponseDto(String companyName, String name, String phoneNum) {
         this.companyName = companyName;
         this.name = name;

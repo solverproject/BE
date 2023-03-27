@@ -23,7 +23,9 @@ public class GlobalExceptionHandler {
                 .body(GlobalResponseDto.of(responseCode));
     }
 
+
     // CompanyException
+
     @ExceptionHandler(CompanyException.class)
     public ResponseEntity<GlobalResponseDto> handleCompanyException(CompanyException e) {
         ResponseCode responseCode = e.getStatusCode();
@@ -32,7 +34,9 @@ public class GlobalExceptionHandler {
                 .body(GlobalResponseDto.of(responseCode));
     }
 
+
     // VisitFormException
+
     @ExceptionHandler(VisitFormException.class)
     public ResponseEntity<GlobalResponseDto> handleVisitFormException(VisitFormException e) {
         ResponseCode responseCode = e.getStatusCode();

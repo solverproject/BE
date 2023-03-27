@@ -28,15 +28,14 @@ public class User {
     private String name;
     @Column
     private String businessNum;
-
     @Column
     private String companyName;
-
     @Column(nullable = false)
     @Enumerated(value = EnumType.STRING)
     private UserRoleEnum role;
 
     @Builder
+
     private User(String userId, String password, String phoneNum, String name, String businessNum, String companyName, UserRoleEnum role) {
         this.userId = userId;
         this.password = password;

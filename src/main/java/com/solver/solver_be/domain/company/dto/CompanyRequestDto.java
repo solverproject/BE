@@ -9,7 +9,9 @@ public class CompanyRequestDto {
 
     private String businessCode;
 
+
     private String companyName;
+
 
     private Integer x;
 

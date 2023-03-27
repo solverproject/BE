@@ -24,11 +24,13 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class VisitFormService {
 
+
     private final VisitFormRepository visitFormRepository;
     private final UserRepository userRepository;
 
     // 1. 방문신청서 작성
     @Transactional
+
     public ResponseEntity<GlobalResponseDto> createVisitForm(VisitFormRequestDto visitFormRequestDto, User user) {
 
         // 담당자가 존재를 하는지.
@@ -38,6 +40,7 @@ public class VisitFormService {
         }
 
         VisitForm visitorForm = visitFormRepository.saveAndFlush(VisitForm.of(visitFormRequestDto, user));
+
 
         return ResponseEntity.ok(GlobalResponseDto.of(ResponseCode.VISITOR_WIRTE_SUCCESS, VisitFromResponseDto.of(visitorForm, user)));
     }
@@ -58,19 +61,22 @@ public class VisitFormService {
             throw new VisitFormException(ResponseCode.VISITOR_NOT_FOUND);
         }
 
+
         List<VisitFromResponseDto> visitFromResponseDtos = new ArrayList<>();
         for (VisitForm visitorForm : visiFormUserList) {
             visitFromResponseDtos.add(VisitFromResponseDto.of(visitorForm, user));
         }
 
         return ResponseEntity.ok(GlobalResponseDto.of(ResponseCode.VISITOR_GET_SUCCESS, visitFromResponseDtos));
-    }
+
 
     // 3. 방문신청서 수정
     @Transactional
     public ResponseEntity<GlobalResponseDto> updateVisitForm(Long id, VisitFormRequestDto visitFormRequestDto, User user) {
 
+
         VisitForm visitorForm = getVisitFormById(id);
+
 
         if (!visitorForm.getUser().equals(user)) {
             throw new VisitFormException(ResponseCode.VISITOR_UPDATE_FAILED);
@@ -78,13 +84,15 @@ public class VisitFormService {
 
         visitorForm.update(visitFormRequestDto);
 
+
         VisitFromResponseDto visitFromResponseDto = VisitFromResponseDto.of(visitorForm, user);
         return ResponseEntity.ok(GlobalResponseDto.of(ResponseCode.VISITOR_UPDATE_SUCCESS, visitFromResponseDto));
-    }
+
 
     // 4. 방문신청서 삭제
     @Transactional
     public ResponseEntity<GlobalResponseDto> deleteVisitForm(Long id, User user) {
+
 
         VisitForm visitForm = getVisitFormById(id);
 
@@ -94,12 +102,14 @@ public class VisitFormService {
 
         visitFormRepository.deleteById(id);
 
+
         return ResponseEntity.ok(GlobalResponseDto.of(ResponseCode.VISITOR_DELETE_SUCCESS));
     }
 
     // ======================================= METHOD ======================================== //
 
+
     private VisitForm getVisitFormById(Long id) {
         return visitFormRepository.findById(id).orElseThrow(() -> new VisitFormException(ResponseCode.VISITOR_NOT_FOUND));
-    }
+
 }

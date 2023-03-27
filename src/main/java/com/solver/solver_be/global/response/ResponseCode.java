@@ -19,14 +19,17 @@ public enum ResponseCode {
     VISITOR_UPDATE_SUCCESS(200, "방문 기록 수정 성공" ),
     VISITOR_DELETE_SUCCESS(200,"방문 기록 삭제 성공" ),
 
+
     // Token 관련
     TOKEN_UPDATE_SUCCESS(200, "토큰이 업데이트되었습니다."),
+
 
    // Company 관련
     COMPANY_REGISTER_SUCCESS(200, "회사 정보 등록을 완료했습니다." ),
     COMPANY_GET_SUCCESS(200, "등록된 회사 가져오기 성공했습니다. " ),
     COMPANY_UPDATE_SUCCESS(200, "회사 정보 변경을 완료했습니다."),
     COMPANY_DELETE_SUCCESS(200, "회사 정보 삭제를 완료했습니다."),
+
 
     /*============================ FAIL ================================*/
     //Global
@@ -35,7 +38,9 @@ public enum ResponseCode {
     TOKEN_NOT_FOUND(400, "토큰을 찾을 수 없습니다."),
     NOT_VALID_REFRESH_TOKEN(400, "유효하지 않은 리프레시 토큰입니다."),
 
+
     // User 관련
+
     USER_ID_EXIST(400, "이미 존재하는 아이디입니다."),
     USER_NICKNAME_EXIST(400, "이미 존재하는 닉네임입니다."),
     USER_ACCOUNT_NOT_EXIST(400, "존재하지 않는 계정입니다."),
@@ -49,6 +54,7 @@ public enum ResponseCode {
     ADMIN_NOT_FOUND(400, "담당자가 없습니다."  ),
 
    // Company 관련
+
     COMPANY_ALREADY_EXIST(400, "등록된 회사가 이미 존재합니다."  ),
     COMPANY_NOT_FOUND(400, "회사를 찾을 수 없습니다."  );
 
