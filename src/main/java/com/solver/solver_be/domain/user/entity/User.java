@@ -1,5 +1,7 @@
 package com.solver.solver_be.domain.user.entity;
 
+import com.solver.solver_be.domain.user.dto.BusinessSignupRequestDto;
+import com.solver.solver_be.domain.user.dto.GuestSignupRequestDto;
 import lombok.*;
 
 import javax.persistence.*;
