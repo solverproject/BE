@@ -46,7 +46,7 @@ public class VisitFormService {
 
     // 2. 방문신청서 가져오기
     @Transactional(readOnly = true)
-    public ResponseEntity<GlobalResponseDto> getVisitForm(Guest guest) {
+    public ResponseEntity<GlobalResponseDto> getGuestVisitForm(Guest guest) {
 
         List<VisitForm> visiFormUserList = visitFormRepository.findByGuestId(guest.getId());
 
@@ -56,7 +56,24 @@ public class VisitFormService {
 
         List<VisitFromResponseDto> visitFromResponseDtoList = new ArrayList<>();
         for (VisitForm visitorForm : visiFormUserList) {
-            visitFromResponseDtoList.add(VisitFromResponseDto.of(visitorForm, guest));
+            visitFromResponseDtoList.add(VisitFromResponseDto.of(visitorForm));
+        }
+
+        return ResponseEntity.ok(GlobalResponseDto.of(ResponseCode.VISITOR_GET_SUCCESS, visitFromResponseDtoList));
+    }
+
+    @Transactional(readOnly = true)
+    public ResponseEntity<GlobalResponseDto> getAdminVisitForm(Admin admin) {
+
+        List<VisitForm> visiFormUserList = visitFormRepository.findByTarget(admin.getName());
+
+        if (visiFormUserList.isEmpty()) {
+            throw new VisitFormException(ResponseCode.VISITOR_NOT_FOUND);
+        }
+
+        List<VisitFromResponseDto> visitFromResponseDtoList = new ArrayList<>();
+        for (VisitForm visitorForm : visiFormUserList) {
+            visitFromResponseDtoList.add(VisitFromResponseDto.of(visitorForm));
         }
 
         return ResponseEntity.ok(GlobalResponseDto.of(ResponseCode.VISITOR_GET_SUCCESS, visitFromResponseDtoList));

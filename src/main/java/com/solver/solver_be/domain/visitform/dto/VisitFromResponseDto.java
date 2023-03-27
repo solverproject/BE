@@ -25,7 +25,22 @@ public class VisitFromResponseDto {
     private String visitor;
     private String phoneNum;
     private String status;
-
+    public static VisitFromResponseDto of(VisitForm visitForm){
+        return VisitFromResponseDto.builder()
+                .id(visitForm.getId())
+                .location(visitForm.getLocation())
+                .target(visitForm.getTarget())
+                .place(visitForm.getPlace())
+                .purpose(visitForm.getPurpose())
+                .startDate(visitForm.getStartDate())
+                .startTime(visitForm.getStartTime())
+                .endDate(visitForm.getEndDate())
+                .endTime(visitForm.getEndTime())
+                .visitor(visitForm.getGuest().getName())
+                .phoneNum(visitForm.getGuest().getPhoneNum())
+                .status(visitForm.getStatus())
+                .build();
+    }
     public static VisitFromResponseDto of(VisitForm visitForm, Guest guest){
         return VisitFromResponseDto.builder()
                 .id(visitForm.getId())
@@ -42,4 +57,5 @@ public class VisitFromResponseDto {
                 .status(visitForm.getStatus())
                 .build();
     }
+
 }

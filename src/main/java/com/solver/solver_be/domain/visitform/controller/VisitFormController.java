@@ -23,9 +23,15 @@ public class VisitFormController {
         return visitorService.createVisitForm(visitorRequestDto, userDetails.getGuest());
     }
 
-    @GetMapping("/visit")
-    public ResponseEntity<GlobalResponseDto> getVisitForm(@AuthenticationPrincipal UserDetailsImpl userDetails){
-        return visitorService.getVisitForm(userDetails.getGuest());
+    @GetMapping("/visit/guest")
+    public ResponseEntity<GlobalResponseDto> getGuestVisitForm(@AuthenticationPrincipal UserDetailsImpl userDetails){
+        return visitorService.getGuestVisitForm(userDetails.getGuest());
+    }
+
+
+    @GetMapping("/visit/admin")
+    public ResponseEntity<GlobalResponseDto> getAdminVisitForm(@AuthenticationPrincipal UserDetailsImpl userDetails){
+        return visitorService.getAdminVisitForm(userDetails.getAdmin());
     }
 
     @PutMapping("/visit/{id}")
