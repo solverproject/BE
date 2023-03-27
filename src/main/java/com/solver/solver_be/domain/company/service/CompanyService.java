@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -54,6 +55,35 @@ public class CompanyService {
             companyResponseDtoList.add(CompanyResponseDto.of(company));
         }
 
-        return  ResponseEntity.ok(GlobalResponseDto.of(ResponseCode.COMPANY_GET_SUCCESS, companyResponseDtoList));
+        return ResponseEntity.ok(GlobalResponseDto.of(ResponseCode.COMPANY_GET_SUCCESS, companyResponseDtoList));
+    }
+
+    // 3. 회사 내용 수정하기
+    public ResponseEntity<GlobalResponseDto> updateCompany(Long id, CompanyRequestDto companyRequestDto, User user){
+
+        Optional<Company> company = companyRepository.findById(id);
+
+        if(company.isEmpty()){
+            throw new CompanyException(ResponseCode.COMPANY_NOT_FOUND);
+        }
+
+        company.get().update(companyRequestDto);
+
+        CompanyResponseDto companyResponseDto = CompanyResponseDto.of(company.get());
+        return ResponseEntity.ok(GlobalResponseDto.of(ResponseCode.COMPANY_UPDATE_SUCCESS, companyResponseDto));
+    }
+
+    // 4. 회사 정보 삭제하기
+    public ResponseEntity<GlobalResponseDto> deleteCompany(Long id, User user){
+
+        Optional<Company> company = companyRepository.findById(id);
+
+        if(company.isEmpty()){
+            throw new CompanyException(ResponseCode.COMPANY_NOT_FOUND);
+        }
+
+        companyRepository.deleteById(id);
+
+        return ResponseEntity.ok(GlobalResponseDto.of(ResponseCode.COMPANY_DELETE_SUCCESS));
     }
 }

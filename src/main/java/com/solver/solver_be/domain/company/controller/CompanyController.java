@@ -7,10 +7,7 @@ import com.solver.solver_be.global.security.webSecurity.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -28,6 +25,17 @@ public class CompanyController {
     @GetMapping("/company")
     public ResponseEntity<GlobalResponseDto> getCompanies(@AuthenticationPrincipal UserDetailsImpl userDetails){
         return companyService.getCompanies(userDetails.getUser());
+    }
+
+    @PutMapping("/company/{id}")
+    public ResponseEntity<GlobalResponseDto> updateCompany(@PathVariable Long id, @RequestBody CompanyRequestDto companyRequestDto,
+                                                           @AuthenticationPrincipal UserDetailsImpl userDetails){
+        return companyService.updateCompany(id, companyRequestDto, userDetails.getUser());
+    }
+
+    @DeleteMapping("/company/{id}")
+    public ResponseEntity<GlobalResponseDto> deleteCompany(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails){
+        return companyService.deleteCompany(id, userDetails.getUser());
     }
 
 }

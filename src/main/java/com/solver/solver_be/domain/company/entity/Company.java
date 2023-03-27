@@ -52,4 +52,11 @@ public class Company extends TimeStamped {
                 .build();
     }
 
+    public void update(CompanyRequestDto companyRequestDto) {
+        this.businessNum = companyRequestDto.getBusinessNum();
+        this.businessCode = companyRequestDto.getBusinessCode();
+        this.businessName = companyRequestDto.getBusinessName();
+        this.x = companyRequestDto.getX();
+        this.y = companyRequestDto.getY();
+    }
 }

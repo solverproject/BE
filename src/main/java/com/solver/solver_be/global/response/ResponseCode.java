@@ -23,9 +23,10 @@ public enum ResponseCode {
     TOKEN_UPDATE_SUCCESS(200, "토큰이 업데이트되었습니다."),
 
    // Company 관련
-    COMPANY_REGISTER_SUCCESS(200, "회사 등록 대기 완료했습니다." ),
-
+    COMPANY_REGISTER_SUCCESS(200, "회사 정보 등록을 완료했습니다." ),
     COMPANY_GET_SUCCESS(200, "등록된 회사 가져오기 성공했습니다. " ),
+    COMPANY_UPDATE_SUCCESS(200, "회사 정보 변경을 완료했습니다."),
+    COMPANY_DELETE_SUCCESS(200, "회사 정보 삭제를 완료했습니다."),
 
     /*============================ FAIL ================================*/
     //Global

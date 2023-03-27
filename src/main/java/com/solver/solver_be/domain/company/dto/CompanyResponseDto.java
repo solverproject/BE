@@ -9,6 +9,8 @@ import lombok.Getter;
 @Getter
 public class CompanyResponseDto {
 
+    private Long id;
+
     private String businessNum;
 
     private String businessCode;
@@ -20,8 +22,9 @@ public class CompanyResponseDto {
     private Integer y;
 
     @Builder
-    public CompanyResponseDto(String businessNum, String businessCode, String businessName,
+    public CompanyResponseDto(Long id, String businessNum, String businessCode, String businessName,
                               Integer x, Integer y){
+        this.id = id;
         this.businessNum = businessNum;
         this.businessCode = businessCode;
         this.businessName = businessName;
@@ -41,6 +44,7 @@ public class CompanyResponseDto {
 
     public static CompanyResponseDto of(Company company) {
         return CompanyResponseDto.builder()
+                .id(company.getId())
                 .businessNum(company.getBusinessNum())
                 .businessCode(company.getBusinessCode())
                 .businessName(company.getBusinessName())
