@@ -1,6 +1,5 @@
 package com.solver.solver_be.domain.visitform.entity;
 
-import com.solver.solver_be.domain.branch.entity.Branch;
 import com.solver.solver_be.domain.user.entity.User;
 import com.solver.solver_be.domain.visitform.dto.VisitFormRequestDto;
 import com.solver.solver_be.global.util.TimeStamped;

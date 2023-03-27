@@ -28,7 +28,7 @@ public class BusinessSignupRequestDto {
     private String businessNum;
 
     @NotBlank(message = "회사명은 필수입니다.")
-    private String businessName;
+    private String companyName;
 
     private String companyToken = "";
 

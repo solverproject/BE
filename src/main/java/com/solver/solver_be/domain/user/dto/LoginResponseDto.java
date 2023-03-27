@@ -9,15 +9,15 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class LoginResponseDto {
 
-    private String businessName;
+    private String companyName;
 
     private String name;
 
     private String phoneNum;
 
     @Builder
-    private LoginResponseDto(String businessName, String name, String phoneNum) {
-        this.businessName =businessName;
+    private LoginResponseDto(String companyName, String name, String phoneNum) {
+        this.companyName = companyName;
         this.name = name;
         this.phoneNum = phoneNum;
     }
@@ -25,7 +25,7 @@ public class LoginResponseDto {
     public static LoginResponseDto of(User user) {
         return LoginResponseDto.builder()
                 .name(user.getName())
-                .businessName(user.getBusinessName())
+                .companyName(user.getCompanyName())
                 .phoneNum(user.getPhoneNum())
                 .build();
     }
