@@ -1,6 +1,7 @@
 package com.solver.solver_be.domain.company.entity;
 
 import com.solver.solver_be.domain.company.dto.CompanyRequestDto;
+import com.solver.solver_be.domain.user.dto.AdminSignupRequestDto;
 import com.solver.solver_be.global.util.TimeStamped;
 import lombok.*;
 
@@ -49,6 +50,16 @@ public class Company extends TimeStamped {
                 .companyName(companyRequestDto.getCompanyName())
                 .x(companyRequestDto.getX())
                 .y(companyRequestDto.getY())
+                .build();
+    }
+
+    public static Company of(AdminSignupRequestDto adminSignupRequestDto, Company company) {
+        return Company.builder()
+                .businessNum(adminSignupRequestDto.getBusinessNum())
+                .businessCode(company.getBusinessCode())
+                .companyName(adminSignupRequestDto.getCompanyName())
+                .x(company.getX())
+                .y(company.getY())
                 .build();
     }
 

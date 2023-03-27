@@ -20,24 +20,30 @@ public class VisitFormController {
     @PostMapping("/visit")
     public ResponseEntity<GlobalResponseDto> createVisitForm(@Valid @RequestBody VisitFormRequestDto visitorRequestDto,
                                                              @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        return visitorService.createVisitForm(visitorRequestDto, userDetails.getUser());
+        return visitorService.createVisitForm(visitorRequestDto, userDetails.getGuest());
     }
 
-    @GetMapping("/visit")
-    public ResponseEntity<GlobalResponseDto> getVisitForm(@AuthenticationPrincipal UserDetailsImpl userDetails){
-        return visitorService.getVisitForm(userDetails.getUser());
+    @GetMapping("/visit/guest")
+    public ResponseEntity<GlobalResponseDto> getGuestVisitForm(@AuthenticationPrincipal UserDetailsImpl userDetails){
+        return visitorService.getGuestVisitForm(userDetails.getGuest());
+    }
+
+
+    @GetMapping("/visit/admin")
+    public ResponseEntity<GlobalResponseDto> getAdminVisitForm(@AuthenticationPrincipal UserDetailsImpl userDetails){
+        return visitorService.getAdminVisitForm(userDetails.getAdmin());
     }
 
     @PutMapping("/visit/{id}")
     public ResponseEntity<GlobalResponseDto> updateVisitForm(@PathVariable Long id,
                                                          @RequestBody VisitFormRequestDto visitorRequestDto,
                                                          @AuthenticationPrincipal UserDetailsImpl userDetails){
-        return visitorService.updateVisitForm(id, visitorRequestDto, userDetails.getUser());
+        return visitorService.updateVisitForm(id, visitorRequestDto, userDetails.getGuest());
     }
 
     @DeleteMapping("/visit/{id}")
     public ResponseEntity<GlobalResponseDto> deleteVisitForm(@PathVariable Long id,
                                                           @AuthenticationPrincipal UserDetailsImpl userDetails){
-        return visitorService.deleteVisitForm(id, userDetails.getUser());
+        return visitorService.deleteVisitForm(id, userDetails.getGuest());
     }
 }

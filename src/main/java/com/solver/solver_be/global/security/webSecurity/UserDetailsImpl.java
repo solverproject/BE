@@ -1,6 +1,7 @@
 package com.solver.solver_be.global.security.webSecurity;
 
-import com.solver.solver_be.domain.user.entity.User;
+import com.solver.solver_be.domain.user.entity.Admin;
+import com.solver.solver_be.domain.user.entity.Guest;
 import com.solver.solver_be.domain.user.entity.UserRoleEnum;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -11,17 +12,25 @@ import java.util.Collection;
 
 public class UserDetailsImpl implements UserDetails {
 
-    private final User user;
+    private final Admin admin;
+    private final Guest guest;
     private final String userId;
 
-    public UserDetailsImpl(User user, String userId) {
-        this.user = user;
+    public UserDetailsImpl(Admin admin, String userId) {
+        this.admin = admin;
+        this.guest = null;
+        this.userId = userId;
+    }
+
+    public UserDetailsImpl(Guest guest, String userId) {
+        this.admin = null;
+        this.guest = guest;
         this.userId = userId;
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        UserRoleEnum role = user.getRole();
+        UserRoleEnum role = (admin != null) ? admin.getRole() : guest.getRole();
         String authority = role.getAuthority();
 
         SimpleGrantedAuthority simpleGrantedAuthority = new SimpleGrantedAuthority(authority);
@@ -31,8 +40,12 @@ public class UserDetailsImpl implements UserDetails {
         return authorities;
     }
 
-    public User getUser() {
-        return user;
+    public Admin getAdmin() {
+        return this.admin;
+    }
+
+    public Guest getGuest() {
+        return this.guest;
     }
 
     @Override

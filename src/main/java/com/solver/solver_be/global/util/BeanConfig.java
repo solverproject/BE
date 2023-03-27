@@ -17,4 +17,5 @@ public class BeanConfig {
     public JPAQueryFactory jpaQueryFactory() {
         return new JPAQueryFactory(em);
     }
+
 }

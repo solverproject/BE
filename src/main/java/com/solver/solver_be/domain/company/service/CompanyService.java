@@ -4,7 +4,8 @@ import com.solver.solver_be.domain.company.dto.CompanyRequestDto;
 import com.solver.solver_be.domain.company.dto.CompanyResponseDto;
 import com.solver.solver_be.domain.company.entity.Company;
 import com.solver.solver_be.domain.company.repository.CompanyRepository;
-import com.solver.solver_be.domain.user.entity.User;
+import com.solver.solver_be.domain.user.entity.Admin;
+import com.solver.solver_be.domain.user.entity.Guest;
 import com.solver.solver_be.global.exception.exceptionType.CompanyException;
 import com.solver.solver_be.global.exception.exceptionType.UserException;
 import com.solver.solver_be.global.response.GlobalResponseDto;
@@ -27,7 +28,7 @@ public class CompanyService {
 
     // 1. 회사 등록
     @Transactional
-    public ResponseEntity<GlobalResponseDto> createCompany(CompanyRequestDto companyRequestDto, User user) {
+    public ResponseEntity<GlobalResponseDto> createCompany(CompanyRequestDto companyRequestDto) {
 
         // 원래 등록된 회사 였는지.
         if (companyRepository.findByCompanyName(companyRequestDto.getCompanyName()).isPresent()) {
@@ -42,7 +43,7 @@ public class CompanyService {
 
     // 2. 회사 목록 가져오기
     @Transactional(readOnly = true)
-    public ResponseEntity<GlobalResponseDto> getCompanies(User user) {
+    public ResponseEntity<GlobalResponseDto> getCompanies(Guest guest) {
 
         List<Company> companyList = companyRepository.findAllByOrderByCreatedAtDesc();
 
@@ -60,7 +61,7 @@ public class CompanyService {
 
     // 3. 회사 내용 수정하기
     @Transactional
-    public ResponseEntity<GlobalResponseDto> updateCompany(Long id, CompanyRequestDto companyRequestDto, User user){
+    public ResponseEntity<GlobalResponseDto> updateCompany(Long id, CompanyRequestDto companyRequestDto, Admin admin){
 
         Optional<Company> company = companyRepository.findById(id);
 
@@ -76,7 +77,7 @@ public class CompanyService {
 
     // 4. 회사 정보 삭제하기
     @Transactional
-    public ResponseEntity<GlobalResponseDto> deleteCompany(Long id, User user){
+    public ResponseEntity<GlobalResponseDto> deleteCompany(Long id, Admin admin){
 
         Optional<Company> company = companyRepository.findById(id);
 

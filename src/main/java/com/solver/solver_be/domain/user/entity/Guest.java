@@ -1,16 +1,17 @@
 package com.solver.solver_be.domain.user.entity;
 
-import com.solver.solver_be.domain.user.dto.BusinessSignupRequestDto;
 import com.solver.solver_be.domain.user.dto.GuestSignupRequestDto;
 import lombok.*;
 
 import javax.persistence.*;
 
-@Entity(name = "users")
+@Entity
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Builder
+@AllArgsConstructor
 @EqualsAndHashCode
-public class User {
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+public class Guest {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -26,29 +27,13 @@ public class User {
 
     @Column(nullable = false)
     private String name;
-    @Column
-    private String businessNum;
-
-    @Column
-    private String companyName;
 
     @Column(nullable = false)
     @Enumerated(value = EnumType.STRING)
     private UserRoleEnum role;
 
-    @Builder
-    private User(String userId, String password, String phoneNum, String name, String businessNum, String companyName, UserRoleEnum role) {
-        this.userId = userId;
-        this.password = password;
-        this.phoneNum = phoneNum;
-        this.name = name;
-        this.companyName = companyName;
-        this.businessNum = businessNum;
-        this.role = role;
-    }
-
-    public static User of(String userId, String password, String phoneNum, UserRoleEnum role) {
-        return User.builder()
+    public static Guest of(String userId, String password, String phoneNum, UserRoleEnum role) {
+        return Guest.builder()
                 .userId(userId)
                 .password(password)
                 .phoneNum(phoneNum)
@@ -56,20 +41,18 @@ public class User {
                 .build();
     }
 
-    public static User of(BusinessSignupRequestDto signupRequestDto, String userId, String password, UserRoleEnum role) {
-        return User.builder()
-                .userId(userId)
+    public static Guest of(GuestSignupRequestDto signupRequestDto, String password, UserRoleEnum role) {
+        return Guest.builder()
+                .userId(signupRequestDto.getUserId())
                 .password(password)
                 .phoneNum(signupRequestDto.getPhoneNum())
                 .name(signupRequestDto.getName())
-                .companyName(signupRequestDto.getCompanyName())
-                .businessNum(signupRequestDto.getBusinessNum())
                 .role(role)
                 .build();
     }
 
-    public static User of(GuestSignupRequestDto signupRequestDto, String userId, String password, UserRoleEnum role) {
-        return User.builder()
+    public static Guest of(GuestSignupRequestDto signupRequestDto, String userId, String password, UserRoleEnum role) {
+        return Guest.builder()
                 .userId(userId)
                 .password(password)
                 .phoneNum(signupRequestDto.getPhoneNum())
@@ -77,5 +60,5 @@ public class User {
                 .role(role)
                 .build();
     }
+
 }
-

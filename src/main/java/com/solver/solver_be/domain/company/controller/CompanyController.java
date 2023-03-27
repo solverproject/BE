@@ -17,25 +17,25 @@ public class CompanyController {
     private final CompanyService companyService;
 
     @PostMapping("/company")
-    public ResponseEntity<GlobalResponseDto> createCompany(@RequestBody CompanyRequestDto companyRequestDto,
-                                                           @AuthenticationPrincipal UserDetailsImpl userDetails){
-        return companyService.createCompany(companyRequestDto,userDetails.getUser());
+    public ResponseEntity<GlobalResponseDto> createCompany(@RequestBody CompanyRequestDto companyRequestDto
+    ) {
+        return companyService.createCompany(companyRequestDto);
     }
 
     @GetMapping("/company")
-    public ResponseEntity<GlobalResponseDto> getCompanies(@AuthenticationPrincipal UserDetailsImpl userDetails){
-        return companyService.getCompanies(userDetails.getUser());
+    public ResponseEntity<GlobalResponseDto> getCompanies(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return companyService.getCompanies(userDetails.getGuest());
     }
 
     @PutMapping("/company/{id}")
     public ResponseEntity<GlobalResponseDto> updateCompany(@PathVariable Long id, @RequestBody CompanyRequestDto companyRequestDto,
-                                                           @AuthenticationPrincipal UserDetailsImpl userDetails){
-        return companyService.updateCompany(id, companyRequestDto, userDetails.getUser());
+                                                           @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return companyService.updateCompany(id, companyRequestDto, userDetails.getAdmin());
     }
 
     @DeleteMapping("/company/{id}")
-    public ResponseEntity<GlobalResponseDto> deleteCompany(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails){
-        return companyService.deleteCompany(id, userDetails.getUser());
+    public ResponseEntity<GlobalResponseDto> deleteCompany(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return companyService.deleteCompany(id, userDetails.getAdmin());
     }
 
 }

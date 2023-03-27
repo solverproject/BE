@@ -6,7 +6,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 
 @Getter
-public class BusinessSignupRequestDto {
+public class AdminSignupRequestDto {
 
     @NotBlank(message = "아이디는 필수입니다.")
     @Pattern(regexp = "^[a-z0-9]{4,10}$", message = "아이디는 4~10자 영문 대 소문자, 숫자를 사용하세요.")
@@ -20,7 +20,7 @@ public class BusinessSignupRequestDto {
     @Pattern(regexp = "^\\d{3}-\\d{3,4}-\\d{4}$", message = "전화번호는 010-XXXX-XXXX 형식입니다.")
     private String phoneNum;
 
-    @NotBlank(message = "이름은 필수입니다.")
+    @NotBlank(message = "담당자명은 필수입니다.")
     private String name;
 
     @NotBlank(message = "회사 전화번호는 필수입니다.")
@@ -30,6 +30,7 @@ public class BusinessSignupRequestDto {
     @NotBlank(message = "회사명은 필수입니다.")
     private String companyName;
 
+    @NotBlank
     private String companyToken = "";
 
 }
