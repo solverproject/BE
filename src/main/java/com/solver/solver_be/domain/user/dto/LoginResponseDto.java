@@ -1,32 +1,34 @@
 package com.solver.solver_be.domain.user.dto;
 
-import com.solver.solver_be.domain.user.entity.User;
+import com.solver.solver_be.domain.user.entity.Admin;
+import com.solver.solver_be.domain.user.entity.Guest;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
+@Builder
 @NoArgsConstructor
+@AllArgsConstructor
 public class LoginResponseDto {
 
     private String companyName;
-
     private String name;
-
     private String phoneNum;
 
-    @Builder
-    private LoginResponseDto(String companyName, String name, String phoneNum) {
-        this.companyName = companyName;
-        this.name = name;
-        this.phoneNum = phoneNum;
-    }
-
-    public static LoginResponseDto of(User user) {
+    public static LoginResponseDto of(Admin admin) {
         return LoginResponseDto.builder()
-                .name(user.getName())
-                .companyName(user.getCompanyName())
-                .phoneNum(user.getPhoneNum())
+                .name(admin.getName())
+                .phoneNum(admin.getPhoneNum())
                 .build();
     }
+
+    public static LoginResponseDto of(Guest guest) {
+        return LoginResponseDto.builder()
+                .name(guest.getName())
+                .phoneNum(guest.getPhoneNum())
+                .build();
+    }
+
 }

@@ -20,24 +20,24 @@ public class VisitFormController {
     @PostMapping("/visit")
     public ResponseEntity<GlobalResponseDto> createVisitForm(@Valid @RequestBody VisitFormRequestDto visitorRequestDto,
                                                              @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        return visitorService.createVisitForm(visitorRequestDto, userDetails.getUser());
+        return visitorService.createVisitForm(visitorRequestDto, userDetails.getGuest());
     }
 
     @GetMapping("/visit")
     public ResponseEntity<GlobalResponseDto> getVisitForm(@AuthenticationPrincipal UserDetailsImpl userDetails){
-        return visitorService.getVisitForm(userDetails.getUser());
+        return visitorService.getVisitForm(userDetails.getGuest());
     }
 
     @PutMapping("/visit/{id}")
     public ResponseEntity<GlobalResponseDto> updateVisitForm(@PathVariable Long id,
                                                          @RequestBody VisitFormRequestDto visitorRequestDto,
                                                          @AuthenticationPrincipal UserDetailsImpl userDetails){
-        return visitorService.updateVisitForm(id, visitorRequestDto, userDetails.getUser());
+        return visitorService.updateVisitForm(id, visitorRequestDto, userDetails.getGuest());
     }
 
     @DeleteMapping("/visit/{id}")
     public ResponseEntity<GlobalResponseDto> deleteVisitForm(@PathVariable Long id,
                                                           @AuthenticationPrincipal UserDetailsImpl userDetails){
-        return visitorService.deleteVisitForm(id, userDetails.getUser());
+        return visitorService.deleteVisitForm(id, userDetails.getGuest());
     }
 }

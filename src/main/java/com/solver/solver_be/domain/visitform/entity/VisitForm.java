@@ -1,6 +1,6 @@
 package com.solver.solver_be.domain.visitform.entity;
 
-import com.solver.solver_be.domain.user.entity.User;
+import com.solver.solver_be.domain.user.entity.Guest;
 import com.solver.solver_be.domain.visitform.dto.VisitFormRequestDto;
 import com.solver.solver_be.global.util.TimeStamped;
 import lombok.*;
@@ -46,11 +46,11 @@ public class VisitForm extends TimeStamped {
     private String status;
 
     @ManyToOne
-    @JoinColumn(name = "USER_ID", nullable = false)
-    private User user;
+    @JoinColumn(name = "GUEST_ID", nullable = false)
+    private Guest guest;
 
 
-    public static VisitForm of(VisitFormRequestDto visitorRequestDto, User user) {
+    public static VisitForm of(VisitFormRequestDto visitorRequestDto, Guest guest) {
         return VisitForm.builder()
                 .location(visitorRequestDto.getLocation())
                 .target(visitorRequestDto.getTarget())
@@ -61,7 +61,7 @@ public class VisitForm extends TimeStamped {
                 .startTime(visitorRequestDto.getStartTime())
                 .endTime(visitorRequestDto.getEndTime())
                 .status(visitorRequestDto.getStatus())
-                .user(user)
+                .guest(guest)
                 .build();
     }
 

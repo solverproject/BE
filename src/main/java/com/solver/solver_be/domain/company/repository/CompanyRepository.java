@@ -10,4 +10,6 @@ public interface CompanyRepository extends JpaRepository<Company, Long> {
     Optional<Company> findByCompanyName(String companyName);
 
     List<Company> findAllByOrderByCreatedAtDesc();
+
+    Company findByBusinessCode(String companyToken);
 }
