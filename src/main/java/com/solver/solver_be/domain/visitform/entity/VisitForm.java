@@ -2,6 +2,7 @@ package com.solver.solver_be.domain.visitform.entity;
 
 import com.solver.solver_be.domain.user.entity.Guest;
 import com.solver.solver_be.domain.visitform.dto.VisitFormRequestDto;
+import com.solver.solver_be.domain.visitform.dto.VisitFromResponseDto;
 import com.solver.solver_be.global.util.TimeStamped;
 import lombok.*;
 
@@ -46,7 +47,7 @@ public class VisitForm extends TimeStamped {
     private String status;
 
     @ManyToOne
-    @JoinColumn(name = "GUEST_ID", nullable = false)
+    @JoinColumn(name = "GUEST_ID")
     private Guest guest;
 
 
@@ -74,5 +75,9 @@ public class VisitForm extends TimeStamped {
         this.endDate = visitorRequestDto.getEndDate();
         this.startTime = visitorRequestDto.getStartTime();
         this.endTime = visitorRequestDto.getEndTime();
+    }
+
+    public void updateStatus(VisitFormRequestDto visitFormRequestDto){
+        this.status = visitFormRequestDto.getStatus();
     }
 }
