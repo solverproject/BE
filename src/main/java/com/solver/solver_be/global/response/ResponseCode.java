@@ -28,6 +28,9 @@ public enum ResponseCode {
     COMPANY_UPDATE_SUCCESS(200, "회사 정보 변경을 완료했습니다."),
     COMPANY_DELETE_SUCCESS(200, "회사 정보 삭제를 완료했습니다."),
 
+    // Email 관련
+    EMAIL_CHECK(200, "이메일을 확인 하십시오." ),
+
     /*============================ FAIL ================================*/
     //Global
     NOT_VALID_REQUEST(400, "유효하지 않은 요청입니다."),
