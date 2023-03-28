@@ -135,7 +135,7 @@ public class VisitFormService {
     }
 
     @Scheduled(fixedDelay = 1000)
-    private void scheduleFixedDelay()throws InterruptedException {
+    public void scheduleFixedDelay()throws InterruptedException {
         log.info("Log Test");
         Thread.sleep(1000L);
     }
