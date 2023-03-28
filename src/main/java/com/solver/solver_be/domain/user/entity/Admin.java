@@ -35,7 +35,7 @@ public class Admin{
     private UserRoleEnum role;
 
     @ManyToOne
-    @JoinColumn(name = "COMPANY_ID", nullable = false)
+    @JoinColumn(name = "COMPANY_ID")
     private Company company;
 
     public static Admin of(String userId, String password, String phoneNum, UserRoleEnum role, Company company) {

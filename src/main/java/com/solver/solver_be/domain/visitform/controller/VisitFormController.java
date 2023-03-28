@@ -6,7 +6,9 @@ import com.solver.solver_be.global.response.GlobalResponseDto;
 import com.solver.solver_be.global.security.webSecurity.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -34,11 +36,18 @@ public class VisitFormController {
         return visitorService.getAdminVisitForm(userDetails.getAdmin());
     }
 
-    @PutMapping("/visit/{id}")
-    public ResponseEntity<GlobalResponseDto> updateVisitForm(@PathVariable Long id,
+    @PutMapping("/visit/guest/{id}")
+    public ResponseEntity<GlobalResponseDto> updateGuestVisitForm(@PathVariable Long id,
                                                          @RequestBody VisitFormRequestDto visitorRequestDto,
                                                          @AuthenticationPrincipal UserDetailsImpl userDetails){
-        return visitorService.updateVisitForm(id, visitorRequestDto, userDetails.getGuest());
+        return visitorService.updateGuestVisitForm(id, visitorRequestDto, userDetails.getGuest());
+    }
+
+    @PutMapping("/visit/admin/{id}")
+    public ResponseEntity<GlobalResponseDto> updateAdminVisitForm(@PathVariable Long id,
+                                                                  @RequestBody VisitFormRequestDto visitFormRequestDto,
+                                                                  @AuthenticationPrincipal UserDetailsImpl userDetails){
+        return visitorService.updateAdminVisitForm(id, visitFormRequestDto, userDetails.getAdmin());
     }
 
     @DeleteMapping("/visit/{id}")

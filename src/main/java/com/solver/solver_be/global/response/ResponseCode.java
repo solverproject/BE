@@ -18,6 +18,7 @@ public enum ResponseCode {
     VISITOR_GET_SUCCESS(200, "방문 신청 내용 조회 성공"),
     VISITOR_UPDATE_SUCCESS(200, "방문 기록 수정 성공" ),
     VISITOR_DELETE_SUCCESS(200,"방문 기록 삭제 성공" ),
+    VISITOR_STATUS_UPDATE_SUCCESS(200, "방문자 상태 변경 성공"),
 
     // Token 관련
     TOKEN_UPDATE_SUCCESS(200, "토큰이 업데이트되었습니다."),
