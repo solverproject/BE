@@ -56,6 +56,10 @@ dependencies {
     //querydsl 관련 의존성 주입
     implementation "com.querydsl:querydsl-jpa:${queryDslVersion}"
     implementation "com.querydsl:querydsl-apt:${queryDslVersion}"
+    // redis 관련 의존성 주입
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+    // mail 관련 의존성 주입
+    implementation 'org.springframework.boot:spring-boot-starter-mail'
 }
 
 tasks.named('test') {
