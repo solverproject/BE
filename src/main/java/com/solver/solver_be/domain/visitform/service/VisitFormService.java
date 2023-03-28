@@ -134,9 +134,9 @@ public class VisitFormService {
         return visitFormRepository.findById(id).orElseThrow(() -> new VisitFormException(ResponseCode.VISITOR_NOT_FOUND));
     }
 
-    @Scheduled(fixedDelay = 1000)
-    public void scheduleFixedDelay()throws InterruptedException {
-        log.info("Log Test");
-        Thread.sleep(1000L);
-    }
+//    @Scheduled(fixedDelay = 1000)
+//    public void scheduleFixedDelay()throws InterruptedException {
+//        log.info("Log Test");
+//        Thread.sleep(1000L);
+//    }
 }
