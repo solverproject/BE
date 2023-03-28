@@ -7,8 +7,6 @@ public class CompanyRequestDto {
 
     private String businessNum;
 
-    private String businessCode;
-
     private String companyName;
 
     private Integer x;

@@ -48,11 +48,13 @@ public class AdminService {
             throw new UserException(ResponseCode.USER_ID_EXIST);
         }
 
+        Optional<Company> foundCompany = companyRepository.findByCompanyTokenAndCompanyName(signupRequestDto.getCompanyToken(), signupRequestDto.getCompanyName());
+
         // CompanyToken Check
-        if (!signupRequestDto.getCompanyToken().equals(COMPANY_TOKEN)) {
+        if (!foundCompany.isPresent()) {
             throw new UserException(ResponseCode.INVALID_COMPANY_TOKEN);
         }
-        Company company = companyRepository.findByBusinessCode(COMPANY_TOKEN);
+        Company company = companyRepository.findByCompanyToken(signupRequestDto.getCompanyToken());
         UserRoleEnum role = UserRoleEnum.ADMIN;
 
         // Save Admin Entity

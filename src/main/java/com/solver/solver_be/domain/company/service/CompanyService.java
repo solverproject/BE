@@ -14,17 +14,22 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import java.security.SecureRandom;
 
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
 public class CompanyService {
 
+    private static final String BASE62 = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+
+    private static final int ID_LENGTH = 16;
+
     private final CompanyRepository companyRepository;
+
+
 
     // 1. 회사 등록
     @Transactional
@@ -34,8 +39,9 @@ public class CompanyService {
         if (companyRepository.findByCompanyName(companyRequestDto.getCompanyName()).isPresent()) {
             throw new UserException(ResponseCode.COMPANY_ALREADY_EXIST);
         }
+        String companyToken = createCompanyToken(companyRequestDto);
 
-        Company company = companyRepository.saveAndFlush(Company.of(companyRequestDto));
+        Company company = companyRepository.saveAndFlush(Company.of(companyRequestDto, companyToken));
 
         return ResponseEntity.ok(GlobalResponseDto.of(ResponseCode.COMPANY_REGISTER_SUCCESS, CompanyResponseDto.of(company)));
 
@@ -88,5 +94,18 @@ public class CompanyService {
         companyRepository.deleteById(id);
 
         return ResponseEntity.ok(GlobalResponseDto.of(ResponseCode.COMPANY_DELETE_SUCCESS));
+    }
+
+    //====================METHOD====================
+
+    public String createCompanyToken(CompanyRequestDto companyRequestDto) {
+        SecureRandom random = new SecureRandom();
+        byte[] bytes = new byte[ID_LENGTH];
+        random.nextBytes(bytes);
+        StringBuilder sb = new StringBuilder(ID_LENGTH);
+        for (byte b : bytes) {
+            sb.append(BASE62.charAt(Math.abs(b) % BASE62.length()));
+        }
+        return sb.toString();
     }
 }

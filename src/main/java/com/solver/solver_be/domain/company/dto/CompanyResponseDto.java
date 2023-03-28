@@ -2,8 +2,6 @@ package com.solver.solver_be.domain.company.dto;
 
 
 import com.solver.solver_be.domain.company.entity.Company;
-import com.solver.solver_be.domain.user.entity.Admin;
-import com.solver.solver_be.domain.user.entity.Guest;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -14,23 +12,24 @@ public class CompanyResponseDto {
 
     private String businessNum;
 
-    private String businessCode;
-
     private String companyName;
 
     private Integer x;
 
     private Integer y;
 
+    private String companyToken;
+
+
     @Builder
-    public CompanyResponseDto(Long id, String businessNum, String businessCode, String companyName,
-                              Integer x, Integer y){
+    public CompanyResponseDto(Long id, String businessNum, String companyName,
+                              Integer x, Integer y, String companyToken){
         this.id = id;
         this.businessNum = businessNum;
-        this.businessCode = businessCode;
         this.companyName = companyName;
         this.x = x;
         this.y = y;
+        this.companyToken = companyToken;
     }
 
 
@@ -38,10 +37,10 @@ public class CompanyResponseDto {
         return CompanyResponseDto.builder()
                 .id(company.getId())
                 .businessNum(company.getBusinessNum())
-                .businessCode(company.getBusinessCode())
                 .companyName(company.getCompanyName())
                 .x(company.getX())
                 .y(company.getY())
+                .companyToken(company.getCompanyToken())
                 .build();
     }
 }

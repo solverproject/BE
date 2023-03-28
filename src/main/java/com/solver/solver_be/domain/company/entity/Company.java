@@ -21,9 +21,6 @@ public class Company extends TimeStamped {
     @Column(nullable = false)
     private String businessNum;
 
-    @Column(unique = true)
-    private String businessCode;
-
     @Column(nullable = false, unique = true)
     private String companyName;
 
@@ -33,30 +30,32 @@ public class Company extends TimeStamped {
     @Column
     private Integer y;
 
-    public static Company of(String businessNum, String businessCode, String companyName, Integer x, Integer y) {
+    @Column(unique = true)
+    private String companyToken;
+
+    public static Company of(String businessNum, String companyName, Integer x, Integer y, String companyToken) {
         return Company.builder()
                 .businessNum(businessNum)
-                .businessCode(businessCode)
                 .companyName(companyName)
                 .x(x)
                 .y(y)
+                .companyToken(companyToken)
                 .build();
     }
 
-    public static Company of(CompanyRequestDto companyRequestDto) {
+    public static Company of(CompanyRequestDto companyRequestDto, String companyToken) {
         return Company.builder()
                 .businessNum(companyRequestDto.getBusinessNum())
-                .businessCode(companyRequestDto.getBusinessCode())
                 .companyName(companyRequestDto.getCompanyName())
                 .x(companyRequestDto.getX())
                 .y(companyRequestDto.getY())
+                .companyToken(companyToken)
                 .build();
     }
 
     public static Company of(AdminSignupRequestDto adminSignupRequestDto, Company company) {
         return Company.builder()
                 .businessNum(adminSignupRequestDto.getBusinessNum())
-                .businessCode(company.getBusinessCode())
                 .companyName(adminSignupRequestDto.getCompanyName())
                 .x(company.getX())
                 .y(company.getY())
@@ -65,7 +64,6 @@ public class Company extends TimeStamped {
 
     public void update(CompanyRequestDto companyRequestDto) {
         this.businessNum = companyRequestDto.getBusinessNum();
-        this.businessCode = companyRequestDto.getBusinessCode();
         this.companyName = companyRequestDto.getCompanyName();
         this.x = companyRequestDto.getX();
         this.y = companyRequestDto.getY();
