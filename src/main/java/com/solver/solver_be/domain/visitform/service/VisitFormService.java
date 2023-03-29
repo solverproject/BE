@@ -3,11 +3,9 @@ package com.solver.solver_be.domain.visitform.service;
 import com.solver.solver_be.domain.user.entity.Admin;
 import com.solver.solver_be.domain.user.entity.Guest;
 import com.solver.solver_be.domain.user.repository.AdminRepository;
-import com.solver.solver_be.domain.user.repository.GuestRepository;
 import com.solver.solver_be.domain.visitform.dto.AccessStatusResponseDto;
 import com.solver.solver_be.domain.visitform.dto.VisitFormRequestDto;
-import com.solver.solver_be.domain.visitform.dto.VisitFormStatusResponseDto;
-import com.solver.solver_be.domain.visitform.dto.VisitFromResponseDto;
+import com.solver.solver_be.domain.visitform.dto.VisitFormResponseDto;
 import com.solver.solver_be.domain.visitform.entity.VisitForm;
 import com.solver.solver_be.domain.visitform.repository.VisitFormRepository;
 import com.solver.solver_be.global.exception.exceptionType.UserException;
@@ -17,7 +15,6 @@ import com.solver.solver_be.global.response.ResponseCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -41,9 +38,9 @@ public class VisitFormService {
             throw new UserException(ResponseCode.ADMIN_NOT_FOUND);
         }
 
-        VisitForm visitorForm = visitFormRepository.saveAndFlush(VisitForm.of(visitFormRequestDto, guest));
+        VisitForm visitForm = visitFormRepository.saveAndFlush(VisitForm.of(visitFormRequestDto, guest));
 
-        return ResponseEntity.ok(GlobalResponseDto.of(ResponseCode.VISITOR_WIRTE_SUCCESS, VisitFromResponseDto.of(visitorForm, guest)));
+        return ResponseEntity.ok(GlobalResponseDto.of(ResponseCode.VISITOR_WIRTE_SUCCESS, VisitFormResponseDto.of(visitForm, guest)));
     }
 
     // 2. 방문신청서 가져오기
@@ -52,9 +49,9 @@ public class VisitFormService {
 
         List<VisitForm> visiFormUserList = visitFormRepository.findByGuestId(guest.getId());
 
-        List<VisitFromResponseDto> visitFromResponseDtoList = new ArrayList<>();
+        List<VisitFormResponseDto> visitFromResponseDtoList = new ArrayList<>();
         for (VisitForm visitorForm : visiFormUserList) {
-            visitFromResponseDtoList.add(VisitFromResponseDto.of(visitorForm));
+            visitFromResponseDtoList.add(VisitFormResponseDto.of(visitorForm));
         }
 
         return ResponseEntity.ok(GlobalResponseDto.of(ResponseCode.VISITOR_GET_SUCCESS, visitFromResponseDtoList));
@@ -63,18 +60,18 @@ public class VisitFormService {
     @Transactional(readOnly = true)
     public ResponseEntity<GlobalResponseDto> getAdminVisitForm(Admin admin) {
 
-        List<VisitForm> visiFormUserList = visitFormRepository.findByTarget(admin.getName());
+        List<VisitForm> visitFormUserList = visitFormRepository.findByTarget(admin.getName());
 
-//        if (visiFormUserList.isEmpty()) {
+//        if (visitFormUserList.isEmpty()) {
 //            throw new VisitFormException(ResponseCode.VISITOR_NOT_FOUND);
 //        }
 
-        List<VisitFromResponseDto> visitFromResponseDtoList = new ArrayList<>();
-        for (VisitForm visitorForm : visiFormUserList) {
-            visitFromResponseDtoList.add(VisitFromResponseDto.of(visitorForm));
+        List<VisitFormResponseDto> visitFormResponseDtos = new ArrayList<>();
+        for (VisitForm visitorForm : visitFormUserList) {
+            visitFormResponseDtos.add(VisitFormResponseDto.of(visitorForm));
         }
 
-        return ResponseEntity.ok(GlobalResponseDto.of(ResponseCode.VISITOR_GET_SUCCESS, visitFromResponseDtoList));
+        return ResponseEntity.ok(GlobalResponseDto.of(ResponseCode.VISITOR_GET_SUCCESS, visitFormResponseDtos));
     }
 
     // 3. 방문신청서 수정 ( Guest )
@@ -89,8 +86,8 @@ public class VisitFormService {
 
         visitorForm.update(visitFormRequestDto);
 
-        VisitFromResponseDto visitFromResponseDto = VisitFromResponseDto.of(visitorForm, guest);
-        return ResponseEntity.ok(GlobalResponseDto.of(ResponseCode.VISITOR_UPDATE_SUCCESS, visitFromResponseDto));
+        VisitFormResponseDto visitFormResponseDto = VisitFormResponseDto.of(visitorForm, guest);
+        return ResponseEntity.ok(GlobalResponseDto.of(ResponseCode.VISITOR_UPDATE_SUCCESS, visitFormResponseDto));
     }
 
     // 4. 방문신청서 수정 ( Admin )
@@ -105,8 +102,8 @@ public class VisitFormService {
 
         visitForm.updateStatus(visitFormRequestDto);
 
-        VisitFormStatusResponseDto visitFormStatusResponseDto = VisitFormStatusResponseDto.of(visitForm);
-        return ResponseEntity.ok(GlobalResponseDto.of(ResponseCode.VISITOR_STATUS_UPDATE_SUCCESS, visitFormStatusResponseDto));
+        VisitFormResponseDto visitFromResponseDto = VisitFormResponseDto.of(visitForm);
+        return ResponseEntity.ok(GlobalResponseDto.of(ResponseCode.VISITOR_STATUS_UPDATE_SUCCESS, visitFromResponseDto));
     }
 
     // 5. 방문신청서 삭제
