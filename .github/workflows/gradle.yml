@@ -32,7 +32,12 @@ jobs:
         key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
         restore-keys: |
           ${{ runner.os }}-gradle-
-      
+    
+    # Delete Gradle Cache
+    - name: Delete Gradle Cache
+      run: |
+        rm -rf ~/.gradle/caches/
+      shell: bash
             
     ## create application-common.yml
     - name: make application.yml
