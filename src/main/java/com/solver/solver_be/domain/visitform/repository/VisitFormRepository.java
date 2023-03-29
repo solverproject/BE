@@ -9,8 +9,9 @@ public interface VisitFormRepository extends JpaRepository<VisitForm, Long> {
 
     List<VisitForm> findByGuestId(Long userId);
 
-
     List<VisitForm> findByTarget(String name);
 
     VisitForm findByGuestIdAndStartDate(Long id, String startDate);
+
+    VisitForm findByIdAndTarget(Long id, String target);
 }
