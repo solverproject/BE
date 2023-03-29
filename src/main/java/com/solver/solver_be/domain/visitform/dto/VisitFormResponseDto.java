@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class VisitFromResponseDto {
+public class VisitFormResponseDto {
 
     private Long id;
     private String location;
@@ -25,8 +25,8 @@ public class VisitFromResponseDto {
     private String visitor;
     private String phoneNum;
     private String status;
-    public static VisitFromResponseDto of(VisitForm visitForm){
-        return VisitFromResponseDto.builder()
+    public static VisitFormResponseDto of(VisitForm visitForm){
+        return VisitFormResponseDto.builder()
                 .id(visitForm.getId())
                 .location(visitForm.getLocation())
                 .target(visitForm.getTarget())
@@ -41,8 +41,8 @@ public class VisitFromResponseDto {
                 .status(visitForm.getStatus())
                 .build();
     }
-    public static VisitFromResponseDto of(VisitForm visitForm, Guest guest){
-        return VisitFromResponseDto.builder()
+    public static VisitFormResponseDto of(VisitForm visitForm, Guest guest){
+        return VisitFormResponseDto.builder()
                 .id(visitForm.getId())
                 .location(visitForm.getLocation())
                 .target(visitForm.getTarget())
