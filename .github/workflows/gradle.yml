@@ -71,7 +71,9 @@ jobs:
       with:
         host: ${{ secrets.EC2_HOST }}
         username: ${{ secrets.EC2_USERNAME }}
+
         password: ${{ secrets.EC2_PW }}
+
         port: 22
         script: |
           sudo usermod -aG docker $USER
@@ -79,4 +81,6 @@ jobs:
           sudo docker stop $(docker ps -a -q) 
           sudo docker rm $(docker ps -a -q)
           sudo docker pull ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}
+
           sudo docker run -d -p 8080:8080 ${{ secrets.DOCKER_USERNAME }}/${{ secrets.DOCKER_REPO }}
+

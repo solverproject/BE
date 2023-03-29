@@ -53,9 +53,11 @@ dependencies {
     implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
     // OAuth2 클라이언트 라이브러리 제공
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+
     //querydsl 관련 의존성 주입
     implementation "com.querydsl:querydsl-jpa:${queryDslVersion}"
     implementation "com.querydsl:querydsl-apt:${queryDslVersion}"
+
 }
 
 tasks.named('test') {
