@@ -52,10 +52,6 @@ public class VisitFormService {
 
         List<VisitForm> visiFormUserList = visitFormRepository.findByGuestId(guest.getId());
 
-//        if (visiFormUserList.isEmpty()) {
-//            throw new VisitFormException(ResponseCode.VISITOR_NOT_FOUND);
-//        }
-
         List<VisitFromResponseDto> visitFromResponseDtoList = new ArrayList<>();
         for (VisitForm visitorForm : visiFormUserList) {
             visitFromResponseDtoList.add(VisitFromResponseDto.of(visitorForm));
