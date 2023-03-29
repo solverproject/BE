@@ -69,9 +69,9 @@ public class VisitFormService {
 
         List<VisitForm> visiFormUserList = visitFormRepository.findByTarget(admin.getName());
 
-        if (visiFormUserList.isEmpty()) {
-            throw new VisitFormException(ResponseCode.VISITOR_NOT_FOUND);
-        }
+//        if (visiFormUserList.isEmpty()) {
+//            throw new VisitFormException(ResponseCode.VISITOR_NOT_FOUND);
+//        }
 
         List<VisitFromResponseDto> visitFromResponseDtoList = new ArrayList<>();
         for (VisitForm visitorForm : visiFormUserList) {
