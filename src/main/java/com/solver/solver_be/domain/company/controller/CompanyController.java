@@ -16,7 +16,6 @@ public class CompanyController {
 
     private final CompanyService companyService;
 
-
     @PostMapping("/company")
     public ResponseEntity<GlobalResponseDto> createCompany(@RequestBody CompanyRequestDto companyRequestDto
     ) {
