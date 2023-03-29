@@ -11,6 +11,7 @@ import com.solver.solver_be.global.util.TimeStamped;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 
@@ -21,6 +22,7 @@ public class AccessService extends TimeStamped {
     private final VisitFormRepository visitFormRepository;
 
     // 출입 기록 생성
+    @Transactional
     public ResponseEntity<GlobalResponseDto> AccessIn(Guest guest, String startDate) {
         VisitForm visitForm = visitFormRepository.findByGuestIdAndStartDate(guest.getId(),startDate);
         LocalDateTime inTime = LocalDateTime.now(); // 현재 시간을 출입 시간으로 설정
@@ -30,6 +32,7 @@ public class AccessService extends TimeStamped {
 
 
     // 출입 기록 업데이트
+    @Transactional
     public ResponseEntity<GlobalResponseDto> AccessOut(Guest guest) {
         LocalDateTime outTime = LocalDateTime.now(); // 현재 시간을 나가는 시간으로 설정
         AccessRecord accessRecord = accessRepository.findLatestAccessRecordByGuest(guest)
