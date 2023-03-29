@@ -4,7 +4,6 @@ import com.solver.solver_be.domain.user.entity.Admin;
 import com.solver.solver_be.domain.user.entity.Guest;
 import com.solver.solver_be.domain.user.repository.AdminRepository;
 import com.solver.solver_be.domain.visitform.dto.VisitFormRequestDto;
-import com.solver.solver_be.domain.visitform.dto.VisitFormStatusResponseDto;
 import com.solver.solver_be.domain.visitform.dto.VisitFormResponseDto;
 import com.solver.solver_be.domain.visitform.entity.VisitForm;
 import com.solver.solver_be.domain.visitform.repository.VisitFormRepository;
@@ -103,8 +102,8 @@ public class VisitFormService {
 
         visitForm.updateStatus(visitFormRequestDto);
 
-        VisitFormStatusResponseDto visitFormStatusResponseDto = VisitFormStatusResponseDto.of(visitForm);
-        return ResponseEntity.ok(GlobalResponseDto.of(ResponseCode.VISITOR_STATUS_UPDATE_SUCCESS, visitFormStatusResponseDto));
+        VisitFormResponseDto visitFromResponseDto = VisitFormResponseDto.of(visitForm);
+        return ResponseEntity.ok(GlobalResponseDto.of(ResponseCode.VISITOR_STATUS_UPDATE_SUCCESS, visitFromResponseDto));
     }
 
     // 5. 방문신청서 삭제
