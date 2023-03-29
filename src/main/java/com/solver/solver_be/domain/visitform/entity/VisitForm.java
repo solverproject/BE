@@ -2,7 +2,6 @@ package com.solver.solver_be.domain.visitform.entity;
 
 import com.solver.solver_be.domain.user.entity.Guest;
 import com.solver.solver_be.domain.visitform.dto.VisitFormRequestDto;
-import com.solver.solver_be.domain.visitform.dto.VisitFromResponseDto;
 import com.solver.solver_be.global.util.TimeStamped;
 import lombok.*;
 
