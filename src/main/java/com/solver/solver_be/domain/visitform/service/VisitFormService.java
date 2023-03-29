@@ -121,6 +121,7 @@ public class VisitFormService {
         return ResponseEntity.ok(GlobalResponseDto.of(ResponseCode.VISITOR_DELETE_SUCCESS));
     }
 
+    @Transactional
     public ResponseEntity<GlobalResponseDto> getAccessStatus(Admin admin) {
 
         List<VisitForm> visitFormList = visitFormRepository.findByTarget(admin.getName());
