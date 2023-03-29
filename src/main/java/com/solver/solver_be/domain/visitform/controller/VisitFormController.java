@@ -26,33 +26,40 @@ public class VisitFormController {
     }
 
     @GetMapping("/visit/guest")
-    public ResponseEntity<GlobalResponseDto> getGuestVisitForm(@AuthenticationPrincipal UserDetailsImpl userDetails){
+    public ResponseEntity<GlobalResponseDto> getGuestVisitForm(@AuthenticationPrincipal UserDetailsImpl userDetails) {
         return visitorService.getGuestVisitForm(userDetails.getGuest());
     }
 
 
     @GetMapping("/visit/admin")
-    public ResponseEntity<GlobalResponseDto> getAdminVisitForm(@AuthenticationPrincipal UserDetailsImpl userDetails){
+    public ResponseEntity<GlobalResponseDto> getAdminVisitForm(@AuthenticationPrincipal UserDetailsImpl userDetails) {
         return visitorService.getAdminVisitForm(userDetails.getAdmin());
     }
 
     @PutMapping("/visit/guest/{id}")
     public ResponseEntity<GlobalResponseDto> updateGuestVisitForm(@PathVariable Long id,
-                                                         @RequestBody VisitFormRequestDto visitorRequestDto,
-                                                         @AuthenticationPrincipal UserDetailsImpl userDetails){
+                                                                  @RequestBody VisitFormRequestDto visitorRequestDto,
+                                                                  @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return visitorService.updateGuestVisitForm(id, visitorRequestDto, userDetails.getGuest());
     }
 
     @PutMapping("/visit/admin/{id}")
     public ResponseEntity<GlobalResponseDto> updateAdminVisitForm(@PathVariable Long id,
                                                                   @RequestBody VisitFormRequestDto visitFormRequestDto,
-                                                                  @AuthenticationPrincipal UserDetailsImpl userDetails){
+                                                                  @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return visitorService.updateAdminVisitForm(id, visitFormRequestDto, userDetails.getAdmin());
     }
 
     @DeleteMapping("/visit/{id}")
     public ResponseEntity<GlobalResponseDto> deleteVisitForm(@PathVariable Long id,
-                                                          @AuthenticationPrincipal UserDetailsImpl userDetails){
+                                                             @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return visitorService.deleteVisitForm(id, userDetails.getGuest());
     }
+
+    @GetMapping("/visit/admin/access")
+    public ResponseEntity<GlobalResponseDto> getAccessStatus(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return visitorService.getAccessStatus(userDetails.getAdmin());
+    }
+
+
 }
