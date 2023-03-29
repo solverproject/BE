@@ -24,7 +24,6 @@ import java.util.*;
 @Slf4j
 @RequiredArgsConstructor
 public class VisitFormService {
-
     private final VisitFormRepository visitFormRepository;
     private final AdminRepository adminRepository;
 
