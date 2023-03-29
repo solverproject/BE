@@ -1,5 +1,6 @@
 package com.solver.solver_be.domain.AccessRecord.service;
 
+import com.solver.solver_be.domain.AccessRecord.dto.AccessRecordRequestDto;
 import com.solver.solver_be.domain.AccessRecord.entity.AccessRecord;
 import com.solver.solver_be.domain.AccessRecord.repository.AccessRecordRepository;
 import com.solver.solver_be.domain.user.entity.Guest;
@@ -21,8 +22,8 @@ public class AccessService extends TimeStamped {
     private final VisitFormRepository visitFormRepository;
 
     // 출입 기록 생성
-    public ResponseEntity<GlobalResponseDto> AccessIn(Guest guest, String startDate) {
-        VisitForm visitForm = visitFormRepository.findByGuestIdAndStartDate(guest.getId(),startDate);
+    public ResponseEntity<GlobalResponseDto> AccessIn(Guest guest, AccessRecordRequestDto accessRecordRequestDto) {
+        VisitForm visitForm = visitFormRepository.findByGuestIdAndStartDate(guest.getId(), accessRecordRequestDto.getStartDate());
         LocalDateTime inTime = LocalDateTime.now(); // 현재 시간을 출입 시간으로 설정
         accessRepository.save(AccessRecord.of(inTime,null,guest,visitForm)); // 출입 기록 저장
         return ResponseEntity.ok(GlobalResponseDto.of(ResponseCode.ACCESS_IN_SUCCESS));
