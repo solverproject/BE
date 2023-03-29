@@ -11,8 +11,8 @@ public class CompanyRequestDto {
 
     private String companyName;
 
-    private Integer x;
+    private Double x;
 
-    private Integer y;
+    private Double y;
 
 }

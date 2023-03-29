@@ -18,13 +18,12 @@ public class CompanyResponseDto {
 
     private String companyName;
 
-    private Integer x;
+    private Double x;
 
-    private Integer y;
+    private Double y;
 
     @Builder
-    public CompanyResponseDto(Long id, String businessNum, String businessCode, String companyName,
-                              Integer x, Integer y){
+    public CompanyResponseDto(Long id, String businessNum, String businessCode, String companyName, Double x, Double y) {
         this.id = id;
         this.businessNum = businessNum;
         this.businessCode = businessCode;
@@ -40,8 +39,9 @@ public class CompanyResponseDto {
                 .businessNum(company.getBusinessNum())
                 .businessCode(company.getBusinessCode())
                 .companyName(company.getCompanyName())
-                .x(company.getX())
-                .y(company.getY())
+                .x(company.getX().doubleValue()) // BigDecimal 타입에서 Double 타입으로 변환
+                .y(company.getY().doubleValue())
                 .build();
     }
+
 }

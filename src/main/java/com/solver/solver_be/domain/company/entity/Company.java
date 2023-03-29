@@ -6,6 +6,7 @@ import com.solver.solver_be.global.util.TimeStamped;
 import lombok.*;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 
 @Entity
 @Getter
@@ -24,16 +25,18 @@ public class Company extends TimeStamped {
     @Column(unique = true)
     private String businessCode;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private String companyName;
 
-    @Column
-    private Integer x;
+    @Column(precision = 10, scale = 7)
+    private BigDecimal x;
 
-    @Column
-    private Integer y;
+    @Column(precision = 10, scale = 7)
+    private BigDecimal y;
 
-    public static Company of(String businessNum, String businessCode, String companyName, Integer x, Integer y) {
+
+
+    public static Company of(String businessNum, String businessCode, String companyName, BigDecimal x, BigDecimal y) {
         return Company.builder()
                 .businessNum(businessNum)
                 .businessCode(businessCode)
@@ -48,26 +51,17 @@ public class Company extends TimeStamped {
                 .businessNum(companyRequestDto.getBusinessNum())
                 .businessCode(companyRequestDto.getBusinessCode())
                 .companyName(companyRequestDto.getCompanyName())
-                .x(companyRequestDto.getX())
-                .y(companyRequestDto.getY())
+                .x(BigDecimal.valueOf(companyRequestDto.getX()))
+                .y(BigDecimal.valueOf(companyRequestDto.getY()))
                 .build();
     }
 
-    public static Company of(AdminSignupRequestDto adminSignupRequestDto, Company company) {
-        return Company.builder()
-                .businessNum(adminSignupRequestDto.getBusinessNum())
-                .businessCode(company.getBusinessCode())
-                .companyName(adminSignupRequestDto.getCompanyName())
-                .x(company.getX())
-                .y(company.getY())
-                .build();
-    }
 
     public void update(CompanyRequestDto companyRequestDto) {
         this.businessNum = companyRequestDto.getBusinessNum();
         this.businessCode = companyRequestDto.getBusinessCode();
         this.companyName = companyRequestDto.getCompanyName();
-        this.x = companyRequestDto.getX();
-        this.y = companyRequestDto.getY();
+        this.x = BigDecimal.valueOf(companyRequestDto.getX());
+        this.y = BigDecimal.valueOf(companyRequestDto.getY());
     }
 }
