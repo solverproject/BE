@@ -52,9 +52,10 @@ public class VisitFormService {
 
         List<VisitForm> visiFormUserList = visitFormRepository.findByGuestId(guest.getId());
 
-        if (visiFormUserList.isEmpty()) {
-            throw new VisitFormException(ResponseCode.VISITOR_NOT_FOUND);
-        }
+//        if (visiFormUserList.isEmpty()) {
+//            return ResponseEntity.ok(GlobalResponseDto.of(ResponseCode.VISITOR_GET_SUCCESS, visiFormUserList))
+////            throw new VisitFormException(ResponseCode.VISITOR_NOT_FOUND);
+//        }
 
         List<VisitFromResponseDto> visitFromResponseDtoList = new ArrayList<>();
         for (VisitForm visitorForm : visiFormUserList) {
