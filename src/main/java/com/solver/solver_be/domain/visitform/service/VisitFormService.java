@@ -102,8 +102,8 @@ public class VisitFormService {
 
         visitForm.updateStatus(visitFormRequestDto);
 
-        VisitFormResponseDto visitFromResponseDto = VisitFormResponseDto.of(visitForm);
-        return ResponseEntity.ok(GlobalResponseDto.of(ResponseCode.VISITOR_STATUS_UPDATE_SUCCESS, visitFromResponseDto));
+        VisitFormResponseDto visitFormResponseDto = VisitFormResponseDto.of(visitForm);
+        return ResponseEntity.ok(GlobalResponseDto.of(ResponseCode.VISITOR_STATUS_UPDATE_SUCCESS, visitFormResponseDto));
     }
 
     // 5. 방문신청서 삭제
