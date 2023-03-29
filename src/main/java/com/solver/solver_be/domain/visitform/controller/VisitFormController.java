@@ -56,7 +56,7 @@ public class VisitFormController {
         return visitorService.deleteVisitForm(id, userDetails.getGuest());
     }
 
-    @GetMapping("/visit/accessStatus")
+    @GetMapping("/visit/access-status")
     public ResponseEntity<GlobalResponseDto> getAccessStatus(@AuthenticationPrincipal UserDetailsImpl userDetails) {
         return visitorService.getAccessStatus(userDetails.getAdmin());
     }
