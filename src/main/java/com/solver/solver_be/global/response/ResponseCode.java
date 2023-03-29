@@ -30,6 +30,8 @@ public enum ResponseCode {
     COMPANY_DELETE_SUCCESS(200, "회사 정보 삭제를 완료했습니다."),
     ACCESS_IN_SUCCESS(200, "어서오십시오" ),
     ACCESS_OUT_SUCCESS(200, "안녕히 가십시오" ),
+    ACCESS_STATUS_SUCCESS(200, "출입관리 목록 불러오기 완료."),
+
 
     /*============================ FAIL ================================*/
     //Global
