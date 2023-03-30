@@ -92,18 +92,17 @@ public class VisitFormService {
 
     // 4. 방문신청서 수정 ( Admin )
     @Transactional
-    public ResponseEntity<GlobalResponseDto> updateAdminVisitForm(Long id, VisitFormRequestDto visitFormRequestDto, Admin admin) {
+    public ResponseEntity<GlobalResponseDto> updateAdminVisitForm(Long id, VisitFormRequestDto visitFormRequestDto, Admin admin){
 
-        VisitForm visitForm = getVisitFormById(id);
+        VisitForm visitForm = visitFormRepository.findByIdAndTarget(id, admin.getName());
 
-        if (!visitForm.getTarget().equals(admin)) {
+        if(!visitForm.getTarget().equals(admin.getName())){
             throw new VisitFormException(ResponseCode.VISITOR_UPDATE_FAILED);
         }
 
         visitForm.updateStatus(visitFormRequestDto);
 
-        VisitFormResponseDto visitFormResponseDto = VisitFormResponseDto.of(visitForm);
-        return ResponseEntity.ok(GlobalResponseDto.of(ResponseCode.VISITOR_STATUS_UPDATE_SUCCESS, visitFormResponseDto));
+        return ResponseEntity.ok(GlobalResponseDto.of(ResponseCode.VISITOR_STATUS_UPDATE_SUCCESS));
     }
 
     // 5. 방문신청서 삭제
