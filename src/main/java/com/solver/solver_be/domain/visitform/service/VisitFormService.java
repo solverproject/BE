@@ -158,6 +158,11 @@ public class VisitFormService {
         return ResponseEntity.ok(GlobalResponseDto.of(ResponseCode.ACCESS_STATUS_SUCCESS, accessStatusResponseDtoList));
     }
 
+    @Transactional(readOnly = true)
+    public String getTest(Admin admin){
+        return "Test Confirm";
+    }
+
 
     // ======================================= METHOD ======================================== //
 
