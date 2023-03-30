@@ -38,7 +38,6 @@ public class CompanyService {
         Company company = companyRepository.saveAndFlush(Company.of(companyRequestDto));
 
         return ResponseEntity.ok(GlobalResponseDto.of(ResponseCode.COMPANY_REGISTER_SUCCESS, CompanyResponseDto.of(company)));
-
     }
 
     // 2. 회사 목록 가져오기
