@@ -38,6 +38,12 @@ public class VisitFormService {
             throw new UserException(ResponseCode.ADMIN_NOT_FOUND);
         }
 
+        // 같은 날에 작성을 한게 있는지.
+        Optional<VisitForm> foundStartDate = visitFormRepository.findAllByStartDateAndLocation(visitFormRequestDto.getStartDate(), visitFormRequestDto.getLocation());
+        if (foundStartDate.isPresent()) {
+            throw new VisitFormException(ResponseCode.VISITOR_EXIST);
+        }
+
         VisitForm visitForm = visitFormRepository.saveAndFlush(VisitForm.of(visitFormRequestDto, guest));
 
         return ResponseEntity.ok(GlobalResponseDto.of(ResponseCode.VISITOR_WIRTE_SUCCESS, VisitFormResponseDto.of(visitForm, guest)));

@@ -51,6 +51,7 @@ public enum ResponseCode {
     // Visitor 관련
     VISITOR_NOT_FOUND(400,"방문 신청 기록이 없습니다." ),
     VISITOR_UPDATE_FAILED(400,"본인은 방문 기록이 아닙니다." ),
+    VISITOR_EXIST(400, "동일한 날짜에 방문 기록이 있습니다." ),
     ADMIN_NOT_FOUND(400, "담당자가 없습니다."  ),
 
    // Company 관련

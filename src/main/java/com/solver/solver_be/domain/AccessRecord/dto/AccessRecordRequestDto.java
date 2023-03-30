@@ -8,5 +8,6 @@ import lombok.NoArgsConstructor;
 public class AccessRecordRequestDto {
 
     private String startDate;
+    private String location;
 
 }

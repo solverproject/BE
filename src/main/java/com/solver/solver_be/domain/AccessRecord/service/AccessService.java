@@ -25,7 +25,7 @@ public class AccessService extends TimeStamped {
     // 출입 기록 생성
     @Transactional
     public ResponseEntity<GlobalResponseDto> AccessIn(Guest guest, AccessRecordRequestDto accessRecordRequestDto) {
-        VisitForm visitForm = visitFormRepository.findByGuestIdAndStartDate(guest.getId(), accessRecordRequestDto.getStartDate());
+        VisitForm visitForm = visitFormRepository.findByGuestIdAndStartDateAndLocation(guest.getId(), accessRecordRequestDto.getStartDate(), accessRecordRequestDto.getLocation());
         LocalDateTime inTime = LocalDateTime.now(); // 현재 시간을 출입 시간으로 설정
         accessRepository.save(AccessRecord.of(inTime,null,guest,visitForm)); // 출입 기록 저장
         return ResponseEntity.ok(GlobalResponseDto.of(ResponseCode.ACCESS_IN_SUCCESS));
