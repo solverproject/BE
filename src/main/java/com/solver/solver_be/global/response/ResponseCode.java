@@ -32,6 +32,8 @@ public enum ResponseCode {
     ACCESS_OUT_SUCCESS(200, "안녕히 가십시오" ),
     ACCESS_STATUS_SUCCESS(200, "출입관리 목록 불러오기 완료."),
 
+    VISITFORM_SEARCH_SUCCESS(200, "정렬 완료." ),
+
 
     /*============================ FAIL ================================*/
     //Global

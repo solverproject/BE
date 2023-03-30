@@ -6,6 +6,7 @@ import com.solver.solver_be.domain.user.repository.AdminRepository;
 import com.solver.solver_be.domain.visitform.dto.AccessStatusResponseDto;
 import com.solver.solver_be.domain.visitform.dto.VisitFormRequestDto;
 import com.solver.solver_be.domain.visitform.dto.VisitFormResponseDto;
+import com.solver.solver_be.domain.visitform.dto.VisitFormSearchRequestDto;
 import com.solver.solver_be.domain.visitform.entity.VisitForm;
 import com.solver.solver_be.domain.visitform.repository.VisitFormRepository;
 import com.solver.solver_be.global.exception.exceptionType.UserException;
@@ -157,7 +158,18 @@ public class VisitFormService {
         }
         return ResponseEntity.ok(GlobalResponseDto.of(ResponseCode.ACCESS_STATUS_SUCCESS, accessStatusResponseDtoList));
     }
-
+    public ResponseEntity<GlobalResponseDto> searchVisitForms(VisitFormSearchRequestDto requestDto, Admin admin) {
+        List<VisitForm> visitFormList = visitFormRepository.findByGuestNameAndLocationAndTargetAndStartDateAndEndDateAndPurposeAndStatus(
+                requestDto.getGuestName(),
+                requestDto.getLocation(),
+                requestDto.getTarget(),
+                requestDto.getStartDate(),
+                requestDto.getEndDate(),
+                requestDto.getPurpose(),
+                requestDto.getStatus()
+        );
+        return ResponseEntity.ok(GlobalResponseDto.of(ResponseCode.VISITFORM_SEARCH_SUCCESS, visitFormList));
+    }
     @Transactional(readOnly = true)
     public String getTest(Admin admin){
         return "Test Confirm";
