@@ -1,6 +1,7 @@
 package com.solver.solver_be.domain.visitform.controller;
 
 import com.solver.solver_be.domain.visitform.dto.VisitFormRequestDto;
+import com.solver.solver_be.domain.visitform.dto.VisitFormSearchRequestDto;
 import com.solver.solver_be.domain.visitform.service.VisitFormService;
 import com.solver.solver_be.global.response.GlobalResponseDto;
 import com.solver.solver_be.global.security.webSecurity.UserDetailsImpl;
@@ -61,5 +62,10 @@ public class VisitFormController {
         return visitorService.getAccessStatus(userDetails.getAdmin());
     }
 
+    @GetMapping("/visit-forms/search")
+    public ResponseEntity<GlobalResponseDto> searchVisitForms(@RequestBody VisitFormSearchRequestDto visitFormSearchRequestDto,
+                                                        @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return visitorService.searchVisitForms(visitFormSearchRequestDto,userDetails.getAdmin());
+    }
 
 }
