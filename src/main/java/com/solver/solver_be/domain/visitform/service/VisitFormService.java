@@ -160,7 +160,7 @@ public class VisitFormService {
 
     @Transactional
     public ResponseEntity<GlobalResponseDto> searchVisitForms(VisitFormSearchRequestDto requestDto, Admin admin) {
-        List<VisitForm> visitFormList = visitFormRepository.findByGuestNameAndLocationAndTargetAndStartDateAndEndDateAndPurposeAndStatus(
+        List<VisitForm> visitFormList = visitFormRepository.findByGuestNameOrLocationOrTargetOrStartDateOrEndDateOrPurposeAndStatus(
                 requestDto.getGuestName(),
                 requestDto.getLocation(),
                 requestDto.getTarget(),

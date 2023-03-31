@@ -17,30 +17,30 @@ public class VisitFormRepositoryCustomImpl implements CustomVisitFormRepository{
     }
 
     @Override
-    public List<VisitForm> findByGuestNameAndLocationAndTargetAndStartDateAndEndDateAndPurposeAndStatus(
+    public List<VisitForm> findByGuestNameOrLocationOrTargetOrStartDateOrEndDateOrPurposeAndStatus(
             String guestName, String location, String target, String startDate, String endDate, String purpose, String status) {
         BooleanBuilder builder = new BooleanBuilder();
 
         if (guestName != null) {
-            builder.and(visitForm.guest.name.eq(guestName));
+            builder.or(visitForm.guest.name.eq(guestName));
         }
         if (location != null) {
-            builder.and(visitForm.location.eq(location));
+            builder.or(visitForm.location.eq(location));
         }
         if (target != null) {
-            builder.and(visitForm.target.eq(target));
+            builder.or(visitForm.target.eq(target));
         }
         if (startDate != null) {
-            builder.and(visitForm.target.eq(startDate));
+            builder.or(visitForm.startDate.eq(startDate));
         }
         if (endDate != null) {
-            builder.and(visitForm.target.eq(endDate));
+            builder.or(visitForm.endDate.eq(endDate));
         }
         if (purpose != null) {
-            builder.and(visitForm.purpose.eq(purpose));
+            builder.or(visitForm.purpose.eq(purpose));
         }
         if (status != null) {
-            builder.and(visitForm.status.eq(status));
+            builder.or(visitForm.status.eq(status));
         }
 
         return queryFactory.selectFrom(visitForm)
