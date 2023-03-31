@@ -23,8 +23,8 @@ public class AdminSignupRequestDto {
     @NotBlank(message = "담당자명은 필수입니다.")
     private String name;
 
-    @NotBlank(message = "회사 전화번호는 필수입니다.")
-    @Pattern(regexp = "^\\d{2,3}-\\d{3,4}-\\d{4}$", message = "전화번호는 02-XXX-XXXX 형식입니다.")
+    @NotBlank(message = "사업자 등록 번호")
+    @Pattern(regexp = "^\\d{2,3}-\\d{3,4}-\\d{4}$", message = "사업자 등록 번호는 XXX-XXX-XXXX 형식입니다.")
     private String businessNum;
 
     @NotBlank(message = "회사명은 필수입니다.")

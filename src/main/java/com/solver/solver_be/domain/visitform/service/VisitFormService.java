@@ -9,7 +9,6 @@ import com.solver.solver_be.domain.visitform.dto.VisitFormResponseDto;
 import com.solver.solver_be.domain.visitform.dto.VisitFormSearchRequestDto;
 import com.solver.solver_be.domain.visitform.entity.VisitForm;
 import com.solver.solver_be.domain.visitform.repository.VisitFormRepository;
-import com.solver.solver_be.global.exception.exceptionType.UserException;
 import com.solver.solver_be.global.exception.exceptionType.VisitFormException;
 import com.solver.solver_be.global.response.GlobalResponseDto;
 import com.solver.solver_be.global.response.ResponseCode;
@@ -36,7 +35,7 @@ public class VisitFormService {
         // 담당자가 존재를 하는지.
         Optional<Admin> target = adminRepository.findByName(visitFormRequestDto.getTarget());
         if (target.isEmpty()) {
-            throw new UserException(ResponseCode.ADMIN_NOT_FOUND);
+            throw new VisitFormException(ResponseCode.ADMIN_NOT_FOUND);
         }
 
         // 같은 날에 작성을 한게 있는지.
@@ -158,6 +157,8 @@ public class VisitFormService {
         }
         return ResponseEntity.ok(GlobalResponseDto.of(ResponseCode.ACCESS_STATUS_SUCCESS, accessStatusResponseDtoList));
     }
+
+    @Transactional
     public ResponseEntity<GlobalResponseDto> searchVisitForms(VisitFormSearchRequestDto requestDto, Admin admin) {
         List<VisitForm> visitFormList = visitFormRepository.findByGuestNameAndLocationAndTargetAndStartDateAndEndDateAndPurposeAndStatus(
                 requestDto.getGuestName(),

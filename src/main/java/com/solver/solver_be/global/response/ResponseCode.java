@@ -19,6 +19,7 @@ public enum ResponseCode {
     VISITOR_UPDATE_SUCCESS(200, "방문 기록 수정 성공" ),
     VISITOR_DELETE_SUCCESS(200,"방문 기록 삭제 성공" ),
     VISITOR_STATUS_UPDATE_SUCCESS(200, "방문자 상태 변경 성공"),
+    VISITFORM_SEARCH_SUCCESS(200, "정렬 완료." ),
 
     // Token 관련
     TOKEN_UPDATE_SUCCESS(200, "토큰이 업데이트되었습니다."),
@@ -31,9 +32,6 @@ public enum ResponseCode {
     ACCESS_IN_SUCCESS(200, "어서오십시오" ),
     ACCESS_OUT_SUCCESS(200, "안녕히 가십시오" ),
     ACCESS_STATUS_SUCCESS(200, "출입관리 목록 불러오기 완료."),
-
-    VISITFORM_SEARCH_SUCCESS(200, "정렬 완료." ),
-
 
     /*============================ FAIL ================================*/
     //Global
