@@ -26,7 +26,7 @@ import java.util.Date;
 public class JwtUtil {
 
     private final UserDetailsServiceImpl userDetailsService;
-    private static final long ACCESS_TIME = 60 * 60 * 1000L;
+    private static final long ACCESS_TIME = 60 * 1000L;
 
     private static final long REFRESH_TIME = 7 * 24 * 60 * 60 * 1000L;
     public static final String ACCESS_TOKEN = "Authorization";
