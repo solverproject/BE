@@ -19,6 +19,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.security.Key;
 import java.util.Base64;
 import java.util.Date;
+import java.util.Enumeration;
 
 @Slf4j
 @Component
@@ -46,6 +47,13 @@ public class JwtUtil {
 
     // header 토큰을 가져오기
     public String resolveToken(HttpServletRequest request, String type) {
+        Enumeration<String> headerNames = request.getHeaderNames();
+        while (headerNames.hasMoreElements()) {
+            String headerName = headerNames.nextElement();
+            String headerValue = request.getHeader(headerName);
+            log.debug(headerName + ": " + headerValue);
+        }
+
         String bearerToken = type.equals("Access") ? request.getHeader(ACCESS_TOKEN) : request.getHeader(REFRESH_TOKEN);
         if (bearerToken == null) {
             return null;
